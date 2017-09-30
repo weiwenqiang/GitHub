@@ -1,0 +1,11 @@
+.gradle
+/local.properties
+/.idea/workspace.xml
+.DS_Store
+/build
+.idea/
+*iml
+*.iml
+*/build
+app/hackernews.apk
+app/hackernews12.apk

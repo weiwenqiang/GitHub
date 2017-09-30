@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">MyApp</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="btn_text_speak">按住录音</string>
+    <string name="btn_text_send">发送</string>
+    <string name="num_postfix">%1$s张</string>
+    <string name="take_picture">拍摄照片</string>
+    <string name="message_max_num">你最多可以选择%1$s张图片</string>
+    <string name="use">使用</string>
+    <string name="done">完成</string>
+    <string name="choose">选择</string>
+    <string name="save_ing">保存图片中...</string>
+    <string name="done_num">完成(%1$s/%2$s)</string>
+    <string name="all_image">所有图片</string>
+    <string name="preview_num">预览(%1$s)</string>
+    <string name="preview">预览</string>
+    <string name="cancel">取消</string>
+    <string name="search">搜索</string>
+    <string name="no_result">对不起，没有搜索到相关数据！</string>
+    <string name="search_map">查找小区/大厦/学校等</string>
+</resources>

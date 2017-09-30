@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">TypefaceHelper</string>
+    <string name="label_examples">Custom typeface examples:</string>
+    <string name="simple_example">Simple example</string>
+    <string name="actionbar_example">Actionbar example</string>
+    <string name="listview_example">ListView example</string>
+    <string name="spinner_example">Spinner example</string>
+    <string name="multiple_typeface_example">Multiple typefaces example</string>
+    <string name="dynamic_example">Dynamic typeface change example</string>
+
+    <string name="lorem_ipsum_title">Lorem ipsum</string>
+    <string name="lorem_ipsum_long">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+    <string name="sample_button">Sample button</string>
+    <string name="label_bold">This text is BOLD!</string>
+    <string name="label_italic">This text is ITALIC!</string>
+    <string name="label_bold_italic">This text is both bold and italic!</string>
+    <string name="btn_italic">I</string>
+    <string name="btn_bold">B</string>
+    <string name="edittext_hint">Write your text here...</string>
+
+    <string-array name="adapter_values">
+        <item>Item One</item>
+        <item>Item Two</item>
+        <item>Item Three</item>
+        <item>Item Four</item>
+        <item>Item Five</item>
+        <item>Item Six</item>
+        <item>Item Seven</item>
+        <item>Item Eight</item>
+    </string-array>
+</resources>

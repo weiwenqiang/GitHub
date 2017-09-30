@@ -1,0 +1,51 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "com.novoda:bintray-release:$bintrayVersion"
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'bintray-release'
+apply plugin: 'jacoco-android'
+
+android {
+    compileSdkVersion COMPILE_SDK_VERSION
+    buildToolsVersion BUILD_TOOLS_VERSION
+
+    defaultConfig {
+        minSdkVersion MIN_SDK_VERSION
+        targetSdkVersion TARGET_SDK_VERSION
+        versionCode VERSION_CODE
+        versionName VERSION_NAME
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+        debug {
+            // output coverage with ./gradlew clean build createDebugCoverageReport
+            testCoverageEnabled true
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    compile project(':thirtyinch')
+    provided "com.pascalwelsch.compositeandroid:activity:$supportLibraryVersion"
+    provided "com.pascalwelsch.compositeandroid:fragment:$supportLibraryVersion"
+}
+
+publish {
+    userOrg = 'passsy'
+    groupId = 'net.grandcentrix.thirtyinch'
+    artifactId = 'thirtyinch-plugin'
+    uploadName = 'ThirtyInch'
+    publishVersion = VERSION_NAME
+    website = 'https://github.com/grandcentrix/ThirtyInch'
+}

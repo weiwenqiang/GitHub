@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.crazysunj.multityperecyclerviewadapter">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".LinearActivity" />
+        <activity android:name=".GridActivity" />
+        <activity android:name=".CommonLinearActivity" />
+        <activity android:name=".CommonGridActivity" />
+        <activity android:name=".HighLightActivity" />
+        <activity android:name=".RxLinearActivity" />
+        <activity android:name=".RxErrorAndEmptyLinearActivity" />
+        <activity android:name=".RxContinuityActivity" />
+        <activity android:name=".RxStandardLinearActivity" />
+        <activity android:name=".RxMixedLinearActivity" />
+        <activity android:name=".RxAptDefaultActivity" />
+        <activity android:name=".RxAptStandardLinearActivity" />
+        <activity android:name=".RxAptErrorAndEmptyLinearActivity" />
+        <activity
+            android:name=".OpenCloseActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+    </application>
+
+</manifest>

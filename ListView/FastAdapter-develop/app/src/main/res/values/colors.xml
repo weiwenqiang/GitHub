@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+    Just set custom primary and accent color.
+    Looks best with a light theme. see the AndroidManifest
+
+    android:theme="@style/MaterialDrawerTheme.Light.DarkActionBar.TranslucentStatus"
+    -->
+    <color name="colorPrimary">#ffeb3b</color>
+    <color name="colorPrimaryDark">#ffd740</color>
+    <color name="colorPrimaryLight">#ffff00</color>
+    <color name="colorAccent">#8bc34a</color>
+
+    <!-- general colors for drawer -->
+    <color name="list_background">#F2F2F2</color>
+    <!-- primary colors for drawer -->
+    <color name="list_background_normal">#FCFCFC</color>
+</resources>

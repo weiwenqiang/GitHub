@@ -1,0 +1,23 @@
+apply plugin: 'com.android.application'
+
+android {
+  compileSdkVersion project.ext.compileSdkVersion
+  buildToolsVersion project.ext.buildToolsVersion
+
+  defaultConfig {
+    minSdkVersion project.ext.minSdkVersion
+    targetSdkVersion project.ext.targetSdkVersion
+  }
+
+  lintOptions {
+    abortOnError false
+  }
+}
+
+dependencies {
+  compile "frankiesardo:icepick:${icepickVersion}"
+  provided "frankiesardo:icepick-processor:${icepickVersion}"
+  compile "org.parceler:parceler-api:${parcelerVersion}"
+  annotationProcessor "org.parceler:parceler:${parcelerVersion}"
+  compile project(':lib')
+}

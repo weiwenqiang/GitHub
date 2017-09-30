@@ -1,0 +1,57 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.base.util.helper.RouterHelper" />
+
+        <import type="com.base.entity.DataExtra" />
+
+        <import type="com.C" />
+
+        <variable
+            name="item"
+            type="com.model.CommentInfo" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/backgroundCard"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:onClick="@{()->RouterHelper.go(C.ARTICLE,DataExtra.getExtra(C.HEAD_DATA,item.article),imArticle)}"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imArticle"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:scaleType="centerCrop"
+                app:imageUrl="@{item.article.image}" />
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textColor="?attr/textColor"
+                android:text="@{item.article.title}" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="?attr/textColorBg"
+            android:textColor="?attr/textColor"
+            android:padding="10dp"
+            android:text="@{item.content}" />
+    </LinearLayout>
+</layout>

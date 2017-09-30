@@ -1,0 +1,60 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="razerdp.demo.DemoActivity">
+    <item
+        android:id="@+id/id_scale_popup"
+        android:title="scale popup"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_slide_from_bottom_popup"
+        android:title="slide from bottom popup"
+        android:orderInCategory="101"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_comment_popup"
+        android:title="comment popup"
+        android:orderInCategory="102"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_input_popup"
+        android:title="input popup"
+        android:orderInCategory="103"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_list_popup"
+        android:title="list popup"
+        android:orderInCategory="104"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_menu_popup"
+        android:title="menu popup"
+        android:orderInCategory="105"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_dialog_popup"
+        android:title="dialog popup"
+        android:orderInCategory="106"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_custom_interpolator_popup"
+        android:title="custom interpolator popup"
+        android:orderInCategory="107"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_full_screen_popup"
+        android:title="full screen popup"
+        android:orderInCategory="108"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_auto_located_popup"
+        android:title="auto located popup"
+        android:orderInCategory="109"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_slide_from_top_popup"
+        android:title="slide from top popup"
+        android:orderInCategory="110"
+        app:showAsAction="never"/>
+</menu>

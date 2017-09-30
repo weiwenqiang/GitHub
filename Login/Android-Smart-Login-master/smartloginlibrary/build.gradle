@@ -1,0 +1,45 @@
+apply plugin: 'com.android.library'
+
+//ext {
+//    PUBLISH_GROUP_ID = 'codelight.studios'
+//    PUBLISH_ARTIFACT_ID = 'android-smart-login'
+//    PUBLISH_VERSION = '1.2'
+//}
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
+    defaultConfig {
+//        minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
+//        targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
+        versionCode 3
+        versionName "1.2"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+//dependencies {
+//    compile fileTree(dir: 'libs', include: ['*.jar'])
+//    // Facebook sdk
+//    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+//    // Google Play Services
+//    compile 'com.google.android.gms:play-services-auth:10.2.0'
+//    compile 'com.google.firebase:firebase-auth:10.2.0'
+//    // GSON lib
+//    compile 'com.google.code.gson:gson:2.7'
+//}
+//
+//apply from: 'https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle'

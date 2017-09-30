@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">FastAdapter</string>
+
+    <string name="sample_simple_item_list">SimpleItemList Sample</string>
+    <string name="sample_simple_item_list_descr">FastScroller, Filter, Drag&amp;Drop</string>
+    <string name="sample_swipe_list">SwipeList Sample</string>
+    <string name="sample_swipe_list_descr">Swipe, leave-behinds and actions</string>
+    <string name="sample_icon_grid">IconGrid Sample</string>
+    <string name="sample_icon_grid_descr">Grid, Expandable</string>
+    <string name="sample_image_list">ImageList Sample</string>
+    <string name="sample_image_list_descr">View Click Listener</string>
+    <string name="sample_multi_select">MultiSelect Sample</string>
+    <string name="sample_multi_select_descr">MultiSelect, CAB, Remove, Undo</string>
+    <string name="sample_collapsible_multi_select_delete">Expandable MultiSelect Delete Sample</string>
+    <string name="sample_collapsible_multi_select_delete_descr">Expandable, MultiSelect, CAB, Remove</string>
+    <string name="sample_collapsible">Expandable Sample</string>
+    <string name="sample_collapsible_descr">Expandable, Select</string>
+    <string name="sample_sticky_header">StickyHeader Sample</string>
+    <string name="sample_sticky_header_descr">StickyHeader, Select</string>
+    <string name="sample_advanced">Advanced Sample</string>
+    <string name="sample_advanced_descr">Header, StickyHeader, Expandable, CAB, MultiSelect</string>
+    <string name="sample_generic_item">GenericItem Sample</string>
+    <string name="sample_generic_item_descr">Split up Item and Model</string>
+    <string name="sample_multi_generic_item">MultiGenericItem Sample</string>
+    <string name="sample_multi_generic_item_descr">Split up multiple Items and Models in one GenericAdapter</string>
+    <string name="sample_checkbox_item">CheckBox Sample</string>
+    <string name="sample_checkbox_item_descr">Use FastAdapters internal state with a CheckBox</string>
+    <string name="sample_radiobutton_item">RadioButton Sample</string>
+    <string name="sample_endless_scroll_item">EndlessScroll Sample</string>
+    <string name="sample_radiobutton_item_descr">Use FastAdapters internal state with a RadioButton</string>
+    <string name="sample_endless_scroll_list">EndlessScroll Sample</string>
+    <string name="sample_endless_scroll_list_descr">EndlessScroll, Progress</string>
+    <string name="sample_sort">Sort Sample</string>
+    <string name="sample_sort_descr">Simply sort your items by providing a Comparator</string>
+    <string name="sample_mopub">Mopub Ads Sample</string>
+    <string name="sample_mopub_descr">Simply mopub adapter usage example</string>
+    <string name="sample_realm_list">Realm Sample</string>
+    <string name="sample_realm_list_descr">Realm, Implement IItem interface</string>
+    <string name="open_source">Open Source</string>
+    <string name="search_title">Suche</string>
+    <string name="action_undo">UNDO</string>
+</resources>

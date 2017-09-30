@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:hm="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    tools:context="com.hm.horizontalprogressbar.MainActivity">
+
+    <view.HorizonalProgessBar
+        android:id="@+id/id_horizonalbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:max="100"
+        android:progress="0"
+        hm:progressbar_text_color="#000000"
+        hm:progressbar_text_size="12sp"
+        hm:progressbar_unreach_color="#00ff00"
+        hm:progressbar_reach_height="1dp"
+        hm:progressbar_unreach_height="1dp"
+        hm:progressbar_reach_color="#ff0000"
+        />
+
+
+    <view.RoundProgressBar
+        android:id="@+id/id_roundbar"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:padding="10dp"
+        android:max="100"
+        android:progress="0"
+        hm:progressbar_radius="60dp"
+        hm:progressbar_text_color="#000000"
+        hm:progressbar_text_size="22sp"
+        hm:progressbar_unreach_color="#00ff00"
+        hm:progressbar_reach_height="8dp"
+        hm:progressbar_unreach_height="2dp"
+        hm:progressbar_reach_color="#ff0000"
+        hm:progressbar_text_visible="true"
+        />
+    <TextView
+        android:id="@+id/id_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+</LinearLayout>

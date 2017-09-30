@@ -1,0 +1,36 @@
+*.iml
+.gradle
+/local.properties
+/.idea/*
+.DS_Store
+/build
+/captures
+<<<<<<< HEAD
+
+.idea/compiler.xml
+
+.idea/copyright/profiles_settings.xml
+
+.idea/encodings.xml
+
+.idea/gradle.xml
+
+.idea/misc.xml
+
+.idea/modules.xml
+
+.idea/misc.xml
+
+.idea/vcs.xml
+
+.idea/misc.xml
+
+.idea/misc.xml
+
+.idea/misc.xml
+
+.idea/runConfigurations.xml
+
+.idea/dictionaries/hcc.xml
+=======
+>>>>>>> origin/master

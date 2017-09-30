@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_wood" />
+
+    <LinearLayout
+        android:id="@+id/activity_music"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp">
+
+            <ImageButton
+                android:id="@+id/bt_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="12dp"
+                android:background="@null"
+                android:src="@drawable/back_pink" />
+
+            <TextView
+                android:id="@+id/tv_spacing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="F O O D    W I T H    W O O D"
+                android:textColor="#FFEEEE"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="12dp"
+                android:background="@null"
+                android:src="@drawable/map" />
+        </RelativeLayout>
+
+        <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
+            android:id="@+id/refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"/>
+
+        </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
+
+    </LinearLayout>
+</RelativeLayout>

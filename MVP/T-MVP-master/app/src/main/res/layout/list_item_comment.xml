@@ -1,0 +1,47 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.base.util.helper.RouterHelper" />
+
+        <import type="com.base.entity.DataExtra" />
+
+        <import type="com.C" />
+
+        <variable
+            name="item"
+            type="com.model.CommentInfo" />
+    </data>
+
+    <LinearLayout
+        android:background="?attr/backgroundCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:paddingRight="50dp">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:onClick="@{()->RouterHelper.go(C.USER_INFO,DataExtra.getExtra(C.HEAD_DATA,item.creater),image)}"
+            app:roundImageUrl="@{item.creater.face}" />
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1.0"
+            android:textColor="?attr/textColor"
+            app:comment="@{item}" />
+    </LinearLayout>
+</layout>
+
+
+

@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name">WoWo</string>
+
+    <string name="basic_animations">Basic Animations</string>
+    <string name="wowo_position_animation">Position Animation</string>
+    <string name="wowo_translation_animation">Translation Animation</string>
+    <string name="wowo_scale_animation">Scale Animation</string>
+    <string name="wowo_alpha_animation">Alpha Animation</string>
+    <string name="wowo_rotation_animation">Rotation Animation</string>
+    <string name="wowo_elevation_animation">Elevation Animation</string>
+
+    <string name="text_view_animations">TextView Animations</string>
+    <string name="wowo_text_view_text_size_animation">TextView TextSize Animation</string>
+    <string name="wowo_text_view_color_animation">TextView Color Animation</string>
+    <string name="wowo_text_view_text_animation">TextView Text Animation</string>
+
+    <string name="color_animations">Color Animations</string>
+    <string name="wowo_drawable_color_animation">Shape Color Animation</string>
+    <string name="wowo_drawable_color_animation_rgb">RGB Change Type</string>
+    <string name="wowo_drawable_color_animation_hsv">HSV Change Type</string>
+    <string name="wowo_background_color_animation">Background Color Animation</string>
+    <string name="wowo_layer_list_color_animation">Layer-List Color Animation</string>
+    <string name="wowo_state_list_color_animation">State-List Color Animation</string>
+
+    <string name="path_animations">Path Animations</string>
+    <string name="wowo_path_animation">Path Animation</string>
+
+    <string name="view_pager_attributes">WoWoViewPager Attributes</string>
+    <string name="gearbox">Gearbox of ViewPager</string>
+    <string name="static_view_pager">Static ViewPager</string>
+    <string name="auto_scroll">Auto Scroll</string>
+    <string name="direction">Direction</string>
+
+    <string name="interface_expansibility">Interface Expansibility</string>
+    <string name="svg_expansibility">SVG</string>
+    <string name="gif_expansibility">GIF</string>
+    <string name="custom_animation">Custom Animation</string>
+
+    <string name="example">Examples</string>
+    <string name="guide_page_1">Guide Page Example 1</string>
+    <string name="guide_page_2">Guide Page Example 2</string>
+
+    <string name="use_same_ease_type_back">Use same ease type when swiping back</string>
+
+    <string name="nightonke">NIGHTONKE</string>
+    <string name="presents">presents</string>
+    <string name="wowo">WoWo</string>
+    <string name="viewpager">ViewPager 2.0</string>
+    <string name="optimized">Optimized for scrolling app intros.</string>
+    <string name="free">Free and open source.</string>
+
+</resources>

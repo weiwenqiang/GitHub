@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!--<item-->
+    <!--android:id="@+id/action_search"-->
+    <!--android:icon="@mipmap/ic_search"-->
+    <!--android:orderInCategory="100"-->
+    <!--android:title="@string/menu_search"-->
+    <!--app:showAsAction="ifRoom" />-->
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/menu_settings"
+        app:showAsAction="collapseActionView" />
+
+
+    <item
+        android:id="@+id/action_sort"
+        android:icon="@drawable/ic_tab"
+        android:orderInCategory="400"
+        android:title="@string/sort"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_feedback"
+        android:icon="@drawable/ic_whilte_send"
+        android:orderInCategory="300"
+        android:title="反馈"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_about"
+        android:icon="@drawable/ic_menu_info"
+        android:orderInCategory="200"
+        android:title="关于"
+        app:showAsAction="always" />
+
+
+</menu>

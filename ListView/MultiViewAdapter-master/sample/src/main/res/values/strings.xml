@@ -1,0 +1,32 @@
+<!--
+  ~ Copyright 2017 Riyaz Ahamed
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+  <string name="app_name">MultiViewAdapter Sample</string>
+  <string name="label_complex">Complex</string>
+  <string name="label_swipe_to_dismiss">Swipe to dismiss</string>
+  <string name="label_infinite">Infinite scroll</string>
+  <string name="label_action_mode">Contextual action mode</string>
+  <string name="label_data_binding">Data binding</string>
+  <string name="label_simple_adapter">Simple adapter</string>
+  <string name="label_simple_grid">Simple grid</string>
+  <string name="label_multi_set">Multiple data set</string>
+  <string name="label_expandable_item">Expandable item</string>
+  <string name="label_expandable_group">Expandable group</string>
+  <string name="label_drag_drop">Drag and drop</string>
+  <string name="label_payload"><![CDATA[Payload & Diffutil]]></string>
+  <string name="label_selection">Selection mode</string>
+</resources>

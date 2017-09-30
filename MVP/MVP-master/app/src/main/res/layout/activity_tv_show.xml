@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/surfaceLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <SurfaceView
+            android:id="@+id/surfaceView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/vertical_video_height"
+            android:layout_gravity="center"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:keepScreenOn="true" />
+
+        <ImageView
+            android:id="@+id/bgImg"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/vertical_video_height"
+            android:layout_gravity="center"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:scaleType="fitXY" />
+
+        <LinearLayout
+            android:id="@+id/LoadingView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminateDrawable="@drawable/live_loading"
+                android:indeterminateDuration="400" />
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <com.hpw.myapp.widget.media.VerticalMediaControllView
+        android:id="@+id/verticalControll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.hpw.myapp.widget.media.HorMediaControllView
+        android:id="@+id/horizontalControll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+</RelativeLayout>

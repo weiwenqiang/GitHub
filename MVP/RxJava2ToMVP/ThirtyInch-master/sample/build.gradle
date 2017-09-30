@@ -1,0 +1,55 @@
+plugins {
+    id "me.tatarka.retrolambda" version "3.5.0"
+}
+
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion COMPILE_SDK_VERSION
+    buildToolsVersion BUILD_TOOLS_VERSION
+
+    defaultConfig {
+        applicationId "net.grandcentrix.thirtyinch.sample"
+        minSdkVersion 21
+        targetSdkVersion TARGET_SDK_VERSION
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        debug {
+            // only use the build in shrinker for debug builds, don't obfuscate
+            // remove unused classes and to make sure the proguard config is correct
+            // http://tools.android.com/tech-docs/new-build-system/built-in-shrinker
+            // https://developer.android.com/studio/build/shrink-code.html#shrink-code
+            minifyEnabled true
+            // using the build in shrinker only works with proguard disabled
+            // https://developer.android.com/studio/build/shrink-code.html#gradle-shrinker
+            useProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            // use real proguard for release builds, not the build in shrinker which doesn't support obfuscation
+            useProguard true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
+    compile 'com.jakewharton.rxbinding:rxbinding:1.0.1'
+
+
+    compile project(':thirtyinch')
+    compile project(':rx')
+    compile project(':logginginterceptor')
+    testCompile "junit:junit:$junitVersion"
+}

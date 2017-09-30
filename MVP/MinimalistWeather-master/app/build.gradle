@@ -1,0 +1,69 @@
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+//apply plugin: 'io.fabric'
+//
+//
+//buildscript {
+//    repositories {
+//        maven { url 'https://maven.fabric.io/public' }
+//    }
+//
+//    dependencies {
+//        classpath 'io.fabric.tools:gradle:1.21.7'
+//    }
+//}
+//
+//repositories {
+//    maven { url 'https://maven.fabric.io/public' }
+//}
+
+
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        applicationId rootProject.ext.android.applicationId
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
+
+        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+        debug {
+            buildConfigField("boolean", "LOG_DEBUG", "true")
+        }
+
+        release {
+            buildConfigField("boolean", "LOG_DEBUG", "false")
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile project(':library')
+    compile project(':widget')
+//    compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
+//        transitive = true;
+//    }
+    compile rootProject.ext.dependencies["butterknife"]
+    annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
+
+    compile rootProject.ext.dependencies["dagger"]
+    annotationProcessor rootProject.ext.dependencies["dagger-compiler"]
+}

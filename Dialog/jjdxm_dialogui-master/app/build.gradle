@@ -1,0 +1,56 @@
+apply plugin: 'com.android.application'
+
+Properties props = new Properties();
+props.load(new FileInputStream(file(rootProject.file("signing.properties"))))
+
+android {
+
+    signingConfigs {
+        release {
+            keyAlias props['signing.alias']
+            keyPassword props['signing.password']
+            storeFile file(rootProject.file("debug.keystore"))
+            storePassword props['signing.password']
+        }
+
+        debug {
+            keyAlias props['signing.jjdxm_alias']
+            keyPassword props['signing.jjdxm_password']
+            storeFile file(rootProject.file("debug.keystore"))
+            storePassword props['signing.jjdxm_password']
+        }
+    }
+
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        applicationId "com.dou361.jjdxm_dialogui"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+    }
+    buildTypes {
+
+        debug {
+            signingConfig signingConfigs.debug
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile 'com.jakewharton:butterknife:7.0.1'
+    compile rootProject.ext.jjdxm_recyclerview
+    compile project(':jjdxm-dialogui')
+}

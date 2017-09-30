@@ -1,0 +1,53 @@
+apply plugin: 'com.android.application'
+apply plugin: 'weaver'
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
+
+    defaultConfig {
+        applicationId "com.sixthsolution.easymvp.test"
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:25.0.0'
+    compile project(':easymvp-api')
+    compile deps.javax
+    compile deps.rxJava
+
+    compile project(':easymvp-rx-api')
+    annotationProcessor project(':easymvp-compiler')
+    //Butterknife
+    compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+
+    weaver project(':easymvp-weaver')
+    androidTestCompile 'com.android.support:support-annotations:25.0.0'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+}

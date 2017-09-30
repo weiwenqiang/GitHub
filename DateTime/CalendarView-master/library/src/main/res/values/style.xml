@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 日历 -->
+    <declare-styleable name="DayPickerView">
+        <attr name="colorCurrentDay" format="color"/>               <!-- 今天字体颜色 -->
+        <attr name="colorSelectedDayBackground" format="color"/>    <!-- 被选中的日期背景颜色 -->
+        <attr name="colorSelectedDayText" format="color"/>          <!-- 被选中的日期字体颜色 -->
+        <attr name="colorPreviousDayText" format="color"/>          <!-- 已过去的日期字体颜色 -->
+        <attr name="colorNormalDayText" format="color" />           <!-- 正常日期颜色 -->
+        <attr name="colorYearMonthText" format="color" />           <!-- 头部年份月份字体颜色 -->
+        <attr name="colorWeekText" format="color" />                <!-- 头部星期几字体颜色 -->
+        <attr name="colorBusyDaysBg" format="color" />              <!-- 被占用的日期背景颜色 -->
+        <attr name="colorInValidDaysBg" format="color" />           <!-- 禁用的日期背景颜色 -->
+        <attr name="colorBusyDaysText" format="color" />            <!-- 被占用的日期字体颜色 -->
+        <attr name="colorInValidDaysText" format="color" />         <!-- 禁用的日期字体颜色 -->
+
+        <attr name="textSizeDay" format="dimension"/>               <!-- 正常日期字体大小 -->
+        <attr name="textSizeTag" format="dimension"/>               <!-- 标签字体大小 -->
+        <attr name="textSizeYearMonth" format="dimension" />        <!-- 头部年份月份字体大小 -->
+        <attr name="textSizeWeek" format="dimension" />             <!-- 头部星期几字体大小 -->
+        <attr name="headerMonthHeight" format="dimension" />        <!-- 头部高度 -->
+        <attr name="selectedDayRadius" format="dimension" />        <!-- 日期半径 -->
+        <attr name="calendarHeight" format="dimension" />           <!-- 行高 -->
+        <attr name="enablePreviousDay" format="boolean" />          <!-- 已过去的日期是否能被操作 -->
+        <!--<attr name="drawRoundRect" format="boolean" />-->
+        <!--<attr name="leastsSeleDaysNum" format="integer" />-->
+        <!--<attr name="mostSeleDaysNum" format="integer" />-->
+<!--        <attr name="type" format="enum">
+            <enum name="multiChoice" value="0" />
+            <enum name="range" value="1" />
+            <enum name="onlyRead" value="2" />
+        </attr>-->
+<!--        <attr name="firstMonth" format="enum">
+            <enum name="january" value="0" />
+            <enum name="february" value="1" />
+            <enum name="march" value="2" />
+            <enum name="april" value="3" />
+            <enum name="may" value="4" />
+            <enum name="june" value="5" />
+            <enum name="july" value="6" />
+            <enum name="august" value="7" />
+            <enum name="september" value="8" />
+            <enum name="october" value="9" />
+            <enum name="november" value="10" />
+            <enum name="december" value="11" />
+        </attr>
+        <attr name="lastMonth" format="enum">
+            <enum name="january" value="0" />
+            <enum name="february" value="1" />
+            <enum name="march" value="2" />
+            <enum name="april" value="3" />
+            <enum name="may" value="4" />
+            <enum name="june" value="5" />
+            <enum name="july" value="6" />
+            <enum name="august" value="7" />
+            <enum name="september" value="8" />
+            <enum name="october" value="9" />
+            <enum name="november" value="10" />
+            <enum name="december" value="11" />
+        </attr>-->
+    </declare-styleable>
+</resources>

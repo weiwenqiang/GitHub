@@ -1,0 +1,2 @@
+include ':thirtyinch', ':plugin', ':sample', ':rx', ':test', ':plugin-test', ':rx2',
+        ':logginginterceptor'

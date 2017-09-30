@@ -1,0 +1,201 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:indicatorView="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.baronzhang.android.weather.view.fragment.HomePageFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cv_weather_information"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="8dp"
+            app:cardElevation="1dp"
+            app:contentPadding="8dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants">
+
+                <TextView
+                    android:id="@+id/temp_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:includeFontPadding="false"
+                    android:textSize="96sp"
+                    tools:text="12°" />
+
+                <ImageView
+                    android:id="@+id/weather_icon_image_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/temp_text_view"
+                    android:contentDescription="@string/content_description_default"
+                    android:src="@mipmap/ic_launcher" />
+
+                <TextView
+                    android:id="@+id/weather_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/weather_icon_image_view"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/publish_time_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/weather_text_view" />
+
+                <View
+                    android:id="@+id/line"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/publish_time_text_view"
+                    android:layout_margin="4dp"
+                    android:background="@android:color/darker_gray" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/forecast_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/line"
+                    android:layout_margin="4dp"
+                    android:layout_marginTop="4dp"
+                    tools:listitem="@layout/item_forecast" />
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cv_aqi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="4dp"
+            app:cardElevation="1dp"
+            app:contentPadding="8dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/aqi_title_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/string_aqi_title" />
+
+                <TextView
+                    android:id="@+id/tv_aqi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/aqi_title_text_view"
+                    android:layout_marginTop="8dp"
+                    android:includeFontPadding="false"
+                    android:textSize="48sp"
+                    tools:text="29" />
+
+                <TextView
+                    android:id="@+id/tv_quality"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/tv_aqi"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_toEndOf="@id/tv_aqi"
+                    android:layout_toRightOf="@id/tv_aqi"
+                    android:includeFontPadding="false"
+                    android:textSize="26sp"
+                    tools:text="优" />
+
+                <com.baronzhang.android.widget.IndicatorView
+                    android:id="@+id/indicator_view_aqi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/tv_aqi"
+                    android:layout_alignStart="@id/tv_aqi"
+                    android:layout_below="@id/tv_aqi"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="16dp"
+                    indicatorView:indicatorValue="0"
+                    indicatorView:intervalSize="0dp"
+                    indicatorView:marker="@drawable/ic_vector_indicator_down"
+                    indicatorView:textSize="8sp" />
+
+                <TextView
+                    android:id="@+id/tv_advice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/tv_aqi"
+                    android:layout_alignStart="@id/tv_aqi"
+                    android:layout_below="@id/indicator_view_aqi"
+                    tools:text="气象条件不利于空气污染物稀释、扩散和清除，请尽量避免在室外长时间活动。" />
+
+                <TextView
+                    android:id="@+id/tv_city_rank"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/tv_advice"
+                    android:layout_marginTop="6dp"
+                    tools:text="空气质量超过全国4%的城市或地区" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/index_card_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="4dp"
+            app:cardElevation="1dp"
+            app:contentPadding="8dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants">
+
+                <TextView
+                    android:id="@+id/index_title_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/string_index_title" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/life_index_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/index_title_text_view"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="12dp"
+                    tools:listitem="@layout/item_life_index" />
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+</ScrollView>

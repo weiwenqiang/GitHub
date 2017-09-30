@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.scwang.refreshlayout">
+
+    <!-- 读取SD卡权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 网络状态权限 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 网络访问权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 设备编号权限 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <application
+        android:name=".App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".activity.IndexMainActivity"
+            android:label="@string/title_activity_index_main">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.ExperimentActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.style.FlyRefreshStyleActivity"
+            android:label="@string/title_activity_fly_refresh"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.using.NestLayoutUsingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.style.WaveSwipStyleActivity"
+            android:label="@string/title_activity_style_wave_swip"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.style.MaterialStyleActivity"
+            android:label="@string/title_activity_style_material"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.style.WaterDropStyleActivity"
+            android:label="@string/title_activity_style_water_drop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.style.PhoenixStyleActivity"
+            android:label="@string/title_activity_style_phoenix"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.style.TaurusStyleActivity"
+            android:label="@string/title_activity_style_taurus"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.style.BezierStyleActivity"
+            android:label="@string/title_activity_style_bezier"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.style.ClassicsStyleActivity"
+            android:label="@string/title_activity_style_classics"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.style.CircleStyleActivity"
+            android:label="@string/title_activity_style_circle"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.style.FunGameBattleCityStyleActivity"
+            android:label="@string/title_activity_style_fungame_battlecity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.style.FunGameHitBlockStyleActivity"
+            android:label="@string/title_activity_style_fungame_hitblock"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.style.StoreHouseStyleActivity"
+            android:label="@string/title_activity_style_storehouse"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.style.DropboxStyleActivity"
+            android:label="@string/title_activity_style_dropbox"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.style.DeliveryStyleActivity"
+            android:label="@string/title_activity_style_dropbox"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.using.BasicUsingActivity"
+            android:label="@string/title_activity_using_basic"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.using.AssignDefaultUsingActivity"
+            android:label="@string/title_activity_using_assign_default"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.using.AssignXmlUsingActivity"
+            android:label="@string/title_activity_using_assign_xml"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.using.AssignCodeUsingActivity"
+            android:label="@string/title_activity_using_assign_code"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.using.OverScrollUsingActivity"
+            android:label="@string/title_activity_using_overscroll"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.using.ListenerUsingActivity"
+            android:label="@string/title_activity_using_listener"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.practice.RepastPracticeActivity"
+            android:label="@string/title_activity_practice_repast"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.practice.ProfilePracticeActivity"
+            android:label="@string/title_activity_practice_profile"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.practice.WebviewPracticeActivity"
+            android:label="@string/title_activity_practice_profile"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.practice.FeedlistPracticeActivity"
+            android:label="@string/title_activity_practice_feedlist"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.practice.WeiboPracticeActivity"
+            android:label="@string/title_activity_practice_weibo"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.practice.BannerPracticeActivity"
+            android:label="@string/title_activity_practice_banner"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.practice.QQBrowserPracticeActivity"
+            android:label="@string/title_activity_practice_qqbrowser"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.using.CustomUsingActivity"
+            android:label="@string/title_activity_using_custom"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.using.SnapHelperUsingActivity"
+            android:label="@string/title_activity_using_snaphelper"
+            android:screenOrientation="portrait"/>
+    </application>
+
+</manifest>

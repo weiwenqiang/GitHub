@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none"
+    tools:context="com.nightonke.wowoviewpagerexample.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/basic_animations"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:gravity="center_vertical"
+            />
+
+        <Button
+            android:id="@+id/wowo_position_animation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wowo_position_animation"
+            />
+
+        <Button
+            android:id="@+id/wowo_translation_animation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wowo_translation_animation"
+            />
+
+        <Button
+            android:id="@+id/wowo_scale_animation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wowo_scale_animation"
+            />
+
+        <Button
+            android:id="@+id/wowo_alpha_animation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wowo_alpha_animation"
+            />
+
+        <Button
+            android:id="@+id/wowo_rotation_animation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wowo_rotation_animation"
+            />
+
+        <Button
+            android:id="@+id/wowo_elevation_animation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wowo_elevation_animation"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/text_view_animations"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:gravity="center_vertical"
+            />
+
+        <Button
+            android:id="@+id/wowo_text_view_text_size_animation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wowo_text_view_text_size_animation"
+            />
+
+        <Button
+            android:id="@+id/wowo_text_view_color_animation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wowo_text_view_color_animation"
+            />
+
+        <Button
+            android:id="@+id/wowo_text_view_text_animation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wowo_text_view_text_animation"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/color_animations"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:gravity="center_vertical"
+            />
+
+        <Button
+            android:id="@+id/wowo_background_color_animation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wowo_background_color_animation"
+            />
+
+        <Button
+            android:id="@+id/wowo_drawable_color_animation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wowo_drawable_color_animation"
+            />
+
+        <Button
+            android:id="@+id/wowo_state_list_color_animation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wowo_state_list_color_animation"
+            />
+
+        <Button
+            android:id="@+id/wowo_layer_list_color_animation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wowo_layer_list_color_animation"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/path_animations"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:gravity="center_vertical"
+            />
+
+        <Button
+            android:id="@+id/wowo_path_animation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wowo_path_animation"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/view_pager_attributes"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:gravity="center_vertical"
+            />
+
+        <Button
+            android:id="@+id/gearbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/gearbox"
+            />
+
+        <Button
+            android:id="@+id/static_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/static_view_pager"
+            />
+
+        <Button
+            android:id="@+id/auto_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/auto_scroll"
+            />
+
+        <Button
+            android:id="@+id/direction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/direction"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/interface_expansibility"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:gravity="center_vertical"
+            />
+
+        <Button
+            android:id="@+id/svg_expansibility"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/svg_expansibility"
+            />
+
+        <Button
+            android:id="@+id/gif_expansibility"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/gif_expansibility"
+            />
+
+        <Button
+            android:id="@+id/custom_animation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/custom_animation"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/example"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:gravity="center_vertical"
+            />
+
+        <Button
+            android:id="@+id/guide_page_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/guide_page_1"
+            />
+
+        <Button
+            android:id="@+id/guide_page_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/guide_page_2"
+            />
+
+    </LinearLayout>
+
+</ScrollView>

@@ -1,0 +1,26 @@
+apply plugin: 'groovy'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.1.6'
+}
+
+task runScript(dependsOn: 'classes', type: JavaExec) {
+    description 'Run Groovy script'
+
+    // Set main property to name of Groovy script class.
+    main = 'ConvertXML2Json'
+
+    // Set classpath for running the Groovy script.
+    classpath = sourceSets.main.runtimeClasspath
+
+    if (project.hasProperty('xml')) {
+        // Pass command-line argument to script.
+        args new File(".").absolutePath + File.separator + project.getProperty('xml')
+    }
+}
+
+defaultTasks 'runScript'

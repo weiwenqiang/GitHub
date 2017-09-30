@@ -1,0 +1,52 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+apply plugin: 'com.android.application'
+
+ext {
+    PUBLISH_VERSION = '0.9.3.0'
+    SUPPORT_LIBRARY_VERSION = '25.1.1'
+    BUILD_TOOLS = "25.0.2"
+    TARGET_SDK = 25
+}
+
+android {
+    compileSdkVersion TARGET_SDK
+    buildToolsVersion BUILD_TOOLS
+
+    defaultConfig {
+        applicationId "com.afollestad.materialdialogssample"
+        minSdkVersion 13
+        targetSdkVersion TARGET_SDK
+        versionCode 171
+        versionName PUBLISH_VERSION
+
+        jackOptions {
+            enabled true
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    lintOptions {
+        abortOnError false
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+}
+
+dependencies {
+    compile project(':core')
+    compile project(':commons')
+    compile "com.android.support:gridlayout-v7:$SUPPORT_LIBRARY_VERSION"
+    compile 'com.jakewharton:butterknife:8.1.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.1.0'
+}

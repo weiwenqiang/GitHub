@@ -1,0 +1,98 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.base.util.helper.RouterHelper" />
+
+        <import type="com.base.entity.DataExtra" />
+
+        <import type="com.C" />
+
+        <variable
+            name="item"
+            type="com.model.ImageInfo" />
+    </data>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/card_margin"
+        android:foreground="?attr/selectableItemBackground"
+        android:onClick="@{()->RouterHelper.go(C.ARTICLE,DataExtra.getExtra(C.HEAD_DATA,item),image)}"
+        android:paddingLeft="8dp"
+        android:background="?attr/backgroundCard"
+        android:paddingRight="8dp"
+        android:paddingTop="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/backgroundCard"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <LinearLayout
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="120dp"
+                    android:layout_height="100dp"
+                    android:scaleType="centerCrop"
+                    app:imageUrl="@{item.image}" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minLines="2"
+                    android:text="@{item.title}"
+                    android:textColor="?attr/textColor"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_des"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@{item.author}"
+                    android:textColor="?attr/textColor"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="@{item.type}"
+                    android:textColor="?attr/textColor"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@{item.createdAt}"
+                    android:textColor="?attr/textColor" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</layout>

@@ -1,0 +1,43 @@
+apply plugin: 'com.android.application'
+
+def getGooglePlayServicesApiKey() {
+    if (REACTIVE_LOCATION_GMS_API_KEY != null && !REACTIVE_LOCATION_GMS_API_KEY.isEmpty()) {
+        return REACTIVE_LOCATION_GMS_API_KEY;
+    }
+    return ""
+}
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionName project.VERSION_NAME
+        versionCode Integer.parseInt(project.VERSION_CODE)
+        resValue "string", "API_KEY", getGooglePlayServicesApiKey()
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
+    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar'
+    compile project(':android-reactive-location')
+}

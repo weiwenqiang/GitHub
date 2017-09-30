@@ -1,0 +1,35 @@
+apply plugin: 'java'
+
+version rootProject.ext.VERSION_NAME
+group rootProject.ext.GROUP
+
+[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
+
+task buildTinkerSdk(type: Copy, dependsOn: [build]) {
+    group = "tinker"
+    from('build/libs') {
+        include '*.jar'
+        exclude '*javadoc.jar'
+        exclude '*-sources.jar'
+    }
+    into(rootProject.file("buildSdk/android"))
+}
+
+apply from: rootProject.file('gradle/java-artifacts.gradle')
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

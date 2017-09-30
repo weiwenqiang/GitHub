@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hpw.myapp.ui.publish.DefEmoticonsKeyBoard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ek_bar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <TextView
+                    android:id="@+id/tv_cancel"
+                    style="@style/style_title"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="取消" />
+
+                <TextView
+                    style="@style/style_title"
+                    android:layout_centerInParent="true"
+                    android:text="发布观点" />
+
+                <TextView
+                    android:id="@+id/tv_publish"
+                    style="@style/style_title"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:text="发布"
+                    android:textColor="@color/font_dark_gery" />
+            </RelativeLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <include layout="@layout/layout_edittext" />
+    </LinearLayout>
+</com.hpw.myapp.ui.publish.DefEmoticonsKeyBoard>

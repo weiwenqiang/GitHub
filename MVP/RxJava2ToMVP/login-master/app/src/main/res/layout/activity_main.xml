@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f4f4f4"
+    android:orientation="vertical"
+    android:paddingLeft="25dp"
+    android:paddingRight="25dp">
+
+
+    <TextView
+        android:textColor="@color/blueTextColor"
+        android:layout_marginTop="70dp"
+        android:gravity="center"
+        android:textSize="40sp"
+        android:textAllCaps="false"
+        android:text="Welcome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <com.chen.test.Utils.ClearEditText
+            android:text="13545678370"
+            android:textCursorDrawable="@drawable/color_cursor"
+            android:id="@+id/user"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/style_edt_login"
+            android:drawableLeft="@mipmap/ic_account"
+            android:drawablePadding="10dp"
+            android:hint="你的手机号"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:nextFocusForward="@+id/pass"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:singleLine="true"
+            android:textSize="14sp" />
+
+        <com.chen.test.Utils.ClearEditText
+            android:text="123456"
+            android:textCursorDrawable="@drawable/color_cursor"
+            android:id="@+id/pass"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/style_edt_login"
+            android:drawableLeft="@mipmap/ic_password"
+            android:drawablePadding="10dp"
+            android:hint="请输入密码"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:singleLine="true"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/register"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_marginRight="15dp"
+                android:layout_weight="1"
+                android:background="@drawable/style_btn_register"
+                android:text="注册账号"
+                android:textAllCaps="false"
+                android:textColor="@drawable/style_btn_color"
+                android:textSize="14sp" />
+
+            <Button
+                android:enabled="false"
+                android:id="@+id/login"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:background="@drawable/style_btn_enable"
+                android:text="登录"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/forget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="15dp"
+            android:text="忘记密码?"
+            android:textColor="@android:color/holo_blue_light"
+            android:textSize="14sp" />
+    </LinearLayout>
+</LinearLayout>

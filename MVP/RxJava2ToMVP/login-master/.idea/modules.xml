@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Test.iml" filepath="$PROJECT_DIR$/Test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/login-master.iml" filepath="$PROJECT_DIR$/login-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mvp/mvp.iml" filepath="$PROJECT_DIR$/mvp/mvp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mvp/mvp.iml" filepath="$PROJECT_DIR$/mvp/mvp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mydagger/mydagger.iml" filepath="$PROJECT_DIR$/mydagger/mydagger.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mydagger/mydagger.iml" filepath="$PROJECT_DIR$/mydagger/mydagger.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mynet/mynet.iml" filepath="$PROJECT_DIR$/mynet/mynet.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mynet/mynet.iml" filepath="$PROJECT_DIR$/mynet/mynet.iml" />
+      <module fileurl="file://$PROJECT_DIR$/videoview/videoview.iml" filepath="$PROJECT_DIR$/videoview/videoview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/videoview/videoview.iml" filepath="$PROJECT_DIR$/videoview/videoview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wheel/wheel.iml" filepath="$PROJECT_DIR$/wheel/wheel.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wheel/wheel.iml" filepath="$PROJECT_DIR$/wheel/wheel.iml" />
+    </modules>
+  </component>
+</project>

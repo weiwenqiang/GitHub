@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2017 lizhaotailang
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v7.preference.PreferenceCategory android:title="@string/app_name">
+
+        <android.support.v7.preference.Preference android:title="@string/version" />
+
+        <android.support.v7.preference.Preference android:title="@string/rate"
+            android:key="rate"
+            android:summary="@string/rate_description" />
+
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory android:title="@string/author">
+
+        <android.support.v7.preference.Preference android:title="@string/author_name"
+            android:key="author"
+            android:summary="@string/author_description"/>
+
+        <android.support.v7.preference.Preference
+            android:title="@string/follow_me_on_github"
+            android:key="follow_me_on_github"
+            android:summary="@string/github_url"/>
+
+        <android.support.v7.preference.Preference
+            android:title="@string/follow_me_on_zhihu"
+            android:key="follow_me_on_zhihu"
+            android:summary="@string/zhihu_account"/>
+
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory android:title="@string/support">
+
+        <android.support.v7.preference.Preference android:title="@string/feedback"
+            android:key="feedback"
+            android:summary="@string/feedback_description"/>
+
+        <android.support.v7.preference.Preference android:title="@string/coffee"
+            android:key="coffee"
+            android:summary="@string/coffee_description"/>
+
+        <android.support.v7.preference.Preference android:title="@string/open_source_license"
+            android:key="open_source_license" />
+
+    </android.support.v7.preference.PreferenceCategory>
+
+</android.support.v7.preference.PreferenceScreen>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="show message"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:layout_above="@+id/start_activity"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"/>
+    <TextView
+        android:id="@+id/start_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="开"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:background="@drawable/round_button"
+        android:textSize="20sp"/>
+</RelativeLayout>

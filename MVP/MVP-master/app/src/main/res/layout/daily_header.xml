@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.hpw.mvpframe.widget.recyclerview.recyclerviewpager.LoopRecyclerViewPager
+        android:id="@+id/vp_top"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_viewpager_height"
+        android:clipToPadding="false"
+        app:rvp_singlePageFling="true"
+        app:rvp_triggerOffset="0.1" />
+
+</RelativeLayout>

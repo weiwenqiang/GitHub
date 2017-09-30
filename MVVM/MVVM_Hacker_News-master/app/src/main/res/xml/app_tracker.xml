@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="ga_sessionTimeout">300</integer>
+
+    <bool name="ga_autoActivityTracking">true</bool>
+
+    <screenName name="com.hitherejoe.mvvm_hackernews.view.activity.MainActivity">
+        HackerNewsReader MainActivity
+    </screenName>
+    <screenName name="com.hitherejoe.mvvm_hackernews.view.activity.AboutActivity">
+        HackerNewsReader AboutActivity
+    </screenName>
+    <screenName name="com.hitherejoe.mvvm_hackernews.view.activity.BookmarksActivity">
+        HackerNewsReader BookmarksActivity
+    </screenName>
+    <screenName name="com.hitherejoe.mvvm_hackernews.view.activity.CommentsActivity">
+        HackerNewsReader CommentsActivity
+    </screenName>
+    <screenName name="com.hitherejoe.mvvm_hackernews.view.activity.UserActivity">
+        HackerNewsReader UserActivity
+    </screenName>
+    <screenName name="com.hitherejoe.mvvm_hackernews.view.activity.ViewStoryActivity">
+        HackerNewsReader WebPageActivity
+    </screenName>
+    <!--  The following value should be replaced with correct property id. -->
+    <string name="ga_trackingId">UA-00000000-0</string>
+</resources>

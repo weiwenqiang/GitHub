@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/colorBackground">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/contact_bar" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="QQ群："
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="482866708"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="邮件："
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="424346976@qq.com"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="App based on Material Design + MVP + Rxjava + Retrofit + Okhttp + Glide + cache + others" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="4dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="20dp"
+                        android:text="项目简介"
+                        android:textSize="@dimen/txt_14sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/divider_color" />
+
+                <TextView
+                    android:id="@+id/tv_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15dp"
+                    android:paddingLeft="25dp"
+                    android:paddingRight="25dp"
+                    android:paddingTop="15dp"
+                    android:text="* 使用Rxjava配合Retrofit2+okhttp做网络请求和缓存\n* 使用RxUtil对线程操作和网络请求结果处理做了封装\n* 使用RxManager对订阅生命周期做了统一管理\n* 使用RxBus做了组件间通信\n* 使用RxPermissions对android6.0进行权限申请\n* 使用Material Design控件和动画\n* 使用MVP架构整个项目，并且抽取出core做为库，导入core即可省去50%的代码开发哦\n* 使用Glide做图片处理和加载\n* 使用Fragmentation简化Fragment的操作和懒加载\n* 日间和夜间模式切换\n* 自己封装了recyclerview和recyclerviewpager实现下拉刷新，上拉加载更多和pagerview功能（只需简单几句代码即可实现各种列表，无需adapter，无需自己设计分页加载）\n* 使用x5WebView做阅览页\n* 日报首页的头部可以循环滚动（使用了rxjava轮循和recyclerviewpager）" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="4dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="20dp"
+                        android:text="欢迎fork,star"
+                        android:textSize="@dimen/txt_14sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/divider_color" />
+
+                <TextView
+                    android:id="@+id/tv_content1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15dp"
+                    android:paddingLeft="25dp"
+                    android:paddingRight="25dp"
+                    android:paddingTop="15dp"
+                    android:text="https://github.com/SuperMan42/MVP"
+                    android:textColor="@color/md_blue_500" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

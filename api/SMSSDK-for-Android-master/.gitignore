@@ -1,0 +1,19 @@
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+*.iml
+
+#IDEA
+#/.idea/workspace.xml
+#/.idea/libraries
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# hprof file
+*.hprof

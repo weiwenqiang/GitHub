@@ -1,0 +1,50 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+
+    <!--CollapsingToolbarLayout展开时标题文字样式-->
+    <style name="ExpandedTitleTextStyle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">#fff</item>
+    </style>
+
+    <!--CollapsingToolbarLayout折叠时标题文字样式-->
+    <style name="CollapsedTitleTextStyle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#f00</item>
+    </style>
+
+
+    <style name="TabTextStyle" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="SeachViewActivityTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/netease_red</item>
+        <item name="colorPrimaryDark">@color/netease_red</item>
+        <item name="colorAccent">@color/netease_red</item>
+        <!--toolbar菜单项图标的颜色-->
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <!--修改searchView样式-->
+        <item name="searchViewStyle">@style/SearchViewStyle</item>
+    </style>
+
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="searchIcon">@mipmap/ic_search</item>
+        <item name="searchHintIcon">@null</item>
+    </style>
+
+    <!--NavigationIcon和标题之间的距离-->
+    <style name="ToolbarStyle" parent="Base.Widget.AppCompat.Toolbar">
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+    </style>
+
+</resources>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Hacker News</string>
+    <string name="loading">Loading&#8230;</string>
+
+    <!-- Activity labels -->
+    <string name="label_bookmarks">Bookmarks</string>
+
+    <!-- Option menus -->
+    <string name="action_view_on_github">View on GitHub</string>
+    <string name="action_view_in_browser">View in Browser</string>
+    <string name="action_share">Share</string>
+    <string name="action_bookmark">Bookmark</string>
+    <string name="action_view_bookmarks">View Bookmarks</string>
+
+    <!-- Comments -->
+    <string name="text_comment_author">%s -&#160;</string>
+    <string name="no_comments">No comments yet!</string>
+
+    <!-- Post card -->
+    <string name="view_button">VIEW</string>
+    <string name="text_post_author">&#160;- %s</string>
+    <string name="story_points">&#160;points</string>
+    <string name="seperator_name_points">-</string>
+    <string name="via">via</string>
+
+    <!-- Bookmark cards -->
+    <string name="comments_button">COMMENTS</string>
+    <string name="remove_button">REMOVE</string>
+
+    <!-- Bookmarks -->
+    <string name="no_bookmarks">No bookmarks yet!</string>
+    <string name="bookmark_added">Bookmark added</string>
+    <string name="bookmark_removed">Bookmark removed</string>
+    <string name="bookmark_exists">Bookmark already exists</string>
+    <string name="bookmark_error">There was a problem adding the bookmark</string>
+
+    <!-- Error messages -->
+    <string name="error_stories">Sorry, unable to load stories!</string>
+    <string name="error_comments">Sorry, unable to load comments!</string>
+    <string name="error_post">Sorry, unable to load post!</string>
+    <string name="error_generic">Sorry, an error occurred!</string>
+    <string name="error_connection">No internet connection detected</string>
+    <string name="error_getting_bookmarks">Error retrieving bookmarks</string>
+    <string name="error_removing_bookmark">Error removing bookmark</string>
+    <string name="try_again">Try again</string>
+
+    <!-- Dialog strings -->
+    <string name="dialog_action_ok">OK</string>
+    <string name="dialog_error_title">Oops</string>
+    <string name="dialog_rate_app_title">Rate</string>
+    <string name="dialog_rate_app_text">Enjoying this app? Why not rate it!</string>
+    <string name="dialog_neutral_button_text">Later</string>
+    <string name="dialog_negative_button_text">No, thanks</string>
+    <string name="dialog_positive_button_text">Rate</string>
+
+</resources>

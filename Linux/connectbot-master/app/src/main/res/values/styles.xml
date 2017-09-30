@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+/*
+ ~ ConnectBot: simple, powerful, open-source SSH client for Android
+ ~ Copyright 2015 Kenny Root, Jeffrey Sharkey
+ ~
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~     http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+ */
+-->
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+	<style name="AppTheme" parent="@style/PreferenceFixTheme">
+		<item name="colorPrimary">@color/primary</item>
+		<item name="colorPrimaryDark">@color/dark_primary</item>
+		<item name="colorAccent">@color/accent</item>
+		<item name="alertDialogTheme">@style/AlertDialogTheme</item>
+	</style>
+
+	<style name="AlertDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
+		<item name="colorAccent">@color/accent</item>
+	</style>
+
+	<style name="KeyboardKey">
+		<item name="android:layout_width">45dip</item>
+		<item name="android:layout_height">30dip</item>
+		<item name="android:layout_margin">0dp</item>
+		<item name="android:padding">0dp</item>
+		<item name="android:textSize">10sp</item>
+	</style>
+
+	<style name="KeyboardButton" parent="KeyboardKey">
+		<item name="android:background">@drawable/keyboard_button_selector</item>
+	</style>
+
+	<style name="ListItemIcon">
+		<item name="android:layout_marginLeft">@dimen/list_item_left_right_padding</item>
+		<item name="android:layout_marginStart" tools:ignore="NewApi">@dimen/list_item_left_right_padding</item>
+		<item name="android:layout_centerVertical">true</item>
+		<item name="android:layout_alignParentLeft">true</item>
+		<item name="android:layout_alignParentStart" tools:ignore="NewApi">true</item>
+	</style>
+
+	<style name="ListItemFirstLineText">
+		<item name="android:layout_alignParentTop">true</item>
+		<item name="android:textColor">?android:textColorPrimary</item>
+		<item name="android:textSize">@dimen/list_item_first_line_text_size</item>
+		<item name="android:paddingTop">@dimen/list_item_top_bottom_padding</item>
+		<item name="android:layout_alignParentLeft">true</item>
+		<item name="android:layout_alignParentStart" tools:ignore="NewApi">true</item>
+	</style>
+
+	<style name="ListItemFirstLineText.WithIcon" parent="ListItemFirstLineText">
+		<item name="android:layout_marginLeft">@dimen/list_item_text_margin_left</item>
+		<item name="android:layout_marginStart" tools:ignore="NewApi">@dimen/list_item_text_margin_left</item>
+	</style>
+
+	<style name="ListItemSecondLineText">
+		<item name="android:layout_alignParentBottom">true</item>
+		<item name="android:textColor">?android:textColorSecondary</item>
+		<item name="android:textSize">@dimen/list_item_second_line_text_size</item>
+		<item name="android:paddingBottom">@dimen/list_item_top_bottom_padding</item>
+		<item name="android:layout_alignParentLeft">true</item>
+		<item name="android:layout_alignParentStart" tools:ignore="NewApi">true</item>
+	</style>
+
+	<style name="ListItemSecondLineText.WithIcon" parent="ListItemSecondLineText">
+		<item name="android:layout_marginLeft">@dimen/list_item_text_margin_left</item>
+		<item name="android:layout_marginStart" tools:ignore="NewApi">@dimen/list_item_text_margin_left</item>
+	</style>
+
+	<style name="ListItemFirstLineText.Red" parent="ListItemFirstLineText">
+		<item name="android:textColor">@color/red</item>
+	</style>
+
+	<style name="ListItemSecondLineText.Red" parent="ListItemSecondLineText">
+		<item name="android:textColor">@color/red</item>
+	</style>
+
+	<style name="ListItemFirstLineText.Green" parent="ListItemFirstLineText">
+		<item name="android:textColor">@color/green</item>
+	</style>
+
+	<style name="ListItemSecondLineText.Green" parent="ListItemSecondLineText">
+		<item name="android:textColor">@color/green</item>
+	</style>
+
+	<style name="ListItemFirstLineText.Blue" parent="ListItemFirstLineText">
+		<item name="android:textColor">@color/blue</item>
+	</style>
+
+	<style name="ListItemSecondLineText.Blue" parent="ListItemSecondLineText">
+		<item name="android:textColor">@color/blue</item>
+	</style>
+
+	<!-- This value is overridden for v11 and higher, but left empty here. -->
+	<style name="SelectableItem"></style>
+
+	<style name="SwitchCompatTheme" parent="Theme.AppCompat">
+		<item name="colorAccent">@color/accent</item>
+	</style>
+
+</resources>

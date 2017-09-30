@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="#E0E0E0"
+    android:orientation="vertical"
+    tools:context=".ExampleActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/button1"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_anchor"
+            android:tint="@color/colorAccent"
+            android:background="?android:selectableItemBackground"
+            />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="VERTICAL POSITION"
+            android:textColor="@color/colorAccent"
+            />
+
+        <Spinner
+            android:id="@+id/spinner_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:padding="8dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HORIZONTAL POSITION"
+            android:textColor="@color/colorAccent"
+            />
+
+        <Spinner
+            android:id="@+id/spinner_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:padding="8dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WIDTH"
+            android:textColor="@color/colorAccent"
+            />
+
+        <Spinner
+            android:id="@+id/spinner_width"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:padding="8dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HEIGHT"
+            android:textColor="@color/colorAccent"
+            />
+
+        <Spinner
+            android:id="@+id/spinner_height"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:padding="8dp"
+            />
+
+        <CheckBox
+            android:id="@+id/checkbox_fit_in_screen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fit In Screen"
+            android:checked="true"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

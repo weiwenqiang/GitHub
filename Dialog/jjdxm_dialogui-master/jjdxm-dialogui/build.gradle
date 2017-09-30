@@ -1,0 +1,62 @@
+apply plugin: 'com.android.library'
+
+ext {
+    //类库的module名、bintray上项目名、artifactId最好是一致的
+    jjdxm_bintrayRepo = 'maven'
+    jjdxm_bintrayName = 'jjdxm-dialogui'
+
+    jjdxm_packaging = 'aar'
+    jjdxm_groupId = 'com.dou361.dialogui'
+    jjdxm_artifactId = 'jjdxm-dialogui'
+
+    jjdxm_libraryVersion = '1.0.3'
+    jjdxm_libraryName = 'jjdxm-dialogui'
+    jjdxm_libraryDescription = 'this is a dialogui dialogui of the application'
+
+    jjdxm_siteUrl = 'https://github.com/jjdxmashl/jjdxm_dialogui'
+    jjdxm_gitUrl = 'https://github.com/jjdxmashl/jjdxm_dialogui.git'
+
+    jjdxm_developerId = 'jjdxmashl'
+    jjdxm_developerName = 'jjdxmashl'
+    jjdxm_developerEmail = '316988670@qq.com'
+
+    jjdxm_licenseName = 'The Apache Software License, Version 2.0'
+    jjdxm_licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    jjdxm_allLicenses = ["Apache-2.0"]
+
+    jjdxm_singlePath = 'build/intermediates/classes/release'
+    jjdxm_singleJar = jjdxm_artifactId + '-' + jjdxm_libraryVersion + '.jar'
+}
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.jjdxm_minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.jjdxm_versionCode
+        versionName rootProject.ext.jjdxm_versionName
+    }
+    buildTypes {
+        release {
+            //混淆
+            minifyEnabled false
+            //Zipalign优化
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
+//            consumerProguardFiles 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile rootProject.ext.jjdxm_v7
+    compile rootProject.ext.jjdxm_design
+}
+
+//apply from: 'https://raw.githubusercontent.com/jjdxmashl/jjdxm_ecodingprocess/master/bulidlib.gradle'
+//apply from: 'https://raw.githubusercontent.com/jjdxmashl/jjdxm_ecodingprocess/master/bintray.gradle'

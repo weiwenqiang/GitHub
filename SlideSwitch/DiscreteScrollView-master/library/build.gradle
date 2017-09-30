@@ -1,0 +1,29 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+}
+
+dependencies {
+    compile "com.android.support:appcompat-v7:$supportLibVersion"
+    compile "com.android.support:recyclerview-v7:$supportLibVersion"
+}
+
+publish {
+    artifactId = 'discrete-scrollview'
+    userOrg = rootProject.userOrg
+    groupId = rootProject.groupId
+    uploadName = rootProject.uploadName
+    publishVersion = rootProject.publishVersion
+    description = rootProject.description
+    licences = rootProject.licences
+}

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.amap.api.maps.MapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_250dp"
+                android:layout_marginTop="@dimen/dimen_50dp" />
+
+            <ImageView
+                android:id="@+id/location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_15dp"
+                android:layout_marginTop="@dimen/dimen_250dp"
+                android:src="@drawable/ic_my_location" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_150dp"
+                android:src="@drawable/ic_map_incubator" />
+
+            <com.hpw.myapp.widget.scrolllayout.ScrollLayout
+                android:id="@+id/scroll_down_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.hpw.myapp.widget.scrolllayout.content.ContentListView
+                        android:id="@+id/list_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/white" />
+
+                </RelativeLayout>
+            </com.hpw.myapp.widget.scrolllayout.ScrollLayout>
+        </FrameLayout>
+
+        <include layout="@layout/layout_search_title" />
+    </FrameLayout>
+
+</RelativeLayout>

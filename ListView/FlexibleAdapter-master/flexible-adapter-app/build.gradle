@@ -1,0 +1,80 @@
+apply plugin: "com.android.application"
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.jakewharton.hugo'
+
+android {
+	compileSdkVersion targetSdk
+	buildToolsVersion buildTools
+
+	defaultConfig {
+		applicationId "eu.davidea.examples.flexibleadapter"
+		minSdkVersion minSdk
+		targetSdkVersion targetSdk
+		versionCode libraryCode
+		versionName libraryVersion + libraryDate
+
+		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+		applicationVariants.all { variant ->
+			variant.outputs.each { output ->
+				def file = output.outputFile
+				def fileName = "flexible-adapter-v" + libraryVersion + "-c" + versionCode + ".apk"
+				output.outputFile = new File(file.parentFile, fileName)
+			}
+		}
+	}
+	buildTypes {
+		debug {
+			versionNameSuffix " build"
+			minifyEnabled false
+		}
+		release {
+			zipAlignEnabled true
+			minifyEnabled false
+		}
+	}
+	testOptions {
+		unitTests.returnDefaultValues = true
+	}
+}
+
+dependencies {
+	//Testing
+	androidTestCompile supportDependencies.annotations
+	androidTestCompile 'com.android.support.test:runner:0.5'
+	androidTestCompile 'com.android.support.test:rules:0.5'
+	testCompile 'org.robolectric:robolectric:3.1.2'
+	testCompile 'junit:junit:4.12'
+	testCompile 'org.mockito:mockito-core:2.0.71-beta'
+
+	//FlexibleAdapter
+	compile project (":flexible-adapter")
+
+	//FlipView
+	compile "eu.davidea:flipview:1.1.2"
+
+	//ButterKnife
+	compile 'com.jakewharton:butterknife:8.0.1'
+	apt 'com.jakewharton:butterknife-compiler:8.0.1'
+
+	//Support Libraries
+	compile supportDependencies.appcompat
+	compile supportDependencies.cardview
+	compile (supportDependencies.design) {
+		exclude module: "support-v4"
+		exclude module: "support-annotations"
+	}
+	compile (supportDependencies.recyclerview) {
+		exclude module: "support-v4";
+		exclude module: "support-annotations"
+	}
+
+	//Glide (Image Loader)
+	compile 'com.github.bumptech.glide:glide:3.7.0'
+
+	//Smooth-app-bar-layout
+	compile ('me.henrytao:smooth-app-bar-layout:24.1.1.0') {
+		exclude group: "com.android.support"
+	}
+
+}

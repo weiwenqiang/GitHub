@@ -1,0 +1,45 @@
+apply plugin: 'com.android.application'
+
+android {
+  compileSdkVersion rootProject.ext.compileSdkVersion
+  buildToolsVersion rootProject.ext.buildToolsVersion
+
+  compileOptions {
+    sourceCompatibility = rootProject.ext.sourceCompatibilityVersion
+    targetCompatibility = rootProject.ext.targetCompatibilityVersion
+  }
+
+  defaultConfig {
+    applicationId 'com.example.butterknife'
+    minSdkVersion rootProject.ext.minSdkVersion
+    targetSdkVersion rootProject.ext.targetSdkVersion
+    versionCode 1
+    versionName '1.0.0'
+  }
+
+  lintOptions {
+    textReport true
+    textOutput "stdout"
+    checkAllWarnings true
+    warningsAsErrors true
+    showAll true
+    explainIssues true
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled true
+      proguardFile getDefaultProguardFile('proguard-android.txt')
+    }
+  }
+}
+
+dependencies {
+  compile project(':butterknife')
+  annotationProcessor project(':butterknife-compiler')
+
+  testCompile deps.junit
+  testCompile deps.truth
+  testCompile deps.robolectric
+  testCompile deps.openglApi
+}

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/colorBackground"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="?android:attr/colorBackground"
+        android:paddingTop="10.0dip">
+
+        <TextView
+            android:id="@+id/category_name"
+            style="@style/font15"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@drawable/title_left"
+            android:drawablePadding="5.0dip" />
+
+        <TextView
+            android:id="@+id/goToThisLive"
+            style="@style/font11"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:drawablePadding="1.0dip"
+            android:drawableRight="@drawable/looklookl_selector"
+            android:gravity="center"
+            android:paddingLeft="12.0dip"
+            android:paddingRight="10.0dip"
+            android:text="瞅瞅"
+            android:textColor="@drawable/btn_huihong_tx_selector" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/white_10" />
+
+    <com.hpw.mvpframe.widget.recyclerview.CoreRecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/colorBackground"
+        android:paddingLeft="2.5dp"
+        android:paddingRight="2.5dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/white_10" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="15dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/white_10" />
+
+</LinearLayout>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nightonke.wowoviewpagerexample.svg.SVGActivity">
+
+    <com.nightonke.wowoviewpager.WoWoViewPager
+        android:id="@+id/wowo_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <com.nightonke.wowoviewpager.svg.WoWoSvgView
+        android:id="@+id/svg_4"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_centerInParent="true"/>
+
+    <com.nightonke.wowoviewpager.svg.WoWoSvgView
+        android:id="@+id/svg_3"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_centerInParent="true"/>
+
+    <com.nightonke.wowoviewpager.svg.WoWoSvgView
+        android:id="@+id/svg_2"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_centerInParent="true"/>
+
+    <com.nightonke.wowoviewpager.svg.WoWoSvgView
+        android:id="@+id/svg_1"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_centerInParent="true"/>
+
+    <com.nightonke.wowoviewpager.svg.WoWoSvgView
+        android:id="@+id/svg_0"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_centerInParent="true"/>
+
+    <TextView style="@style/PageIndexTextView" />
+
+</RelativeLayout>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.nightonke.wowoviewpagerexample">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".WoWoTranslationAnimationActivity"
+            android:theme="@style/ShowAppTheme" />
+        <activity android:name=".SetEaseTypeActivity" />
+        <activity
+            android:name=".WoWoScaleAnimationActivity"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".WoWoAlphaAnimationActivity"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".WoWoShapeColorAnimationActivity"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".WoWoTextViewColorAnimationActivity"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".WoWoBackgroundColorAnimationActivity"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".WoWoLayerListColorAnimationActivity"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".WoWoStateListColorAnimationActivity"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".WoWoRotationAnimationActivity"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".WoWoPathAnimationActivity"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".WoWoTextViewTextSizeAnimationActivity"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".WoWoPositionAnimationActivity"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".WoWoTextViewTextAnimationActivity"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".GuidePageActivity1"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".GearboxActivity"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".StaticActivity"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".svg.SVGActivity"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".gif.GIFActivity"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".AutoScrollActivity"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".DirectionActivity"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".CustomAnimationActivity"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".GuidePageActivity2"
+            android:theme="@style/ShowAppTheme" />
+        <activity
+            android:name=".WoWoElevationAnimationActivity"
+            android:theme="@style/ShowAppTheme" />
+    </application>
+
+</manifest>

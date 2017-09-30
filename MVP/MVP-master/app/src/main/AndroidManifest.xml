@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.hpw.myapp">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <application
+        android:name=".App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".ui.main.FlashActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".ui.zhihu.activity.ZhihuMainActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".ui.zhihu.activity.ZhihuDetailsActivity"
+            android:launchMode="singleTask" />
+        <activity android:name=".ui.zhihu.activity.WechatDetailsActivity" />
+        <activity android:name=".ui.publish.PublishActivity" />
+        <activity android:name=".widget.imageselector.view.ImageSelectorActivity" />
+        <activity android:name=".widget.imageselector.view.ImagePreviewActivity" />
+        <activity android:name=".widget.imageselector.view.ImageCropActivity" />
+        <activity android:name=".ui.main.AboutActivity" />
+        <activity android:name=".ui.tv.activity.TvMainActivity" />
+        <activity
+            android:name=".ui.tv.activity.TvShowActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity
+            android:name=".ui.tv.activity.TvShowFullActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity android:name=".ui.map.PoiAroundSearchActivity" />
+
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="5dfdbe43ad60eace00c71de28a967286" />
+        <!-- 定位需要的服务 -->
+        <service android:name="com.amap.api.location.APSService" />
+    </application>
+
+</manifest>

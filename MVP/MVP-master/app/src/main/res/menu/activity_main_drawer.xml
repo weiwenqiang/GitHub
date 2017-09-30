@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_publish"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="发布模块" />
+        <item
+            android:id="@+id/menu_tv"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="全民TV" />
+        <item
+            android:id="@+id/menu_map"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="高德地图" />
+    </group>
+
+    <item android:title="选项">
+        <menu>
+            <item
+                android:id="@+id/setting"
+                android:icon="@mipmap/ic_drawer_setting"
+                android:title="设置" />
+            <item
+                android:id="@+id/about"
+                android:icon="@mipmap/ic_drawer_about"
+                android:title="关于" />
+        </menu>
+    </item>
+
+</menu>

@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">天气</string>
+    <string name="author_mail">baron.zhanglei@gmail.com</string>
+    <string name="title_activity_select_city">城市选择</string>
+    <string name="title_activity_city_manager">城市管理</string>
+    <string name="title_activity_fabric_test">@string/action_fabric_test</string>
+
+    <string name="navigation_drawer_open">打开抽屉</string>
+    <string name="navigation_drawer_close">关闭抽屉</string>
+
+    <string name="action_settings">设置</string>
+    <string name="action_select_city">城市选择</string>
+    <string name="action_city_manager">城市管理</string>
+    <string name="action_fabric_test">Fabric Test</string>
+    <string name="cities_importing">正在导入城市数据…</string>
+
+    <string name="content_description_default">图片描述</string>
+
+    <string name="string_aqi_title">空气污染指数</string>
+    <string name="string_index_title">生活指数</string>
+    <string name="string_publish_time">"发布时间 "</string>
+
+</resources>

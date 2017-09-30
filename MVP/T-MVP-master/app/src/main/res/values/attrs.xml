@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TRecyclerView">
+        <attr name="isReverse" format="boolean" />
+        <attr name="isRefreshable" format="boolean" />
+        <attr name="itemType" format="reference" />
+        <attr name="headType" format="reference" />
+        <attr name="footType" format="reference" />
+    </declare-styleable>
+
+    <attr name="backgroundCard" format="color" />
+    <attr name="textColor" format="color" />
+    <attr name="textColorBg" format="color" />
+    <attr name="themeType" format="string" />
+    <attr name="themeIcon" format="reference" />
+    <attr name="colorWhite" format="color" />
+
+</resources>

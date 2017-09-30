@@ -1,0 +1,63 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "com.novoda:bintray-release:$bintrayVersion"
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'bintray-release'
+apply plugin: 'jacoco-android'
+
+android {
+    compileSdkVersion COMPILE_SDK_VERSION
+    buildToolsVersion BUILD_TOOLS_VERSION
+
+    defaultConfig {
+        minSdkVersion MIN_SDK_VERSION
+        targetSdkVersion TARGET_SDK_VERSION
+        versionCode VERSION_CODE
+        versionName VERSION_NAME
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'proguard-rules.txt'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+        debug {
+            // output coverage with ./gradlew clean build createDebugCoverageReport
+            testCoverageEnabled true
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    provided "com.android.support:appcompat-v7:$supportLibraryVersion"
+
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
+    testCompile "org.assertj:assertj-core:$assertjVersion"
+
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile "org.mockito:mockito-core:$mockitoVersion"
+}
+
+publish {
+    userOrg = 'passsy'
+    groupId = 'net.grandcentrix.thirtyinch'
+    publishVersion = VERSION_NAME
+    artifactId = 'thirtyinch'
+    uploadName = 'ThirtyInch'
+    description = 'a Model View Presenter library for Android'
+    website = 'https://github.com/grandcentrix/ThirtyInch'
+}

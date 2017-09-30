@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+	android:id="@+id/main_view"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context="eu.davidea.samples.flexibleadapter.MainActivity">
+
+	<!-- Toolbar -->
+	<android.support.design.widget.AppBarLayout
+		android:id="@+id/app_bar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:theme="@style/AppTheme.AppBarOverlay">
+
+		<android.support.design.widget.CollapsingToolbarLayout
+			android:id="@+id/toolbar_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:layout_scrollFlags="scroll|enterAlwaysCollapsed|exitUntilCollapsed">
+
+			<include layout="@layout/toolbar"/>
+
+			<LinearLayout
+				android:id="@+id/layout_for_spinners"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/toolbar_height"
+				android:layout_marginBottom="@dimen/margin_bottom_small"
+				android:layout_marginEnd="@dimen/margin_right"
+				android:layout_marginLeft="@dimen/margin_left"
+				android:layout_marginRight="@dimen/margin_right"
+				android:layout_marginStart="@dimen/margin_left"
+				android:orientation="horizontal"
+				android:baselineAligned="false"
+				android:visibility="gone"
+				tools:visibility="visible">
+
+				<LinearLayout
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:orientation="vertical">
+
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+						android:text="@string/item_animators"/>
+
+					<Spinner
+						android:id="@+id/spinner_item_animators"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+				</LinearLayout>
+
+				<LinearLayout
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:orientation="vertical">
+
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+						android:text="@string/scrolling_animations"/>
+
+					<Spinner
+						android:id="@+id/spinner_scrolling_animation"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+				</LinearLayout>
+
+			</LinearLayout>
+
+		</android.support.design.widget.CollapsingToolbarLayout>
+
+	</android.support.design.widget.AppBarLayout>
+
+	<!-- Main Content -->
+	<RelativeLayout
+		android:id="@+id/recycler_view_container"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+	<!-- FAB -->
+	<android.support.design.widget.FloatingActionButton
+		android:id="@+id/fab"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="end|bottom"
+		android:layout_margin="@dimen/fab_margin"
+		android:clickable="true"
+		android:src="@drawable/fab_add"
+		app:borderWidth="0dp"
+		app:layout_behavior="eu.davidea.utils.ScrollAwareFABBehavior"/>
+
+</android.support.design.widget.CoordinatorLayout>

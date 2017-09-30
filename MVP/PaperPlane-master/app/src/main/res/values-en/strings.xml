@@ -1,0 +1,116 @@
+<!--
+  ~ Copyright 2017 lizhaotailang
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+    <string name="app_name">Paper Plane</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="nav_home">Home</string>
+    <string name="nav_bookmarks">Bookmarks</string>
+
+    <string name="zhihu_daily">Zhihu Daily</string>
+    <string name="guokr_handpick">Guokr Handpick</string>
+    <string name="douban_moment">Douban Moment</string>
+
+    <!--general-->
+    <string name="positive">@android:string/ok</string>
+    <string name="negative">@android:string/cancel</string>
+    <string name="share_error">Share failed</string>
+
+    <string name="title_activity_read">Read</string>
+    <string name="title_activity_guokr_read">Guokr Handpick</string>
+    <string name="loaded_failed">Load failed!</string>
+    <string name="loading_more">Loading more…</string>
+    <string name="retry">Retry</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="copied_to_clipboard_failed">Copy to clipboard failed</string>
+    <string name="added_to_bookmarks">Added to bookmarks</string>
+    <string name="deleted_from_bookmarks">Deleted from bookmarks</string>
+
+    <string name="feel_lucky">I\'m feeling lucky</string>
+    <string name="feel_lucky_short">Feel lucky</string>
+    <string name="search_bookmarks">Search bookmarks</string>
+    <string name="check_bookmarks">Bookmarks</string>
+
+    <!--bottom sheet list-->
+    <string name="action_add_to_bookmarks">Add to bookmarks</string>
+    <string name="action_delete_from_bookmarks">Delete from bookmarks</string>
+    <string name="action_copy_link">Copy link</string>
+    <string name="action_open_in_browser">Open in browser</string>
+    <string name="action_copy_text">Copy text</string>
+    <string name="action_share_as_text">Share as Text</string>
+
+    <!--navigation view menu-->
+    <string name="change_theme">Change Theme</string>
+    <string name="settings">Settings</string>
+    <string name="about">About</string>
+    <!--navigation view menu end-->
+
+    <string name="share_extra"> Shared From Paper Plane</string>
+    <string name="share_to">Share to</string>
+
+    <!--activity about-->
+    <string name="version">Version:V3.2.0</string>
+    <string name="rate">Rate</string>
+    <string name="feedback">Report Bugs / Advices</string>
+    <string name="donate">Donate Developer</string>
+    <string name="donate_content">Alipay account will be copied to clipboard.Launch Alipay and paste it to finish donating.Thanks for support!</string>
+    <string name="donate_account">marktonymengyi@gmail.com</string>
+    <string name="sendto">mailto:marktonymengyi@gmail.com</string>
+    <string name="mail_topic">Paper Plane Feedback / Advice</string>
+    <string name="rate_description">If you like the Paper Plane app,please do rate it</string>
+    <string name="device_model">Device Version:</string>
+    <string name="sdk_version">SDK Version:</string>
+    <string name="no_mail_app">No Mail App Installed</string>
+    <string name="no_app_store_found">No App Store Installed</string>
+    <string name="no_browser_found">No Browser Installed</string>
+    <string name="author">Author</string>
+    <string name="author_name">Li Zhaotailang</string>
+    <string name="author_description">Changsha, Hunan, China</string>
+    <string name="follow_me_on_github">Follow Me on GitHub</string>
+    <string name="follow_me_on_zhihu">Follow Me on ZhiHu</string>
+    <string name="support">Support</string>
+    <string name="feedback_description">Help me to improve the Paper Plane app</string>
+    <string name="coffee">Give Me A Cup of Coffee</string>
+    <string name="coffee_description">If you think I deserve to get paid for my work, you can give me a cup of coffee</string>
+    <string name="github_url">https://github.com/marktony</string>
+    <string name="zhihu_url">https://www.zhihu.com/people/kirin-momo</string>
+    <string name="zhihu_account">\@Li Zhaotailang</string>
+    <string name="open_source_license">Open Source License</string>
+    <string name="easter_egg">Easter Egg</string>
+    <string name="easter_egg_content">You clicked my name so many times, do you like me?</string>
+    <string name="sure">Positive</string>
+    <string name="yes">Yes</string>
+    <!--activity about end-->
+
+    <!--settings_preference_fragment-->
+    <string name="basic_settings">Basic</string>
+    <string name="no_picture_mode">No image mode</string>
+    <string name="no_picture_mode_description">Images will not be loaded when reading articles</string>
+    <string name="in_app_browser">In-App Browser</string>
+    <string name="in_app_browser_description">Open links with the built-in browser</string>
+    <string name="time_of_saving_articles">Time of Saving Articles</string>
+    <string name="other_settings">Other</string>
+    <string name="clear_image_cache">Clear Image Cache</string>
+    <string name="clear_image_cache_successfully">Cache successfully cleared</string>
+    <!--setting-->
+
+    <string name="network_error">Internet is lost, tap to retry</string>
+    <string name="refresh">Refresh</string>
+
+</resources>

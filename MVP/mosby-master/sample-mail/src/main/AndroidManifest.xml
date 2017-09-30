@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.hannesdorfmann.mosby3.sample.mail">
+
+  <uses-permission android:name="android.permission.VIBRATE"/>
+
+  <application
+      android:allowBackup="true"
+      android:icon="@mipmap/ic_launcher"
+      android:label="@string/app_name"
+      android:theme="@style/AppTheme"
+      android:name="com.hannesdorfmann.mosby3.sample.mail.MailApplication">
+    <activity
+        android:name="com.hannesdorfmann.mosby3.sample.mail.MainActivity"
+        android:label="@string/app_name"
+        android:launchMode="singleTop"
+        >
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
+
+    <activity
+        android:name="com.hannesdorfmann.mosby3.sample.mail.login.LoginActivity"
+        android:label="@string/title_activity_login"
+        android:theme="@style/LoginTheme"
+        android:windowSoftInputMode="adjustResize">
+    </activity>
+
+    <activity android:name="com.hannesdorfmann.mosby3.sample.mail.details.DetailsActivity"
+        android:label=""/>
+
+    <activity android:name="com.hannesdorfmann.mosby3.sample.mail.write.WriteActivity"
+        android:theme="@style/WriteTheme"
+        android:label=""
+        android:windowSoftInputMode="adjustResize"/>
+
+    <activity android:name="com.hannesdorfmann.mosby3.sample.mail.search.SearchActivity"
+        android:label=""
+        android:windowSoftInputMode="adjustResize"/>
+
+    <activity android:name="com.hannesdorfmann.mosby3.sample.mail.profile.ProfileActivity"
+        />
+
+    <service android:name="com.hannesdorfmann.mosby3.sample.mail.model.mail.service.SendMailService"
+        android:exported="false"/>
+
+    <service android:name="com.hannesdorfmann.mosby3.sample.mail.model.mail.service.GcmFakeIntentService"
+        android:exported="false"/>
+
+    <receiver android:name="com.hannesdorfmann.mosby3.sample.mail.model.mail.receiver.MailReceiver" android:exported="false">
+      <intent-filter>
+        <action android:name="com.hannesdorfmann.mosby.sample.mail.RECEIVE"/>
+      </intent-filter>
+    </receiver>
+  </application>
+
+</manifest>

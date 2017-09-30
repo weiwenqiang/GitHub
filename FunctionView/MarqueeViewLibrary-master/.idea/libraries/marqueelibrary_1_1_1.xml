@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="marqueelibrary-1.1.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.android/build-cache/9534b6c67d34d5fdd7cadb037103fe6cb6e8dc13/output/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.android/build-cache/9534b6c67d34d5fdd7cadb037103fe6cb6e8dc13/output/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.gongwen/marqueelibrary/1.1.1/a63dc2b42d585f6165e48df38f4a3e979cfa79bd/marqueelibrary-1.1.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

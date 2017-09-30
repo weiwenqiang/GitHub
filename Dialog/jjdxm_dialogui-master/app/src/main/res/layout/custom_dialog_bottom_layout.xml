@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/dialogui_shape_wihte_round_corner"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/dialogui_tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="也许某一天在喧闹的城市里，我们擦肩而过，我会停住脚步，凝视着那个正远去的背影，告诉自己，那个人我曾经爱过。"
+        android:textColor="#111111"
+        android:textSize="17sp"/>
+
+
+</LinearLayout>
+
+
+

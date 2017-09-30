@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/ll_main"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_margin="@dimen/dialogui_margin_mid"
+              android:background="@android:color/white"
+              android:orientation="vertical">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_popu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="popuwindow"/>
+
+            <Button
+                android:id="@+id/btn_custom_alert"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="自定义弹出框"/>
+
+            <Button
+                android:id="@+id/btn_custom_bottom_alert"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="自定义底部弹出框"/>
+
+            <Button
+                android:id="@+id/btn_system_alert"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="系统原生弹出框"/>
+
+            <Button
+                android:id="@+id/btn_loading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="loading"/>
+
+            <Button
+                android:id="@+id/btn_md_loading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="MD 风格 loading"/>
+
+
+            <Button
+                android:id="@+id/btn_alert_multichoose"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="md 风格多选框"/>
+
+            <Button
+                android:id="@+id/btn_alert_singlechoose"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="单选框"/>
+
+            <Button
+                android:id="@+id/btn_md_alert"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="md 风格弹出框"/>
+
+            <Button
+                android:id="@+id/btn_tie_alert"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="提示框"/>
+
+            <Button
+                android:id="@+id/btn_alert_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="输入框"/>
+
+
+            <Button
+                android:id="@+id/btn_center_sheet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="中间列表"/>
+
+
+            <Button
+                android:id="@+id/btn_bottom_sheet_cancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="带取消的底部列表"/>
+
+            <Button
+                android:id="@+id/btn_md_bottom_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="md 风格底部竖向列表"/>
+
+            <Button
+                android:id="@+id/btn_md_bottom_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="md 风格底部横向列表"/>
+
+            <Button
+                android:id="@+id/btn_toast_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="上 toast"/>
+
+            <Button
+                android:id="@+id/btn_toast_center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="中 toast"/>
+
+            <Button
+                android:id="@+id/btn_toast"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="下 toast"/>
+
+
+            <Button
+                android:id="@+id/btn_select_ymd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="选择日期年月日"/>
+
+            <Button
+                android:id="@+id/btn_select_ymdhm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="选择日期年月日时分"/>
+
+            <Button
+                android:id="@+id/btn_select_ymdhms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="选择日期年月日时分秒"/>
+
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+
+</LinearLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nightonke.wowoviewpagerexample.WoWoTextViewTextSizeAnimationActivity">
+
+    <com.nightonke.wowoviewpager.WoWoViewPager
+        android:id="@+id/wowo_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <TextView
+        android:id="@+id/test0"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="40sp"
+        />
+
+    <TextView
+        android:id="@+id/test1"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="40sp"
+        android:layout_centerInParent="true"
+        />
+
+    <TextView
+        android:id="@+id/test2"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="40sp"
+        android:layout_alignParentBottom="true"
+        />
+
+    <TextView style="@style/PageIndexTextView" />
+
+</RelativeLayout>

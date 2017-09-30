@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item
+        android:drawable="@drawable/ani_popover_loading_yz_1"
+        android:duration="100" />
+    <item
+        android:drawable="@drawable/ani_popover_loading_yz_2"
+        android:duration="100" />
+    <item
+        android:drawable="@drawable/ani_popover_loading_yz_3"
+        android:duration="100" />
+    <item
+        android:drawable="@drawable/ani_popover_loading_yz_4"
+        android:duration="100" />
+    <item
+        android:drawable="@drawable/ani_popover_loading_yz_5"
+        android:duration="100" />
+    <item
+        android:drawable="@drawable/ani_popover_loading_yz_6"
+        android:duration="100" />
+    <item
+        android:drawable="@drawable/ani_popover_loading_yz_7"
+        android:duration="100" />
+    <item
+        android:drawable="@drawable/ani_popover_loading_yz_8"
+        android:duration="100" />
+    <item
+        android:drawable="@drawable/ani_popover_loading_yz_9"
+        android:duration="100" />
+    <item
+        android:drawable="@drawable/ani_popover_loading_yz_10"
+        android:duration="100" />
+    <item
+        android:drawable="@drawable/ani_popover_loading_yz_11"
+        android:duration="100" />
+</animation-list>

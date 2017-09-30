@@ -1,0 +1,24 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+ext {
+    buildToolsVersion = '25.0.2'
+    supportLibraryVersion = '25.3.0'
+}

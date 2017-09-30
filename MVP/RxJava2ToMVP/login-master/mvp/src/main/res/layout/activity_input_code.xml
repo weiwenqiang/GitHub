@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f4f4f4"
+    android:orientation="vertical"
+
+    tools:context=".module.register.inputCode.InputCodeActivity">
+
+    <include layout="@layout/layout_toolbar" />
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="20dp"
+        android:text=""
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/phoneNumb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="20dp"
+        android:text=""
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/code"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/style_edt_white"
+        android:gravity="center"
+        android:hint="请输入验证码"
+        android:inputType="number"
+        android:maxLength="6"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textCursorDrawable="@drawable/color_cursor"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="20dp"
+        android:enabled="false"
+        android:text="发送验证码"
+        android:textColor="@drawable/style_btn_color"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/next"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/style_btn_enable"
+        android:enabled="false"
+        android:text="下一步"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+</LinearLayout>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_click"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="3dp"
+    card_view:cardCornerRadius="6dp">
+
+    <RelativeLayout
+        android:id="@+id/fl_headPng"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/thumnails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_default_cover" />
+
+        <TextView
+            android:id="@+id/tv_viewnum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_margin="5.0dip"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/corner_live_num_bg"
+            android:drawableLeft="@drawable/ic_player_content_number"
+            android:drawablePadding="2.0dip"
+            android:minWidth="30dp"
+            android:paddingBottom="1.0dip"
+            android:paddingLeft="5.0dip"
+            android:paddingRight="5.0dip"
+            android:paddingTop="1.0dip"
+            android:text="1.1万"
+            android:textColor="@color/white_80"
+            android:textSize="10.0sp" />
+
+        <TextView
+            android:id="@+id/intro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/thumnails"
+            android:layout_margin="5.0dip"
+            android:drawableLeft="@drawable/living"
+            android:drawablePadding="2.0dip"
+            android:gravity="center"
+            android:paddingBottom="1.0dip"
+            android:paddingLeft="5.0dip"
+            android:paddingRight="5.0dip"
+            android:singleLine="true"
+            android:text="1.1万"
+            android:textColor="@color/white_80"
+            android:textSize="12.0sp" />
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/label_main_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/label_examples"
+            android:layout_gravity="center"
+            android:textAppearance="@android:style/TextAppearance.Large" />
+
+        <Button
+            android:id="@+id/btn_simple_example"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/simple_example" />
+
+        <Button
+            android:id="@+id/btn_sample_actionbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/actionbar_example" />
+
+        <Button
+            android:id="@+id/btn_sample_listview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/listview_example" />
+
+        <Button
+            android:id="@+id/btn_sample_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/spinner_example" />
+
+        <Button
+            android:id="@+id/btn_sample_multifonts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/multiple_typeface_example" />
+
+        <Button
+            android:id="@+id/btn_sample_dynamic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/dynamic_example" />
+
+    </LinearLayout>
+
+</ScrollView>

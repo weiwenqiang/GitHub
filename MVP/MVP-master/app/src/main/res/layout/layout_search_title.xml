@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dimen_50dp"
+    android:background="?attr/colorPrimaryDark"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/search_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_15dp"
+        android:layout_marginLeft="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_15dp"
+        android:src="@drawable/vp_left_back" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/dimen_10dp"
+        android:layout_weight="1"
+        android:background="@drawable/search_circle_bg"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/search_input" />
+
+        <AutoCompleteTextView
+            android:id="@+id/etInput"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:completionThreshold="1"
+            android:focusable="true"
+            android:hint="搜索项目"
+            android:imeOptions="actionSearch"
+            android:inputType="text|textAutoComplete"
+            android:singleLine="true"
+            android:textColorHint="@color/divider_color"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/text_size_14" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/search_button"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginRight="@dimen/dimen_10dp"
+        android:gravity="center"
+        android:text="@string/cancel"
+        android:textColor="@color/main_red" />
+</LinearLayout>

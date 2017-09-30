@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_music"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.lcodecore.twinklingrefreshlayout.MusicActivity">
+
+    <include layout="@layout/inc_toolbar" />
+
+    <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:divider="#FAFBFF"
+            android:dividerHeight="2dp"
+            android:overScrollMode="never" />
+
+    </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
+
+</LinearLayout>

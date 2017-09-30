@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/AndroidTests-master.iml" filepath="$PROJECT_DIR$/AndroidTests-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CalendarTest/CalendarTest.iml" filepath="$PROJECT_DIR$/CalendarTest/CalendarTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/EventBusTest/EventBusTest.iml" filepath="$PROJECT_DIR$/EventBusTest/EventBusTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ExpandableListViewTest/ExpandableListViewTest.iml" filepath="$PROJECT_DIR$/ExpandableListViewTest/ExpandableListViewTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ResourceFileTest/ResourceFileTest.iml" filepath="$PROJECT_DIR$/ResourceFileTest/ResourceFileTest.iml" />
+    </modules>
+  </component>
+</project>

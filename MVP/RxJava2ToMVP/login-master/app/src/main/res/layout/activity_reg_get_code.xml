@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f4f4f4"
+    android:orientation="vertical"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    tools:context="com.chen.test.UI.RegGetCodeActivity">
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text=""
+        android:textColor="@android:color/black" />
+
+
+    <com.chen.test.Utils.ClearEditText
+        android:inputType="number"
+        android:textCursorDrawable="@drawable/color_cursor"
+        android:id="@+id/phone"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/style_edt_login"
+        android:drawableLeft="@mipmap/ic_account"
+        android:drawablePadding="10dp"
+        android:hint="请输入手机号码"
+        android:maxLines="1"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:singleLine="true"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/getCode"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/style_btn_enable"
+        android:enabled="false"
+        android:text="获取验证码"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+</LinearLayout>

@@ -1,0 +1,40 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchMatch.Vertical"
+    android:gravity="center">
+
+    <TextView
+        style="@style/TestBtn"
+        android:onClick="normalRecyclerViewDemo"
+        android:text="NormalRecyclerViewDemo" />
+
+    <TextView
+        style="@style/TestBtn"
+        android:onClick="normalListViewDemo"
+        android:text="NormalListViewDemo" />
+
+    <TextView
+        style="@style/TestBtn"
+        android:onClick="swipeRecyclerViewDemo"
+        android:text="SwipeRecyclerViewDemo" />
+
+    <TextView
+        style="@style/TestBtn"
+        android:onClick="swipeListViewDemo"
+        android:text="SwipeListViewDemo" />
+
+    <TextView
+        style="@style/TestBtn"
+        android:onClick="scrollViewDemo"
+        android:text="ScrollViewDemo" />
+
+    <TextView
+        style="@style/TestBtn"
+        android:onClick="webViewDemo"
+        android:text="WebViewDemo" />
+
+    <TextView
+        style="@style/TestBtn"
+        android:onClick="viewPagerDemo"
+        android:text="ViewPagerDemo" />
+
+</LinearLayout>

@@ -1,0 +1,13 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.addappcn'
+
+ext {
+    isLibrary = true
+    pomArtifactId = "WheelPicker"
+    pomDescription = "wheel picker for android, include date picker, time picker, single picker, address picker, etc."
+}
+
+dependencies {
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="transparent">#00000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="gray">#888888</color>
+    <color name="blue">#0066FF</color>
+    <color name="red">#FF0000</color>
+    <color name="black">#000000</color>
+    <color name="middle_red">#e7abff</color>
+    <color name="color_nav">#FFFFD9</color>
+    <!-- androidColor -->
+    <color name="androidColorA">#33B5E5</color>
+    <color name="androidColorB">#AA66CC</color>
+    <color name="androidColorC">#99CC00</color>
+    <color name="androidColorD">#FFBB33</color>
+    <color name="androidColorE">#FF4444</color>
+    <color name="text_color">#434343</color>
+    <color name="tv_color">#626262</color>
+
+    <!--cardView 实例中的颜色-->
+    <color name="color_0">#FFF0F5</color>
+    <color name="color_1">#FFE1FF</color>
+    <color name="color_2">#E6E6FA</color>
+    <color name="color_3">#C1FFC1</color>
+    <color name="color_4">#B22222</color>
+    <color name="color_5">#836FFF</color>
+    <color name="color_6">#68228B</color>
+    <color name="color_7">#5CACEE</color>
+    <color name="color_8">#43CD80</color>
+    <color name="color_9">#00EE00</color>
+    <color name="color_10">#708090</color>
+
+
+    <!--标签TAB未选中的颜色-->
+    <color name="color_unselected">#777777</color>
+    <!--标签Tab选中的颜色-->
+    <color name="color_selected">#1da8fe</color>
+</resources>

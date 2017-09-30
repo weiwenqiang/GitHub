@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/largePadding"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/ac_p_c_phone_edt"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:hint="请输入手机号"
+            android:textColor="@color/black"
+            android:textSize="28sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="归属地 （湖南移动）"
+            android:textSize="16sp" />
+
+
+    </LinearLayout>
+
+    <View
+        style="@style/line_vertical"
+        android:layout_marginTop="12dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/largerPadding"
+        android:text="充话费" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/ac_c_p_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

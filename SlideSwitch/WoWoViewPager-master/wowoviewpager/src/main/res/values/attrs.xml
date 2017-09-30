@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <declare-styleable name="WoWoViewPager">
+        <attr name="wowo_gearbox" format="enum|reference">
+            <enum name="zero" value="0"/>
+            <enum name="positive1" value="1"/>
+            <enum name="positive2" value="2"/>
+            <enum name="positive3" value="3"/>
+            <enum name="positive4" value="4"/>
+            <enum name="positive5" value="5"/>
+            <enum name="positive6" value="6"/>
+            <enum name="positive7" value="7"/>
+        </attr>
+        <attr name="wowo_draggable" format="boolean|reference"/>
+        <attr name="wowo_scrollDuration" format="integer|reference"/>
+        <attr name="wowo_direction" format="enum|reference">
+            <enum name="horizontal" value="0"/>
+            <enum name="vertical" value="1"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="WoWoPathView">
+        <attr name="wowo_dashPath" format="boolean|reference"/>
+        <attr name="wowo_dashPathSegmentLength" format="dimension|reference"/>
+        <attr name="wowo_dashPathPaddingLength" format="dimension|reference"/>
+        <attr name="wowo_dynamicPath" format="boolean|reference"/>
+        <attr name="wowo_dynamicPathSpeed" format="dimension|reference"/>
+        <attr name="wowo_pathColor" format="color|reference"/>
+        <attr name="wowo_pathWidth" format="dimension|reference"/>
+        <attr name="wowo_headImageSrc" format="reference"/>
+        <attr name="wowo_headImageWidth" format="dimension|reference"/>
+        <attr name="wowo_headImageHeight" format="dimension|reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="WoWoSvgView">
+        <attr name="wowo_imageSizeX" format="integer|reference"/>
+        <attr name="wowo_imageSizeY" format="integer|reference"/>
+        <attr name="wowo_traceTime" format="string|reference"/>
+        <attr name="wowo_traceTimePerGlyph" format="string|reference"/>
+        <attr name="wowo_fillStart" format="string|reference"/>
+        <attr name="wowo_fillTime" format="string|reference"/>
+        <attr name="wowo_glyphStrings" format="reference"/>
+        <attr name="wowo_traceColors" format="reference"/>
+        <attr name="wowo_traceResidueColors" format="reference"/>
+        <attr name="wowo_traceMarkerLength" format="dimension|reference"/>
+        <attr name="wowo_fillColors" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="WoWoGifView">
+        <attr name="wowo_src" format="reference"/>
+    </declare-styleable>
+
+</resources>

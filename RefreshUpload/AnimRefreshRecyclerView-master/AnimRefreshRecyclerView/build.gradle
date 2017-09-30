@@ -1,0 +1,61 @@
+apply plugin: 'com.android.library'
+
+//apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+// 这个version是区分library版本的，因此当我们需要更新library时记得修改这个version
+version = "1.0.6"
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+
+    resourcePrefix "AnimRefreshRecyclerView" // 可以随便填，不知道干嘛用的
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    /* RecyclerView */
+    compile 'com.android.support:recyclerview-v7:23.1.0'
+}
+
+def siteUrl = 'https://github.com/shichaohui/AnimRefreshRecyclerView'      // 项目的主页
+def gitUrl = 'https://github.com/shichaohui/AnimRefreshRecyclerView.git'   // Git仓库的url
+group = "com.sch.rfview" // Maven Group ID for the artifact，填包名
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+artifacts {
+    archives sourcesJar
+}
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+    configurations = ['archives']
+    pkg {
+        repo = "maven"  //发布到Bintray的那个仓库里，默认账户有四个库，我们这里上传到maven库
+        name = "AnimRefreshRecyclerView"  //发布到Bintray上的项目名字
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true //是否发布
+    }
+}

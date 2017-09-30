@@ -1,0 +1,37 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+    }
+}
+
+configurations {
+    compileJavadoc
+}
+
+dependencies {
+    compile "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
+    compile "io.reactivex:rxjava:$rootProject.rxVersion"
+    compileJavadoc "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
+    compileJavadoc "io.reactivex:rxjava:$rootProject.rxVersion"
+
+    testCompile project(':nucleus-test-kit')
+}
+
+android.libraryVariants.all { variant ->
+    def name = variant.buildType.name
+    if (name.equals(com.android.builder.core.BuilderConstants.DEBUG)) {
+        return; // Skip debug builds.
+    }
+    def task = project.tasks.create "jar${name.capitalize()}", Jar
+    task.dependsOn variant.javaCompile
+    task.from variant.javaCompile.destinationDir
+    artifacts.add('archives', task);
+}
+
+apply from: '../gradle/gradle-mvn-push.gradle'

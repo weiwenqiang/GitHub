@@ -1,0 +1,74 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <Button
+        android:id="@+id/bt_music"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_gravity="center"
+        android:textAllCaps="false"
+        android:text="Music - ListView - FixedHeader"/>
+
+    <Button
+        android:id="@+id/bt_food"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAllCaps="false"
+        android:text="Food - RecyclerView - PureScrollMode"/>
+
+    <Button
+        android:id="@+id/bt_science"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAllCaps="false"
+        android:text="Science - GridView - SinaHeader"/>
+
+    <Button
+        android:id="@+id/bt_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAllCaps="false"
+        android:text="Photo - RecyclerView - BezierLayout"/>
+
+    <Button
+        android:id="@+id/bt_story"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAllCaps="false"
+        android:text="Story - ScrollView - GoogleDotView"/>
+
+    <Button
+        android:id="@+id/bt_enjoy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAllCaps="false"
+        android:text="Dribbble - WebView - FloatRefresh"/>
+
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_layout"
+        app:tabBackground="@android:color/white"
+        app:tabMode="scrollable"
+        app:tabGravity="fill"
+        app:tabIndicatorHeight="3dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

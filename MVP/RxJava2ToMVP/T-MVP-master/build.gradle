@@ -1,0 +1,43 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        jcenter()
+        maven{
+            url uri('repo')
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'me.tatarka:gradle-retrolambda:3.2.0'
+        classpath 'org.aspectj:aspectjtools:1.8.9'
+        classpath 'com.app.plugin:gradleplugin:1.0.0'
+        classpath "io.realm:realm-gradle-plugin:3.4.0"
+        // classpath 'com.codingbingo.library:gradletaskrecord:1.0.0'//追踪Gradle 任务耗时
+    }
+}
+
+//apply plugin: 'com.codingbingo.gradletaskrecord'//追踪Gradle任务耗时的插件
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+//不加这一句MakeProject会报错，其余都正常无影响
+task compileJava {}
+
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+ext {
+
+
+    rxjava2Version = '2.0.8'
+    retrofit2Version = '2.2.0'
+    gsonVersion = '2.6.2'
+
+}
+
+//注意⚠️:   插件修改后运行前需要运行 ./gradlew -p plugin clean build uploadArchives --info

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
+    android:orientation="vertical"
+    tools:showIn="@layout/activity_publish">
+
+    <com.hpw.myapp.widget.emoticonskeyboard.widget.EmoticonsEditText
+        android:id="@+id/et_content"
+        style="@style/emotion_editview"
+        android:layout_weight="1"
+        android:hint="发布观点..." />
+
+    <com.hpw.mvpframe.widget.recyclerview.CoreRecyclerView
+        android:id="@+id/result_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="134dp"
+        android:layout_margin="10dp" />
+
+    <TextView
+        android:id="@+id/et_limit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:drawableLeft="@drawable/compose"
+        android:paddingBottom="15dp"
+        android:paddingRight="@dimen/space_15dp"
+        android:text=" 还可以输入300字"
+        android:textColor="@color/font_dark_gery"
+        android:textSize="@dimen/txt_10sp" />
+</LinearLayout>

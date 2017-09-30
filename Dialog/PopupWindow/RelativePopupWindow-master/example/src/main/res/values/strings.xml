@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">RelativePopupWindow</string>
+    <string-array name="vertical_positions">
+        <item>ABOVE</item>
+        <item>ALIGN_BOTTOM</item>
+        <item>CENTER</item>
+        <item>ALIGN_TOP</item>
+        <item>BELOW</item>
+    </string-array>
+    <string-array name="horizontal_positions">
+        <item>LEFT</item>
+        <item>ALIGN_RIGHT</item>
+        <item>CENTER</item>
+        <item>ALIGN_LEFT</item>
+        <item>RIGHT</item>
+    </string-array>
+    <string-array name="width">
+        <item>WRAP_CONTENT</item>
+        <item>MATCH_PARENT</item>
+        <item>80dp</item>
+        <item>240dp</item>
+        <item>480dp</item>
+    </string-array>
+    <string-array name="height">
+        <item>WRAP_CONTENT</item>
+        <item>MATCH_PARENT</item>
+        <item>80dp</item>
+        <item>240dp</item>
+        <item>480dp</item>
+    </string-array>
+</resources>

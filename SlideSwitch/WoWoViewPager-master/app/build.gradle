@@ -1,0 +1,30 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
+    defaultConfig {
+        applicationId "com.nightonke.wowoviewpagerexample"
+        minSdkVersion 14
+        targetSdkVersion 25
+        versionCode 2000
+        versionName "2.0.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':wowoviewpager')
+    // For svg
+    compile 'com.android.support:appcompat-v7:25.3.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:support-vector-drawable:25.3.0'
+    testCompile 'junit:junit:4.12'
+}

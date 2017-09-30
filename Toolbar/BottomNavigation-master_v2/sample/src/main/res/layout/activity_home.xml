@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ececec"
+    tools:context=".HomeActivity">
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/nested_scroll_child"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp">
+
+
+                <Spinner
+                    android:id="@+id/mode_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    android:padding="16dp" />
+
+                <Spinner
+                    android:id="@+id/bg_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    android:padding="16dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/item_spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp" />
+
+                    <Spinner
+                        android:id="@+id/shape_spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:padding="16dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/toggle_hide"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="1"
+                        android:padding="24dp"
+                        android:text="@string/toggle_hide" />
+
+                    <Button
+                        android:id="@+id/toggle_badge"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="1"
+                        android:padding="24dp"
+                        android:text="@string/toggle_badge" />
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/auto_hide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/auto_hide_badge" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:textSize="20sp" />
+
+            <FrameLayout
+                android:id="@+id/home_activity_frag_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <com.ashokvarma.bottomnavigation.BottomNavigationBar
+        android:id="@+id/bottom_navigation_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
+    <!--app:bnbAutoHideEnabled="false"/>-->
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_favorite_white_24dp"
+        android:tint="@color/white" />
+
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <declare-styleable name="StepperIndicator" tools:ignore="ResourceName">
+        <attr format="integer" name="stpi_stepCount"/>
+        <attr format="integer" name="stpi_animDuration"/>
+
+        <attr format="color" name="stpi_circleColor"/>
+        <attr format="dimension" name="stpi_circleRadius"/>
+        <attr format="dimension" name="stpi_circleStrokeWidth"/>
+
+        <attr format="color" name="stpi_indicatorColor"/>
+        <attr format="dimension" name="stpi_indicatorRadius"/>
+
+        <attr format="color" name="stpi_lineColor"/>
+        <attr format="color" name="stpi_lineDoneColor"/>
+        <attr format="dimension" name="stpi_lineStrokeWidth"/>
+        <attr format="dimension" name="stpi_lineMargin"/>
+
+        <attr format="boolean" name="stpi_showDoneIcon"/>
+        <attr format="boolean" name="stpi_showStepNumberInstead"/>
+
+        <attr format="boolean" name="stpi_useBottomIndicator"/>
+        <attr format="boolean" name="stpi_useBottomIndicatorWithStepColors"/>
+        <attr format="dimension" name="stpi_bottomIndicatorHeight"/>
+        <attr format="dimension" name="stpi_bottomIndicatorWidth"/>
+        <attr format="dimension" name="stpi_bottomIndicatorMarginTop"/>
+
+        <attr format="reference" name="stpi_stepsCircleColors"/>
+        <attr format="reference" name="stpi_stepsIndicatorColors"/>
+
+
+        <attr format="reference" name="stpi_labels"/>
+        <attr format="boolean" name="stpi_showLabels"/>
+        <attr format="dimension" name="stpi_labelMarginTop"/>
+        <attr format="dimension" name="stpi_labelSize"/>
+        <attr format="color" name="stpi_labelColor"/>
+    </declare-styleable>
+</resources>

@@ -1,0 +1,29 @@
+subprojects {
+  buildscript {
+    repositories {
+      jcenter()
+    }
+    dependencies {
+      classpath 'com.android.tools.build:gradle:2.2.2'
+    }
+    project.ext {
+      buildToolsVersion = "25.0.2"
+      compileSdkVersion = 25
+      targetSdkVersion = 25
+      minSdkVersion = 14
+    }
+  }
+
+  repositories {
+    mavenCentral()
+    maven {
+      url "https://clojars.org/repo/"
+    }
+    mavenLocal()
+  }
+}
+
+ext {
+  icepickVersion = '3.2.0-SNAPSHOT'
+  parcelerVersion = '1.1.6'
+}

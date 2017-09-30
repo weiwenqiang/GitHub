@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">Smart Login Library</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="fb_login_text">Sign in with facebook</string>
+    <string name="twitter_login_text">Sign in with Twitter</string>
+    <string name="google_login_text">Sign in with Google</string>
+    <string name="or">or</string>
+
+    <!-- hints -->
+    <string name="email_hint">Email</string>
+    <string name="username_hint">Username</string>
+    <string name="username_email_hint">Username/Email</string>
+    <string name="password_hint">Password</string>
+    <string name="confirm_password_hint">Confirm Password</string>
+
+    <string name="forgot">forgot?</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up">No account yet? Create one</string>
+    <string name="sign_up_button">Sign up</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_smart_login">SmartLoginActivity</string>
+
+    <!--<string name="facebook_app_id">221623114699507</string>-->
+    <string name="config_data">config</string>
+
+    <string name="network_error">Something went wrong. Please check Network Connection.</string>
+    <string name="username_error">Please enter your username</string>
+    <string name="email_error">Please enter your email</string>
+    <string name="password_error">Please choose a password</string>
+    <string name="no_email_error">You need an email to sign up</string>
+    <string name="invalid_email_error">Please enter a valid email</string>
+
+    <string name="loading_holder">Please wait…</string>
+    <string name="logging_holder">Logging in…</string>
+    <string name="getting_data">Getting User Info…</string>
+    <string name="password_mismatch">Make sure your passwords match</string>
+    <string name="login_failed">Login failed! Try again!</string>
+
+</resources>

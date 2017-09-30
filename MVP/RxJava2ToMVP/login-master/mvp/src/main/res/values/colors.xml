@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="white">#ffffff</color>
+    <color name="gray">#D0D0D0</color>
+    <color name="grayBlue">#6633b5e5</color>
+    <drawable name="pressedBlue">#ff0099cc</drawable>
+    <drawable name="blue">#ff33b5e5</drawable>
+    <color name="blueTextColor">#ff33b5e5</color>
+    <color name="pressed">#ff0099cc</color>
+    <drawable name="slidingBg">#FBFBFB</drawable>
+</resources>

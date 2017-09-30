@@ -1,0 +1,116 @@
+<!--
+  ~ Copyright 2017 lizhaotailang
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+    <string name="app_name">纸飞机</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="nav_home">首页</string>
+    <string name="nav_bookmarks">收藏</string>
+
+    <string name="zhihu_daily">知乎日报</string>
+    <string name="guokr_handpick">果壳精选</string>
+    <string name="douban_moment">豆瓣一刻</string>
+
+    <!--常用-->
+    <string name="positive">确定</string>
+    <string name="negative">取消</string>
+    <string name="share_error">分享失败</string>
+
+    <string name="title_activity_read">阅读</string>
+    <string name="title_activity_guokr_read">果壳精选</string>
+    <string name="loading_more">正在加载…</string>
+    <string name="loaded_failed">加载失败!</string>
+    <string name="retry">重试</string>
+    <string name="copied_to_clipboard">复制成功</string>
+    <string name="copied_to_clipboard_failed">复制失败</string>
+    <string name="added_to_bookmarks">已添加到收藏</string>
+    <string name="deleted_from_bookmarks">已从收藏中删除</string>
+
+    <string name="feel_lucky">随便看看</string>
+    <string name="feel_lucky_short">随便看看</string>
+    <string name="search_bookmarks">搜索收藏</string>
+    <string name="check_bookmarks">查看收藏</string>
+
+    <!--bottom sheet list-->
+    <string name="action_add_to_bookmarks">添加到收藏</string>
+    <string name="action_delete_from_bookmarks">取消收藏</string>
+    <string name="action_copy_link">复制链接</string>
+    <string name="action_open_in_browser">在浏览器中打开</string>
+    <string name="action_copy_text">复制内容文本</string>
+    <string name="action_share_as_text">作为文本分享</string>
+
+    <!--main menu-->
+    <string name="change_theme">切换主题</string>
+    <string name="settings">设置</string>
+    <string name="about">关于</string>
+    <!--navigation view menu end-->
+
+    <string name="share_extra"> 分享自 纸飞机</string>
+    <string name="share_to">分享至</string>
+
+    <!--activity关于-->
+    <string name="version">版本:V3.2.0</string>
+    <string name="rate">为纸飞机应用评分</string>
+    <string name="feedback">反馈Bug / 建议</string>
+    <string name="donate">捐赠开发者</string>
+    <string name="donate_content">支付宝账号将会复制到粘贴板，进入支付宝可直接粘贴完成捐赠，感谢您的支持！</string>
+    <string name="donate_account">marktonymengyi@gmail.com</string>
+    <string name="sendto">mailto:marktonymengyi@gmail.com</string>
+    <string name="mail_topic">纸飞机使用反馈与建议</string>
+    <string name="device_model">设备型号:</string>
+    <string name="sdk_version">SDK版本:</string>
+    <string name="no_mail_app">没有找到邮件类App</string>
+    <string name="no_app_store_found">没有市场类App</string>
+    <string name="no_browser_found">没有安装浏览器</string>
+    <string name="author">作者</string>
+    <string name="author_name">黎赵太郎</string>
+    <string name="author_description">湖南,长沙</string>
+    <string name="follow_me_on_github">在GitHub关注我</string>
+    <string name="follow_me_on_zhihu">在知乎关注我</string>
+    <string name="support">支持</string>
+    <string name="feedback_description">帮助我改进纸飞机App</string>
+    <string name="coffee">请我喝杯咖啡</string>
+    <string name="coffee_description">如果你认同我的工作，可以请我喝杯咖啡表示支持</string>
+    <string name="github_url">https://github.com/marktony</string>
+    <string name="zhihu_url">https://www.zhihu.com/people/kirin-momo</string>
+    <string name="rate_description">如果你喜欢纸飞机App,请在商店中给它一个好评吧</string>
+    <string name="zhihu_account">\@黎赵太郎</string>
+    <string name="open_source_license">开源许可</string>
+    <string name="easter_egg">彩蛋</string>
+    <string name="easter_egg_content">点我名字这么多次， 你一定是喜欢我!</string>
+    <string name="sure">确定</string>
+    <string name="yes">是的</string>
+    <!--activity关于 end-->
+
+    <!--settings_preference_fragment-->
+    <string name="basic_settings">基本设置</string>
+    <string name="no_picture_mode">无图模式</string>
+    <string name="no_picture_mode_description">阅读时不再加载图片</string>
+    <string name="in_app_browser">使用内置浏览器</string>
+    <string name="in_app_browser_description">应用内查看链接</string>
+    <string name="time_of_saving_articles">文章保存时间</string>
+    <string name="other_settings">其他设置</string>
+    <string name="clear_image_cache">清除图片缓存</string>
+    <string name="clear_image_cache_successfully">清理成功</string>
+    <!--setting-->
+
+    <string name="network_error">网络走丢了…点击重试</string>
+    <string name="refresh">刷新</string>
+
+</resources>

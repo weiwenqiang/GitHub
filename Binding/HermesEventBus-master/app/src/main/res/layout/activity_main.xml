@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Event received will be shown below:"/>
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start new process" />
+    <Button
+        android:id="@+id/post_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="post event 3s later"/>
+    <Button
+        android:id="@+id/post_sticky_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="post sticky event 3s later"/>
+    <Button
+        android:id="@+id/get_sticky_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="get sticky event"/>
+    <Button
+        android:id="@+id/remove_sticky_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="remove sticky event from the main process"/>
+    <Button
+        android:id="@+id/remove_get_sticky_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="remove and get sticky event"/>
+    <Button
+        android:id="@+id/remove_all_sticky_events"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="remove all sticky events"/>
+    <Button
+        android:id="@+id/start_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start service"/>
+    <!--<Button-->
+        <!--android:id="@+id/exception"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Throw an exception"/>-->
+</LinearLayout>

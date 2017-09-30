@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f4f4f4"
+    android:orientation="vertical"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    tools:context="com.chen.test.UI.SetPassActivity">
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="设置密码后，你就可以使用手机号来登录了"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <com.chen.test.Utils.ClearEditText
+            android:id="@+id/pass"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/style_edt_login"
+            android:hint="6-16个字符以内,区分大小写"
+            android:imeOptions="actionNext"
+            android:inputType="textPassword"
+            android:maxLength="16"
+            android:maxLines="1"
+            android:nextFocusForward="@+id/pass2"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:paddingStart="80dp"
+            android:singleLine="true"
+            android:textCursorDrawable="@drawable/color_cursor"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:background="@null"
+            android:gravity="center"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:text="密码"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+
+        <com.chen.test.Utils.ClearEditText
+            android:id="@+id/pass2"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/style_edt_login"
+            android:hint="请再次输入"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:paddingStart="80dp"
+            android:singleLine="true"
+            android:textCursorDrawable="@drawable/color_cursor"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:background="@null"
+            android:gravity="center"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:text="确认密码"
+            android:textSize="14sp" />
+
+
+    </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/finish"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/style_btn_login"
+        android:text="完成"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+
+</LinearLayout>

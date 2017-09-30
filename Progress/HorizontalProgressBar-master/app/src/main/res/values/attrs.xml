@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="progressbar_text_size" format="dimension"></attr>
+    <attr name="progressbar_text_color" format="color"></attr>
+    <attr name="progressbar_text_offset" format="dimension"></attr>
+    <attr name="progressbar_reach_color" format="color"></attr>
+    <attr name="progressbar_reach_height" format="dimension"></attr>
+    <attr name="progressbar_unreach_color" format="color"></attr>
+    <attr name="progressbar_unreach_height" format="dimension"></attr>
+    <!--自定义水平滚动条的属性-->
+    <declare-styleable name="HorizonalProgessBar">
+        <attr name="progressbar_text_size"></attr>
+        <attr name="progressbar_text_color"></attr>
+        <attr name="progressbar_text_offset"></attr>
+        <attr name="progressbar_reach_color"></attr>
+        <attr name="progressbar_reach_height"></attr>
+        <attr name="progressbar_unreach_color"></attr>
+        <attr name="progressbar_unreach_height"></attr>
+    </declare-styleable>
+
+    <!--自定义圆形滚动条的属性-->
+    <declare-styleable name="RoundProgressBar">
+        <attr name="progressbar_radius" format="dimension"></attr>
+        <attr name="progressbar_text_visible" format="boolean"></attr>
+    </declare-styleable>
+</resources>

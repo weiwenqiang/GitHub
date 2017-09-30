@@ -1,0 +1,45 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+
+
+        //==================Color============//
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="backgroundCard">@color/backgroundCard</item>
+        <item name="textColor">@color/textColor</item>
+        <item name="textColorBg">@color/textColorBg</item>
+        <item name="colorWhite">@color/colorWhite</item>
+        //==================Color============//
+
+        //==================String============//
+        <item name="themeType">@string/theme</item>
+        //==================String============//
+
+        //==================Drawable============//
+        <item name="themeIcon">@drawable/icon_theme</item>
+        //==================Drawable============//
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+
+    </style>
+
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <style name="WindowAnimationFadeInOut">
+        <item name="@android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="@android:windowExitAnimation">@anim/fade_out</item>
+    </style>
+
+</resources>
