@@ -1,6 +1,6 @@
-exec {
-    commandLine "git", "submodule", "update", "--init", "--recursive"
-}
+//exec {
+//    commandLine "git", "submodule", "update", "--init", "--recursive"
+//}
 include ':library'
 include ':annotation'
 include ':annotation:compiler'
