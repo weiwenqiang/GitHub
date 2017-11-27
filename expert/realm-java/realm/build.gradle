@@ -1,0 +1,45 @@
+buildscript {
+    ext.kotlin_version = '1.1.51'
+    repositories {
+        mavenLocal()
+        google()
+        jcenter()
+        maven { url 'https://jitpack.io' }
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.1.0-alpha03'
+        classpath 'de.undercouch:gradle-download-task:3.3.0'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
+        classpath 'com.novoda:gradle-android-command-plugin:1.7.1'
+        classpath 'com.github.skhatri:gradle-s3-plugin:1.0.4'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.5.4'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath "io.realm:realm-transformer:${file('../version.txt').text.trim()}"
+        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.13'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+allprojects {
+    def props = new Properties()
+    props.load(new FileInputStream("${rootDir}/../realm.properties"))
+    props.each { key, val ->
+        project.ext.set(key, val)
+    }
+
+    group = 'io.realm'
+    version = file("${rootDir}/../version.txt").text.trim();
+    repositories {
+        mavenLocal()
+        google()
+        jcenter()
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = project.gradleVersion
+    distributionType = 'all'
+}

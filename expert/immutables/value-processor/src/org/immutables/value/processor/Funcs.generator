@@ -1,0 +1,172 @@
+[--
+   Copyright 2016 Immutables Authors and Contributors
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+--]
+[template public generate]
+  [for type in values.values if type.kind.isValue,
+       func = type.functionalData]
+    [if func.is]
+[output.java type.package (type.name 'Functions')]
+[type.sourceHeader]
+[generateFunctions type func]
+[/output.java]
+    [/if]
+  [/for]
+[/template]
+
+[template generateFunctions Type type Func func]
+[if type.package]
+package [type.package];
+[/if]
+
+/**
+ * Projection functions and predicates that corresponds to attributes of {@link [type.typeAbstract.relative]}.
+ */
+[if type.generatedSuppressWarnings]
+@SuppressWarnings({[for k in type.generatedSuppressWarnings][if not for.first], [/if][literal k][/for]})
+[/if]
+[if classpath.available 'javax.annotation.ParametersAreNonnullByDefault']
+@javax.annotation.ParametersAreNonnullByDefault
+[/if]
+[if classpath.available 'javax.annotation.Generated']
+@javax.annotation.Generated({"Immutables.generator", "[type.typeAbstract.relative]"})
+[/if]
+[type.typePreferablyAbstract.access]final class [type.name]Functions {
+  private [type.name]Functions() {}
+  [generateAttributes type func]
+  [generateBoundElements type func]
+}
+[/template]
+
+[template generateAttributes Type type Func func]
+[for h in func.functionalAttributes]
+[if h.boolean]
+
+/**
+ * Predicate on instance of [type.name] that tests attribute [sourceDocRef type h].
+ * @return {@code [h.name]} predicate instance
+ */
+[h.access]static[type.generics.def] [guava].base.Predicate<[type.typePreferablyAbstract]> [h.names.get]() {
+  [if type.generics]
+  return new [guava].base.Predicate<[type.typePreferablyAbstract]>() {
+    @Override
+    public boolean apply([type.typePreferablyAbstract] input) {
+      return input.[h.names.get]();
+    }
+    @Override
+    public java.lang.String toString() {
+      return "[type.name]Functions.[h.names.get]()";
+    }
+  };
+  [else]
+  return [toUpper h.name]Predicate.INSTANCE;
+  [/if]
+}
+  [if not type.generics]
+
+private enum [toUpper h.name]Predicate implements [guava].base.Predicate<[type.typePreferablyAbstract]> {
+  INSTANCE;
+  @Override
+  public boolean apply([type.typePreferablyAbstract] input) {
+    return input.[h.names.get]();
+  }
+  @Override
+  public java.lang.String toString() {
+    return "[type.name]Functions.[h.names.get]()";
+  }
+}
+  [/if]
+[else]
+
+/**
+ * Projection function from instance of [type.name] to attribute [sourceDocRef type h].
+ * @return {@code [h.name]} function instance
+ */
+[h.access]static[type.generics.def] [guava].base.Function<[type.typePreferablyAbstract], [h.wrapperType]> [h.names.get]() {
+  [if type.generics]
+  return new [guava].base.Function<[type.typePreferablyAbstract], [h.wrapperType]>() {
+    @Override
+    public [h.atNullability][h.wrapperType] apply([type.typePreferablyAbstract] input) {
+      return input.[h.names.get]();
+    }
+    @Override
+    public java.lang.String toString() {
+      return "[type.name]Functions.[h.names.get]()";
+    }
+  };
+  [else]
+  return [toUpper h.name]Function.INSTANCE;
+  [/if]
+}
+  [if not type.generics]
+
+private enum [toUpper h.name]Function implements [guava].base.Function<[type.typePreferablyAbstract], [h.wrapperType]> {
+  INSTANCE;
+  @Override
+  public [h.atNullability][h.wrapperType] apply([type.typePreferablyAbstract] input) {
+    return input.[h.names.get]();
+  }
+  @Override
+  public java.lang.String toString() {
+    return "[type.name]Functions.[h.names.get]()";
+  }
+}
+  [/if]
+[/if]
+[/for]
+[/template]
+
+[template generateBoundElements Type type Func func]
+[for h in func.boundElements]
+[if h.type.toString eq 'boolean']
+
+/**
+ * Predicate from instance of [type.name] to a bound call to {@code [h.name][h.arguments]}.
+ * @return {@code [h.name]} predicate instance
+ */
+[h.access]static[type.generics.def] [guava].base.Predicate<[type.typePreferablyAbstract]> [h.name][h.parameters] {
+  return new [guava].base.Predicate<[type.typePreferablyAbstract]>() {
+    @Override
+    public boolean apply([type.typePreferablyAbstract] input) {
+      return input.[h.name][h.arguments];
+    }
+    @Override
+    public java.lang.String toString() {
+      return "[type.name]Functions.[h.name][h.arguments]";
+    }
+  };
+}
+[else]
+
+/**
+ * Function from instance of [type.name] to a bound call to {@code [h.name]}.
+ * @return {@code [h.name]} function instance
+ */
+[h.access]static[type.generics.def] [guava].base.Function<[type.typePreferablyAbstract], [h.type]> [h.name][h.parameters] {
+  return new [guava].base.Function<[type.typePreferablyAbstract], [h.type]>() {
+    @Override
+    public [h.type] apply([type.typePreferablyAbstract] input) {
+      return input.[h.name][h.arguments];
+    }
+    @Override
+    public java.lang.String toString() {
+      return "[type.name]Functions.[h.name][h.arguments]";
+    }
+  };
+}
+[/if]
+[/for]
+[/template]
+
+[template sourceDocRef Type t Attribute a][if t.kind.isValue]{@link [t.typeAbstract.relative]#[a.names.get]() [a.names.raw]}[else]{@code [a.names.raw]}[/if][/template]

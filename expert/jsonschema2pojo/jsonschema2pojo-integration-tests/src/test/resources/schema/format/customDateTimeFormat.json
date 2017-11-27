@@ -1,0 +1,43 @@
+{
+    "type" : "object",
+    "properties" : {
+        "defaultFormat" : {
+            "type" : "string",
+            "format" : "date-time"
+        },
+        "defaultFormatCustomTZ" : {
+            "type" : "string",
+            "format" : "date-time",
+            "customTimezone" : "PST"
+        },
+        "customFormatDefaultTZ" : {
+            "type" : "string",
+            "format" : "date-time",
+            "customDateTimePattern" : "yyyy-MM-dd'T'HH:mm:ss"
+        },
+        "customFormatCustomTZ" : {
+            "type" : "string",
+            "format" : "date-time",
+            "customDateTimePattern" : "yyyy-MM-dd'T'HH:mm:ss",
+            "customTimezone" : "PST"
+        },
+        "defaultFormatDate" : {
+            "type" : "string",
+            "format" : "date"
+        },
+        "defaultFormatTime" : {
+            "type": "string",
+            "format": "time"
+        },
+        "customFormatCustomDate" : {
+            "type" : "string",
+            "format" : "date",
+            "customDatePattern" : "dd-MM-yyyy"
+        },
+        "customFormatCustomTime" : {
+            "type" : "string",
+            "format" : "time",
+            "customTimePattern" : "H:mm a"
+        }
+    }
+}

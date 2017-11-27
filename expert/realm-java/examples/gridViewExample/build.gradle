@@ -1,0 +1,42 @@
+apply plugin: 'com.android.application'
+apply plugin: 'realm-android'
+
+android {
+    compileSdkVersion rootProject.sdkVersion
+    buildToolsVersion rootProject.buildTools
+
+    defaultConfig {
+        applicationId 'io.realm.examples.realmgridview'
+        targetSdkVersion rootProject.sdkVersion
+        minSdkVersion rootProject.minSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+    }
+
+    splits {
+        // Split apks on build target ABI, view all options for the splits here:
+        // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
+        abi {
+            enable true
+            reset()
+            include 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'mips', 'x86', 'x86_64'
+        }
+    }
+}
+
+dependencies {
+    implementation 'com.google.code.gson:gson:2.8.2'
+}

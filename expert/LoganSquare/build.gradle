@@ -1,0 +1,119 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:3.0.1'
+    }
+}
+
+allprojects {
+    apply plugin: 'idea'
+
+    group = 'com.bluelinelabs'
+    version = '1.3.6'
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+    apply plugin: 'com.jfrog.bintray'
+
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    artifacts {
+        archives sourcesJar, javadocJar
+    }
+
+    repositories {
+        jcenter()
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                artifact sourcesJar
+                artifact javadocJar
+                artifactId project.ext.artifactId
+
+                pom.withXml {
+                    def node = asNode()
+                    node.appendNode('name', 'LoganSquare')
+                    node.appendNode('description', 'Screaming fast JSON parsing and serialization library for Android.')
+                    node.appendNode('url', 'https://github.com/bluelinelabs/LoganSquare')
+
+                    def organizationNode = node.appendNode('organization')
+                    organizationNode.appendNode('name', 'BlueLine Labs')
+                    organizationNode.appendNode('url', 'http://bluelinelabs.com')
+
+                    def scmNode = node.appendNode('scm')
+                    scmNode.appendNode('connection', 'scm:git:https://github.com/bluelinelabs/LoganSquare')
+                    scmNode.appendNode('developerConnection', 'scm:git:https://github.com/bluelinelabs/LoganSquare')
+                    scmNode.appendNode('url', 'https://github.com/bluelinelabs/LoganSquare')
+
+                    def developersNode = node.appendNode('developers')
+                    def ericNode = developersNode.appendNode('developer')
+                    ericNode.appendNode('id', 'erickuck')
+                    ericNode.appendNode('name', 'Eric Kuck')
+
+                    def licensesNode = node.appendNode('licenses')
+                    def licenseNode = licensesNode.appendNode('license')
+                    licenseNode.appendNode('name', 'Apache 2.0')
+                    licenseNode.appendNode('url', 'http://www.apache.org/licenses/LICENSE-2.0.txt')
+
+                }
+            }
+        }
+    }
+
+    bintray {
+        user = project.hasProperty('bintray_username') ? bintray_username : ''
+        key = project.hasProperty('bintray_api_key') ? bintray_api_key : ''
+        publications = ['mavenJava']
+
+        dryRun = false
+        publish = false
+
+        pkg {
+            repo = 'bluelinelabs'
+            userOrg = 'bluelinelabs'
+            name = 'LoganSquare'
+            desc = 'Screaming fast JSON parsing and serialization library for Android.'
+            websiteUrl = 'https://github.com/bluelinelabs/LoganSquare'
+            issueTrackerUrl = 'https://github.com/bluelinelabs/LoganSquare/issues'
+            vcsUrl = 'https://github.com/bluelinelabs/LoganSquare'
+            licenses = ['Apache-2.0']
+            labels = ['json', 'android', 'parser', 'serializer', 'jackson']
+            publicDownloadNumbers = true
+            version {
+                name = project.version
+                gpg {
+                    sign = true
+                    passphrase = project.hasProperty('bintray_gpg_passphrase') ? bintray_gpg_passphrase : ''
+                }
+                mavenCentralSync {
+                    sync = false
+                    user = project.hasProperty('maven_central_username') ? maven_central_username : ''
+                    password = project.hasProperty('maven_central_password') ? maven_central_password : ''
+                    close = '1'
+                }
+            }
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.9'
+}

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+   Copyright 2016 Immutables Authors and Contributors
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>immutables</artifactId>
+    <groupId>org.immutables</groupId>
+    <version>2.6.0-alpha2</version>
+  </parent>
+
+  <artifactId>metainf</artifactId>
+  <version>2.6.0-alpha2</version>
+  <name>${project.groupId}.${project.artifactId}</name>
+  <description>Simple, but superior to others, META-INF/service file generator</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.immutables</groupId>
+      <artifactId>generator</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.immutables</groupId>
+      <artifactId>generator-processor</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.immutables</groupId>
+      <artifactId>metainf</artifactId>
+      <version>${retro.version}</version>
+      <optional>true</optional>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.immutables</groupId>
+      <artifactId>testing</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <compilerVersion>1.6</compilerVersion>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.immutables.tools</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>4</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <createDependencyReducedPom>true</createDependencyReducedPom>
+              <shadedArtifactAttached>false</shadedArtifactAttached>
+              <minimizeJar>true</minimizeJar>
+
+              <artifactSet>
+                <includes>
+                  <include>org.immutables:metainf</include>
+                  <include>org.immutables:generator</include>
+                  <include>com.google.guava:guava</include>
+                </includes>
+              </artifactSet>
+
+              <relocations>
+                <relocation>
+                  <pattern>com.google.common</pattern>
+                  <shadedPattern>org.immutables.metainf.internal.$guava$</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>com.google.thirdparty</pattern>
+                  <shadedPattern>org.immutables.metainf.internal.$thirdparty$</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.immutables.metainf.processor</pattern>
+                  <shadedPattern>org.immutables.metainf.internal.$processor$</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.immutables.generator</pattern>
+                  <shadedPattern>org.immutables.metainf.internal.$generator$</shadedPattern>
+                </relocation>
+              </relocations>
+
+              <filters>
+                <filter>
+                  <artifact>org.immutables:metainf</artifact>
+                  <includes>
+                    <include>**</include>
+                  </includes>
+                  <excludes>
+                    <exclude>**/*.generator</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>com.google.guava:guava</artifact>
+                  <excludes>
+                    <exclude>META-INF/maven/**</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+              </transformers>
+            </configuration>
+          </execution>
+          <execution>
+            <id>annotations</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+              <shadedArtifactAttached>true</shadedArtifactAttached>
+              <minimizeJar>false</minimizeJar>
+              <createSourcesJar>true</createSourcesJar>
+              <shadedClassifierName>annotations</shadedClassifierName>
+
+              <artifactSet>
+                <includes>
+                  <include>org.immutables:metainf</include>
+                </includes>
+              </artifactSet>
+
+              <filters>
+                <filter>
+                  <artifact>org.immutables:metainf</artifact>
+                  <includes>
+                    <include>org/immutables/metainf/*</include>
+                  </includes>
+                </filter>
+              </filters>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="io.realm"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.SET_DEBUG_APP"/>
+
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="22"/>
+
+    <application
+        android:debuggable="true"
+        android:largeHeap="true">
+        <uses-library android:name="android.test.runner"/>
+        <service
+            android:name=".services.RemoteProcessService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":remote">
+        </service>
+
+         <!--
+          FIXME: Manifest merger doesn't seem to work correctly with test flavours.
+          Figure out why. For now place services here
+          -->
+        <service
+            android:name="io.realm.objectserver.ProcessCommitTests$SimpleCommitRemoteService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":remote">
+        </service>
+        <service
+            android:name="io.realm.objectserver.ProcessCommitTests$ALotCommitsRemoteService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":remote">
+        </service>
+    </application>
+
+</manifest>

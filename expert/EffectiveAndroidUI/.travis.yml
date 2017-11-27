@@ -1,0 +1,14 @@
+language: android
+
+android:
+  components:
+    - build-tools-23.0.1
+    - android-23
+    - extra-google-google_play_services
+    - extra-google-m2repository
+    - extra-android-m2repository
+    - extra-android-support
+
+script:
+  # Place findbugs after build
+  ./gradlew checkstyle pmd build findbugs

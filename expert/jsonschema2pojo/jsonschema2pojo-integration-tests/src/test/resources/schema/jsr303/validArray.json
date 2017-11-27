@@ -1,0 +1,40 @@
+{
+    "type" : "object",
+    "properties" : {
+        "primitivearray" : {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "objectarray" : {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "arrayitem":{
+                        "type": "string",
+                        "maxLength" : 5
+                    }
+                }
+            }
+        },
+        "refarray" : {
+            "type": "array",
+            "items": {
+                "$ref": "#definitions/product"
+            }
+        }
+    },
+    "definitions": {
+        "product": {
+            "type": "object",
+            "properties": {
+                "arrayitem":{
+                    "type": "string",
+                    "maxLength" : 5
+                }
+            }
+        }
+    }
+}

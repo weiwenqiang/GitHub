@@ -1,0 +1,48 @@
+language: android
+sudo: required
+dist: trusty
+
+android:
+  components:
+  - tools
+  - platform-tools
+  - tools
+  - build-tools-26.0.2
+  - android-26
+
+licenses:
+  - 'android-sdk-license.*'
+
+jdk:
+  - oraclejdk8
+
+env:
+  matrix:
+    - COMPONENT=unit
+    - COMPONENT=firebase
+    - COMPONENT=instrumentation ANDROID_TARGET=16
+    - COMPONENT=instrumentation ANDROID_TARGET=17
+    - COMPONENT=instrumentation ANDROID_TARGET=18
+    - COMPONENT=instrumentation ANDROID_TARGET=19
+    - COMPONENT=instrumentation ANDROID_TARGET=21
+    - COMPONENT=instrumentation ANDROID_TARGET=22
+    - COMPONENT=samples
+
+before_script:
+  - ./scripts/travis_before_script.sh
+
+script:
+  - ./scripts/travis_script.sh
+
+after_success:
+  - ./scripts/travis_after_success.sh
+
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache
+

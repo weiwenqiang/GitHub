@@ -1,0 +1,50 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+project.group = GROUP
+version = VERSION_NAME
+
+dependencies {
+    provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    compile "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
+    testCompile "junit:junit:${JUNIT_VERSION}"
+    androidTestCompile "junit:junit:${JUNIT_VERSION}"
+    androidTestCompile 'com.android.support.test:runner:0.4'
+    androidTestCompile 'com.android.support.test:rules:0.4'
+    compile project(':fbcore')
+    compile project(':imagepipeline-base')
+}
+apply from: rootProject.file('release.gradle')
+
+// We download various C++ open-source dependencies from SourceForge into nativedeps/downloads.
+// We then copy both downloaded code and our custom makefiles and headers into nativedeps/merge.
+
+task fetchNativeDeps(dependsOn: [copyLibwebp, copyLibpng, copyLibjpeg]) {
+}
+
+android {
+
+    def ndkLibs = [['static-webp', [copyLibjpeg, copyLibpng, copyLibwebp]]]
+
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    sourceSets {
+        main {
+            jni.srcDirs = []
+            jniLibs.srcDirs = ndkLibs.collect { "$buildDir/${it[0]}" }
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+    ndkLibs.each { lib -> makeNdkTasks lib[0], lib[1] }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+artifacts.add('archives', sourcesJar)

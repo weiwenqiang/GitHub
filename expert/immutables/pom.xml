@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+   Copyright 2013-2016 Immutables Authors and Contributors
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
+
+  <groupId>org.immutables</groupId>
+  <artifactId>immutables</artifactId>
+  <version>2.6.0-alpha2</version>
+  <packaging>pom</packaging>
+
+  <name>${project.groupId}.${project.artifactId}</name>
+  <description>
+    Java annotation processing toolkit. Focus is on immutability, type safety, fluent interfaces, high-performance.
+  </description>
+  <url>http://immutables.org</url>
+
+  <modules>
+    <module>utility</module>
+    <module>testing</module>
+    <module>generator</module>
+    <module>generator-processor</module>
+    <module>generator-fixture</module>
+    <module>metainf</module>
+    <module>mirror</module>
+    <module>value</module>
+    <module>ordinal</module>
+    <module>builder</module>
+    <module>android-stub</module>
+    <module>gson</module>
+    <module>mongo</module>
+    <module>func</module>
+    <module>value-processor</module>
+    <module>value-fixture</module>
+    <module>serial</module>
+    <module>trees</module>
+    <module>encode</module>
+  </modules>
+
+  <organization>
+    <name>The Immutables.org authors</name>
+    <url>http://immutables.org</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <id>elucash</id>
+      <name>Ievgen Lukash</name>
+      <email>e.lucash@gmail.com</email>
+      <timezone>-8</timezone>
+    </developer>
+    <developer>
+      <id>ivysharev</id>
+      <name>Ilya Vysharev</name>
+      <email>ivysharev@gmail.com</email>
+      <timezone>+2</timezone>
+    </developer>
+    <developer>
+      <id>augustotravillio</id>
+      <name>Augusto Travillio</name>
+      <email>augusto.travillio@gmail.com</email>
+      <timezone>-8</timezone>
+    </developer>
+  </developers>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+      <comments>For all code which is used at runtime</comments>
+    </license>
+  </licenses>
+
+  <scm>
+    <connection>scm:git:https://github.com/immutables/immutables.git</connection>
+    <developerConnection>scm:git:https://github.com/immutables/immutables.git</developerConnection>
+    <url>https://github.com/immutables/immutables.git</url>
+  </scm>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <retro.version>2.5.1</retro.version>
+  </properties>
+
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <testSourceDirectory>test</testSourceDirectory>
+    <resources>
+      <resource>
+        <directory>src</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </resource>
+    </resources>
+    <testResources>
+      <testResource>
+        <directory>test</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </testResource>
+    </testResources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.0.2</version>
+        <configuration>
+          <archive>
+            <addMavenDescriptor>false</addMavenDescriptor>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.6.1</version>
+        <configuration>
+          <compilerVersion>1.7</compilerVersion>
+          <source>1.7</source>
+          <target>1.7</target>
+          <useIncrementalCompilation>false</useIncrementalCompilation>
+          <compilerArgs>
+            <arg>-Xlint:unchecked</arg>
+          </compilerArgs>
+          <compilerArguments>
+            <Xmaxerrs>1000000</Xmaxerrs>
+          </compilerArguments>
+        </configuration>
+      </plugin>
+      <plugin>
+        <!-- This plugin isn't strictly necessary; without it the generated
+        sources are compiled just fine. It's here to make importing the project
+        into Eclipse using M2Eclipse a much smoother process. Thanks to this
+        configuration users won't have to manually add each generated source
+        directory to the build path. -->
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.12</version>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.build.directory}/generated-sources/annotations</source>
+              </sources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>add-test-source</id>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.build.directory}/generated-test-sources/test-annotations</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>sonatype-oss-release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.10.4</version>
+            <configuration>
+              <quiet>true</quiet>
+              <nonavbar>true</nonavbar>
+              <notree>true</notree>
+              <nocomment>true</nocomment>
+              <nohelp>true</nohelp>
+              <minmemory>1G</minmemory>
+              <maxmemory>2G</maxmemory>
+              <additionalparam>-Xdoclint:none</additionalparam>
+            </configuration>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>

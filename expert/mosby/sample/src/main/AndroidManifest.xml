@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.hannesdorfmann.mosby3.sample">
+
+  <application
+      android:allowBackup="true"
+      android:icon="@mipmap/ic_launcher"
+      android:label="@string/app_name"
+      android:theme="@style/AppTheme"
+      android:name="com.hannesdorfmann.mosby3.sample.SampleApplication">
+
+    <activity
+        android:name="com.hannesdorfmann.mosby3.sample.MainActivity"
+        android:label="@string/title_activity_main">
+
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+
+    </activity>
+
+    <activity android:name="com.hannesdorfmann.mosby3.sample.FragmentContainerActivity"
+        android:label="FragmentActivity"/>
+
+    <activity
+        android:name="com.hannesdorfmann.mosby3.sample.mvp.lce.activity.CountriesActivity"
+        android:label="@string/title_activity_lce">
+    </activity>
+
+    <activity android:name="com.hannesdorfmann.mosby3.sample.mvp.lce.viewstate.NotRetainingCountriesActivity"
+        android:label="NotRetainingCountriesActivity"
+        />
+
+    <activity android:name="com.hannesdorfmann.mosby3.sample.mvp.lce.viewstate.RetainingCountriesActivity"
+      android:label="RetainingCountriesActivity" />
+
+    <activity android:name="com.hannesdorfmann.mosby3.sample.mvp.customviewstate.MyCustomActivity"
+        android:label="Custom ViewState Activity"/>
+
+    <activity android:name="com.hannesdorfmann.mosby3.sample.mvp.lce.layout.CountriesLayoutActivity"
+        android:label="MVP Framelayout"/>
+
+    <activity android:name="com.hannesdorfmann.mosby3.sample.mvp.lce.viewstate.RetainingCountriesFragmentEmbededInXmlActivity"
+      android:label="Embeded ViewState Fragment"
+      />
+    
+    <activity android:name="com.hannesdorfmann.mosby3.sample.mvp.lce.viewpager.ViewPagerActivity"
+      android:label="ViewPager" />
+  </application>
+
+
+</manifest>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Thread example</string>
+    <string name="title_section1">Threads</string>
+    <string name="title_section2">AsyncTask</string>
+    <string name="title_section3">Async Query</string>
+    <string name="add_dot">Add blue dot</string>
+    <string name="clear_dots">Clear dots</string>
+    <string name="translate">Translate Dots</string>
+    <string name="start_activity">Passing to Activity</string>
+    <string name="title_activity_receiving">Receiving Activity</string>
+    <string name="title_section4">Object Passing</string>
+    <string name="start_intent_service">Passing to Intent Service</string>
+    <string name="start_receiver">Passing To Receiver</string>
+    <string name="coordinate">[X= %1$d Y= %2$d]</string>
+    <string name="start">Start</string>
+
+</resources>

@@ -1,0 +1,50 @@
+[--
+   Copyright 2016 Immutables Authors and Contributors
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+--]
+[template public generate]
+[for enc in encodings]
+[output.java enc.package (enc.name 'Enabled')]
+[generateEncoding enc]
+[/output.java]
+[/for]
+[/template]
+
+[template generateEncoding Encoding enc]
+package [enc.package];
+
+@org.immutables.encode.EncodingMetadata(
+  name = "[enc.package].[enc.name]",
+  imports = {
+[for imp in enc.nonlinkedImports][if not for.first],[/if]
+    [literal.string imp][/for]
+  },
+  typeParams = {[for p in enc.typeParams][if not for.first], [/if][literal p][/for]},
+  elements = {
+[for el in enc.allElements][if not for.first],[/if]
+    @org.immutables.encode.EncodingMetadata.Element(
+      name = [literal.string el.name],
+      tags = {[for t in el.tags][if not for.first], [/if][literal.string t][/for]},
+      naming = [literal.string el.naming],
+      stdNaming = [literal.string el.standardNaming],
+      type = [literal.string el.type],
+      typeParams = {[for t in el.typeParams][if not for.first], [/if][literal.string t][/for]},
+      params = {[for p in el.params][if not for.first], [/if][literal.string p][/for]},
+      code = [for String l = enc.linkage el][literal.string l][/for],
+      thrown = {[for t in el.thrown][if not for.first], [/if][literal.string t][/for]}
+    )[/for]
+  }
+)
+public @interface [enc.name]Enabled {}
+[/template]

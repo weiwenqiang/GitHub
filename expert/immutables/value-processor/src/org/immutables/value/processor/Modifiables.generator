@@ -1,0 +1,1166 @@
+[--
+   Copyright 2015-2016 Immutables Authors and Contributors
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+--]
+[template public generate]
+  [for type in values.values if type.kind.isModifiable]
+    [if type.generateOrdinalValue]
+[output.error]
+Use @Value.Modifiable cannot be used with @Value.Immutable which implements OrdinalValue
+[/output.error]
+    [else]
+[setTopLevelSimple type.names.typeModifiable]
+[output.java type.package type.names.typeModifiable]
+[generateModifiable type true]
+[/output.java]
+    [/if]
+  [/for]
+[/template]
+
+[template generateModifiable Type type Boolean topLevel]
+[packageWhenTopLevel type topLevel]
+[classJavadoc type]
+[annotationsWhenTopLevel type topLevel]
+[modifiableClass type topLevel]
+[/template]
+
+[template classJavadoc Type type]
+
+/**
+ * A modifiable implementation of the {@link [type.typeAbstract.relativeRaw] [type.typeAbstract.simple]} type.
+[if type.names.create eq 'new']
+ * <p>Use the constructor to create new modifiable instances. You may even extend this class to
+ * add some convenience methods, however most of the methods in this class are final
+ * to preserve safety and predictable invariants.
+[else]
+ * <p>Use the {@link #[type.names.create]()} static factory methods to create new instances.
+[/if]
+[if type.kind.isValue and type.useCopyConstructor]
+ * Use the {@link #[type.names.toImmutable]()} method to convert to canonical immutable instances.
+[/if]
+ * <p><em>[type.names.typeModifiable] is not thread-safe</em>
+[im.javadocGenerics type]
+[if type.kind.isValue]
+ * @see [type.typeValue.relativeRaw]
+[/if]
+ */
+[/template]
+
+[template modifiableClass Type type Boolean topLevel]
+[for mandatories = type.mandatoryOrEncodingAttributes,
+     nondefaults = type.requiresTrackedIsSetNonMandatoryAttributes,
+     LongPositions positions = longsFor mandatories,
+     LongPositions nondefaultsPositions = longsFor nondefaults]
+[type.typeImmutable.access][if not topLevel]static [/if][if type.names.create ne 'new']final [/if][output.linesShortable]class [type.names.typeModifiable][type.generics]
+    [if type.implementing]implements[else]extends[/if] [type.typeAbstract][if type.serial.shouldImplement][if type.implementing],
+        [else]
+    implements [/if]java.io.Serializable[/if] {[/output.linesShortable]
+[if type.serial.enabled]
+  [for serialVersion = type.serialVersionUID]
+    [if serialVersion]
+  private static final long serialVersionUID = [literal serialVersion];
+    [/if]
+  [/for]
+
+[/if]
+  [for m in mandatories, BitPosition pos = positions m]
+  private static final long INIT_BIT_[toConstant m.name] = [literal.hex pos.mask];
+  [/for]
+  [for p in nondefaults, BitPosition pos = nondefaultsPositions p]
+  private static final long OPT_BIT_[toConstant p.name] = [literal.hex pos.mask];
+  [/for]
+  [for l in positions.longs]
+  private long [disambiguateField type 'initBits'][emptyIfZero l.index] = [literal.hex l.occupation];
+  [/for]
+  [for l in nondefaultsPositions.longs]
+  private long [disambiguateField type 'optBits'][emptyIfZero l.index];
+  [/for]
+  [if positions.longs or nondefaultsPositions.longs][-- just to separate sections --]
+
+  [/if]
+  [for v in type.implementedAttributes if not v.generateDerived]
+  [defineField v true]
+  [/for]
+  [generateConstructors type]
+  [generateAccessors type]
+
+  /**
+   * Clears the object by setting all attributes to their initial values.
+   * @return {@code this} for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  public [thisSetterReturnType type] [type.names.clear]() {
+    [for l in positions.longs]
+    [disambiguateField type 'initBits'][emptyIfZero l.index] = [literal.hex l.occupation];
+    [/for]
+    [for l in nondefaultsPositions.longs]
+    [disambiguateField type 'optBits'][emptyIfZero l.index] = 0;
+    [/for]
+    [for v in type.implementedAttributes if not v.generateDerived]
+    [clearField v true]
+    [/for]
+    [thisSetterReturn type]
+  }
+  [generateFrom type]
+  [generateSetters type]
+  [for m in mandatories, BitPosition pos = positions m]
+
+  /**
+   * Returns {@code true} if the required attribute [sourceDocRef type m] is set.
+   * @return {@code true} if set
+   */
+  [jsonIgnore type]
+  public final boolean [isSet m]() {
+    return ([disambiguateField type 'initBits'][emptyIfZero pos.index] & INIT_BIT_[toConstant m.name]) == 0;
+  }
+  [/for]
+  [for p in nondefaults, BitPosition pos = nondefaultsPositions p]
+
+  /**
+   * Returns {@code true} if the [if p.generateDefault]default[else]non-required[/if] attribute [sourceDocRef type p] is set.
+   * @return {@code true} if set
+   */
+  [jsonIgnore type]
+  public final boolean [isSet p]() {
+    return ([disambiguateField type 'optBits'][emptyIfZero pos.index] & OPT_BIT_[toConstant p.name]) != 0;
+  }
+  [/for]
+  [for v in type.implementedAttributes]
+    [if v.generateDefault]
+      [if v.canUseNullAsUndefined]
+
+  /**
+   * Returns {@code true} if the default attribute [sourceDocRef type v] is set.
+   * @return {@code true} if set
+   */
+  public final boolean [isSet v]() {
+    return [v.name] != null;
+  }
+      [/if]
+    [else if v.deferCollectionAllocation]
+
+  /**
+   * Returns {@code true} if the [sourceDocRef type v] has not been initialized
+   * and will default to an empty [toLower v.rawCollectionType].
+   * @return {@code true} if set
+   */
+  public final boolean [isSet v]() {
+    return [v.name] != null;
+  }
+    [/if]
+  [/for]
+
+  [for m in mandatories, BitPosition pos = positions m]
+
+  /**
+   * Reset an attribute to its initial value.
+   * @return {@code this} for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  public final [thisSetterReturnType type] [unset m]() {
+    [disambiguateField type 'initBits'][emptyIfZero pos.index] |= INIT_BIT_[toConstant m.name];
+    [clearField m true]
+    [thisSetterReturn type]
+  }
+  [/for]
+  [for p in nondefaults, BitPosition pos = nondefaultsPositions p]
+  /**
+   * Reset an attribute to its initial value.
+   * @return {@code this} for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  public final [thisSetterReturnType type] [unset p]() {
+    [disambiguateField type 'optBits'][emptyIfZero pos.index] |= 0;
+    [clearField p true]
+    [thisSetterReturn type]
+  }
+  [/for]
+
+  /**
+   * Returns {@code true} if all required attributes are set, indicating that the object is initialized.
+   * @return {@code true} if set
+   */
+  [jsonIgnore type]
+  public final boolean [isInitialized type]() {
+    [if positions.longs]
+    return [for l in positions.longs][if not for.first]
+        && [/if][disambiguateField type 'initBits'][emptyIfZero l.index] == 0[/for];
+    [else]
+    return true;
+    [/if]
+  }
+  [if positions.longs]
+
+  private void [disambiguateAccessor type 'checkRequiredAttributes']() {
+    if (![isInitialized type]()) {
+      throw new IllegalStateException([disambiguateAccessor type 'formatRequiredAttributesMessage']());
+    }
+  }
+
+  private String [disambiguateAccessor type 'formatRequiredAttributesMessage']() {
+    java.util.List<String> attributes = [if type.generateJdkOnly]new java.util.ArrayList<String>()[else][guava].collect.Lists.newArrayList()[/if];
+    [for m in mandatories]
+    if (![m.names.isSet]()) attributes.add("[m.names.raw]");
+    [/for]
+    return "[type.name] in not initialized, some of the required attributes are not set " + attributes;
+  }
+  [/if]
+[if type.kind.isValue and (type.useCopyConstructor or (type.useBuilder or type.useConstructor))]
+
+  /**
+   * Converts to {@link [type.typeValue.relativeRaw] [type.typeValue.simple]}.
+   * @return An immutable instance of [type.name]
+   */
+  public final [type.typeValue] [type.names.toImmutable]() {
+  [if mandatories]
+    [disambiguateAccessor type 'checkRequiredAttributes']();
+  [/if]
+[if type.useCopyConstructor]
+    return [type.factoryCopyOf](this);
+[else if type.useBuilder]
+    return [type.factoryBuilder.relative]()
+      [if type.generateBuilderFrom]
+        .[type.names.from](this)
+      [else]
+        [for v in type.settableAttributes]
+          [if v.nullable]
+        .[v.names.init]([v.names.get]())
+          [else if v.collectionType]
+        .[v.names.addAll]([v.names.get]())
+          [else if v.mapType]
+        .[v.names.putAll]([v.names.get]())
+          [else]
+        .[v.names.init]([v.names.get]())
+          [/if]
+        [/for]
+      [/if]
+        .[type.names.build]();
+[else if type.useConstructor]
+    return [type.factoryOf.relative]([for v in type.constructorArguments][if not for.first], [/if][v.names.get]()[/for])[for
+            o in type.withSettableAfterConstruction]
+        .[o.names.with]([o.names.get]())[/for];
+[/if]
+  }
+[/if]
+  [generateEqualsHashCode type]
+  [generateToString type]
+[if topLevel and type.generateJdkOnly]
+  [im.objectsUtility type]
+[/if]
+[if topLevel and (type.generateJdkOnly and type.useCollectionUtility)]
+  [im.collectionUtility type]
+[/if]
+}
+[/for]
+[/template]
+
+[template generateConstructors Type type]
+[for Boolean useFactoryMethod = type.names.create ne 'new']
+[let constructorAccess][if useFactoryMethod]private[else]public[/if] [/let]
+[let constructorParameters][output.linesShortable][for p in type.constructorArguments][if not for.first],
+  [/if][p.atNullability][constructorAcceptType p] [p.name][/for][/output.linesShortable][/let]
+[let constructorParametersSupplied][for p in type.constructorArguments][if not for.first], [/if][p.name][/for][/let]
+[if type.useConstructor]
+  [if not useFactoryMethod]
+
+/**
+ * Construct a modifiable instance of {@code [type.typeAbstract.simple]}.
+[for p in type.constructorArguments]
+ * @param [p.name] The value for the [sourceDocRef type p] attribute [if p.nullable](can be {@code null})[/if]
+[/for]
+ */
+[constructorAccess][type.names.typeModifiable]([constructorParameters]) {
+  [for v in type.constructorArguments]
+    [if v.collectionType]
+  [v.names.addAll]([v.name]);
+    [else if v.mapType]
+  [v.names.putAll]([v.name]);
+    [else]
+  [v.names.set]([v.name]);
+    [/if]
+  [/for]
+}
+  [/if]
+[/if]
+[if useFactoryMethod or type.useConstructor][-- do not generate empty constructor if not necessary --]
+
+  [if not useFactoryMethod]
+/**
+ * Construct a modifiable instance of {@code [type.typeAbstract.simple]}.
+ */
+  [/if]
+[constructorAccess][type.names.typeModifiable]() {}
+[/if]
+[if useFactoryMethod]
+  [if type.useConstructor]
+
+/**
+ * Construct a modifiable instance of {@code [type.typeAbstract.simple]}.
+[im.javadocGenerics type]
+[for p in type.constructorArguments]
+ * @param [p.name] The value for the [sourceDocRef type p] attribute [if p.nullable](can be {@code null})[/if]
+[/for]
+ * @return A new modifiable instance
+ */
+public static[type.generics.def] [thisReturnType type] [type.names.create]([constructorParameters]) {
+  return new [type.names.typeModifiable][type.generics.args]()[for v in type.constructorArguments]
+    [if v.collectionType]
+      .[v.names.addAll]([v.name])[else if v.mapType]
+      .[v.names.putAll]([v.name])[else]
+      .[v.names.set]([v.name])[/if][/for];
+}
+  [/if]
+
+/**
+ * Construct a modifiable instance of {@code [type.typeAbstract.simple]}.
+[im.javadocGenerics type]
+ * @return A new modifiable instance
+ */
+public static[type.generics.def] [thisReturnType type] [type.names.create]() {
+  return new [type.names.typeModifiable][type.generics.diamond]();
+}
+[/if]
+[/for]
+[/template]
+
+[template generateFrom Type type]
+[if type.generateFilledFrom]
+[if type.buildFromTypes.hasManySupertypes]
+  [for s in type.buildFromTypes.supertypes]
+
+/**
+ * Fill this modifiable instance with attribute values from the provided {@link [s.type]} instance.
+ * @param instance The instance from which to copy values
+ * @return {@code this} for use in a chained invocation
+ */
+[atCanIgnoreReturnValue]
+public [thisSetterReturnType type] [type.names.from]([s.type] instance) {
+  [im.requireNonNull type](instance, "instance");
+  from((Object) instance);
+  [thisSetterReturn type]
+}
+  [/for]
+
+private void from(Object object) {
+[for bs = type.buildFromTypes]
+[for l in bs.positions.longs]
+  long bits[emptyIfZero l.index] = 0;
+  [/for]
+[for s in bs.supertypes if s.attributes]
+  if (object instanceof [s.type]) {
+    [s.type] instance = ([s.type]) object;
+    [for v in s.attributes, BitPosition pos = bs.positions v.name]
+    [if pos]
+    if ((bits[emptyIfZero pos.index] & [literal.hex pos.mask]) == 0) {
+      [buildFromAttribute v]
+      bits[emptyIfZero pos.index] |= [literal.hex pos.mask];
+    }
+    [else]
+    [buildFromAttribute v]
+    [/if]
+    [/for]
+  }
+[/for]
+[/for]
+}
+[else]
+
+/**
+ * Fill this modifiable instance with attribute values from the provided {@link [type.typeAbstract.relativeRaw]} instance.
+ * Regular attribute values will be overridden, i.e. replaced with ones of an instance.
+ * Any of the instance's absent optional values will not be copied (will not override current values).
+[if type.hasSettableCollection or type.hasSettableMapping]
+ * Collection elements and entries will be added, not replaced.
+[/if]
+ * @param instance The instance from which to copy values
+ * @return {@code this} for use in a chained invocation
+ */
+public [thisReturnType type] [type.names.from]([type.typeAbstract] instance) {
+  [im.requireNonNull type](instance, "instance");
+[for v in type.settableAttributes]
+  [buildFromAttribute v]
+[/for]
+  [thisReturn type]
+}
+[/if]
+[/if]
+[/template]
+
+[template generateAccessors Type type]
+  [for v in type.implementedAttributes]
+
+/**
+  [if v.docComment]
+[for d in v.docComment]
+ *[d][-- no space before doc line!]
+[/for]
+  [else]
+[if v.arrayType]
+ * @return assigned modifiable {@code [v.name]} array
+[else if v.generateLazy]
+ * @return newly computed, not cached value of {@code [v.name]} attribute
+[else if v.generateDerived]
+ * @return newly computed, not cached value of {@code [v.name]} attribute
+[else if v.generateDefault]
+ * @return assigned or, otherwise, newly computed, not cached value of {@code [v.name]} attribute
+[else if v.collectionType]
+ * @return modifiable [toLower v.rawCollectionType] {@code [v.name]}
+[else]
+ * @return value of {@code [v.name]} attribute[if v.nullable], may be {@code null}[/if]
+[/if]
+  [/if]
+ */
+[for a in v.annotations]
+[a]
+[/for]
+[deprecation v]
+@Override
+[v.access]final [v.atNullability][v.implementationModifiableType] [v.names.get]() {
+[if v.mandatory]
+  if (![isSet v]()) {[-- opportunistically reuse attributes check --]
+    [disambiguateAccessor type 'checkRequiredAttributes']();
+  }
+[/if]
+[if v.generateLazy]
+  return [invokeSuper v].[v.names.get]();
+[else if v.generateDerived]
+  return [invokeSuper v].[v.names.get]();
+[else if v.generateDefault]
+  return [isSet v]()
+      ? [v.name]
+      : [invokeSuper v].[v.names.get]();
+[else]
+  [if v.nullableCollector andnot v.nullable]
+  if ([v.name] == null) {
+    [defineOrResetFieldAlt v false true]
+  }
+  [/if]
+  [if v.guavaImmutableDeclared]
+  return [immutableCollectionCopyOf v v.name];
+  [else]
+  return [v.name];
+  [/if]
+[/if]
+}
+  [/for]
+[/template]
+
+[template generateSetters Type type]
+[for mandatories = type.mandatoryOrEncodingAttributes,
+     nondefaults = type.requiresTrackedIsSetNonMandatoryAttributes,
+     LongPositions positions = longsFor mandatories,
+     LongPositions nondefaultsPositions = longsFor nondefaults]
+[-- Being called from builder initializer methods --]
+[let nondefaultSetter Attribute v]
+[if v.requiresTrackIsSet][for BitPosition pos = nondefaultsPositions v]
+[disambiguateField type 'optBits'][emptyIfZero pos.index] |= OPT_BIT_[toConstant v.name];
+[/for][/if]
+[/let]
+[-- Being called from builder initializer methods --]
+[let mandatorySetter Attribute v]
+[if v.mandatory][for BitPosition pos = positions v]
+[disambiguateField type 'initBits'][emptyIfZero pos.index] &= ~INIT_BIT_[toConstant v.name];
+[/for][/if]
+[/let]
+[for v in type.settableAttributes]
+[if v.collectionType]
+
+/**
+ * Adds one element to [sourceDocRef type v] [toLower v.rawCollectionType].
+ * @param element The [v.name] element
+ * @return {@code this} for use in a chained invocation
+ */
+[deprecation v]
+[atCanIgnoreReturnValue]
+public [thisSetterReturnType type] [v.names.add]([v.unwrappedElementType] element) {
+  [if v.nullableCollector]
+  if ([v.name] == null) {
+    [defineOrResetField v false]
+  }
+  [/if]
+  [if v.unwrappedElementPrimitiveType]
+  [v.name].add(element);
+  [else]
+  [v.unwrappedElementType] nonNullElement = [im.requireNonNull type](element, "[v.name] element");
+  [if v.attributeValueKindIsCollectionOfModifiable]
+  [v.name].add(element instanceof [v.attributeValueType.constitution.typeModifiable.absoluteRaw] ? element : [v.attributeValueType.constitution.factoryCreate]().[v.attributeValueType.names.from](element));
+  [else]
+  [v.name].add(nonNullElement);
+  [/if]
+  [/if]
+  [nondefaultSetter v]
+  [thisSetterReturn type]
+}
+
+/**
+ * Adds elements to [sourceDocRef type v] [toLower v.rawCollectionType].
+ * @param elements An array of [v.name] elements
+ * @return {@code this} for use in a chained invocation
+ */
+[deprecation v]
+[varargsSafety v]
+[atCanIgnoreReturnValue]
+public final [thisSetterReturnType type] [v.names.add]([v.unwrappedElementType]... elements) {
+  for ([v.unwrappedElementType] element : elements) {
+    [if v.unwrappedElementPrimitiveType]
+    [v.names.add](element);
+    [else]
+    [v.names.add]([im.requireNonNull type](element, "[v.name] element"));
+    [/if]
+  }
+  [nondefaultSetter v]
+  [thisSetterReturn type]
+}
+
+/**
+ * Sets or replaces all elements for [sourceDocRef type v] [toLower v.rawCollectionType].
+ * @param elements An iterable of [v.name] elements[if v.nullable], can be {@code null}[/if]
+ * @return {@code this} for use in a chained invocation
+ */
+[deprecation v]
+[atCanIgnoreReturnValue]
+public [thisSetterReturnType type] [v.names.set]([v.atNullability][if type.beanFriendlyModifiable][v.type][else]Iterable<[v.consumedElementType]>[/if] elements) {
+  [if v.nullable]
+  if (elements == null) {
+    [v.name] = null;
+    [nondefaultSetter v]
+    [thisSetterReturn type]
+  }
+  [/if]
+  [if v.nullableCollector]
+  if ([v.name] == null) {
+    [defineOrResetField v false]
+  } else {
+    [v.name].clear();
+  }
+  [else]
+  [v.name].clear();
+  [/if]
+  [v.names.addAll](elements);
+  [thisSetterReturn type]
+}
+
+/**
+ * Adds elements to [sourceDocRef type v] [toLower v.rawCollectionType].
+ * @param elements An iterable of [v.name] elements
+ * @return {@code this} for use in a chained invocation
+ */
+[deprecation v]
+[atCanIgnoreReturnValue]
+public [thisSetterReturnType type] [v.names.addAll](Iterable<[v.consumedElementType]> elements) {
+  [if v.nullableCollector]
+  if (elements == null) [thisSetterReturn type]
+  if ([v.name] == null) {
+    [defineOrResetField v false]
+  }
+  [/if]
+  for ([v.unwrappedElementType] element : elements) {
+    [v.names.add](element);
+  }
+  [nondefaultSetter v]
+  [thisSetterReturn type]
+}
+[else if v.optionalType]
+
+/**
+ * Assigns a <i>present</i> value for the optional [sourceDocRef type v] attribute.
+ * @param [v.name] A value for [v.name][if v.optionalAcceptNullable], {@code null} is accepted as {@code [optionalEmpty v]}[/if]
+ * @return {@code this} for use in a chained invocation
+ */
+[deprecation v]
+[atCanIgnoreReturnValue]
+public [thisSetterReturnType type] [v.names.set]([unwrappedOptionalType v] [v.name]) {
+  this.[v.name] = [optionalOf v]([v.name]);
+  [nondefaultSetter v]
+  [thisSetterReturn type]
+}
+
+/**
+ * Assigns an optional value for [sourceDocRef type v].
+ * @param [v.name] A value for [v.name]
+ * @return {@code this} for use in a chained invocation
+ */
+[deprecation v]
+[atCanIgnoreReturnValue]
+public [thisSetterReturnType type] [v.names.set]([v.rawType][if not v.jdkSpecializedOptional]<[v.wrappedElementType]>[/if] [v.name]) {
+  this.[v.name] = [im.requireNonNull type]([v.name], "[v.name]");
+  [nondefaultSetter v]
+  [thisSetterReturn type]
+}
+[else if v.mapType]
+  [for gE = v.consumedElementType, uK = v.unwrappedElementType, wK = v.wrappedElementType, uV = v.unwrappedSecondaryElementType, wV = v.wrappedSecondaryElementType]
+    [if v.multimapType]
+
+/**
+ * Put all mappings from the specified key to values for [sourceDocRef type v] [toLower v.mapType]. Nulls are not permitted
+ * @param key The key for [v.name]
+ * @param values The values for [v.name]
+ * @return {@code this} for use in a chained invocation
+ */
+[varargsSafety v]
+[deprecation v]
+[atCanIgnoreReturnValue]
+public final [thisSetterReturnType type] [v.names.put]([uK] key, [uV]... values) {
+  [v.names.putAll](key, [im.arrayAsListSecondary v 'values']);
+  [thisSetterReturn type]
+}
+
+/**
+ * Put all mappings from the specified key to values for [sourceDocRef type v] [toLower v.mapType]. Nulls are not permitted
+ * @param key The key for [v.name]
+ * @param values The values for [v.name]
+ * @return {@code this} for use in a chained invocation
+ */
+[deprecation v]
+[atCanIgnoreReturnValue]
+public [thisSetterReturnType type] [v.names.putAll]([uK] key, Iterable<[wV]> values) {
+  [if v.nullableCollector]
+  if ([v.name] == null) {
+    [defineOrResetField v false]
+  }
+  [/if]
+  [v.name].putAll(key, values);
+  [nondefaultSetter v]
+  [thisSetterReturn type]
+}
+    [/if]
+
+/**
+ * Put one entry to the [sourceDocRef type v] map.
+ * @param key The key in [v.name] map
+ * @param value The associated value in the [v.name] map
+ * @return {@code this} for use in a chained invocation
+ */
+[deprecation v]
+[atCanIgnoreReturnValue]
+public [thisSetterReturnType type] [v.names.put]([uK] key, [uV] value) {
+  [if v.nullableCollector]
+  if ([v.name] == null) {
+    [defineOrResetField v false]
+  }
+  [/if]
+  [v.name].put(
+      [if not v.unwrappedElementPrimitiveType][im.requireNonNull type](key, "[v.name] key")[else]key[/if],
+      [if not v.unwrappedSecondaryElementPrimitiveType][im.requireNonNull type](value, "[v.name] value")[else]value[/if]);
+  [nondefaultSetter v]
+  [thisSetterReturn type]
+}
+
+/**
+ * Sets or replaces all mappings from the specified map as entries for the [sourceDocRef type v] map.
+ * Nulls are not permitted as keys or values.
+ * @param entries The entries that will be added to the [v.name] map[if v.nullable], can be {@code null}[/if]
+ * @return {@code this} for use in a chained invocation
+ */
+[deprecation v]
+[atCanIgnoreReturnValue]
+public [thisSetterReturnType type] [v.names.set]([v.atNullability][if type.beanFriendlyModifiable][v.type][else][if v.multimapType][guava].collect.Multimap[else]java.util.Map[/if]<[gE], ? extends [wV]>[/if] entries) {
+  [if v.nullable]
+  if (entries == null) {
+    [v.name] = null;
+    [nondefaultSetter v]
+    [thisSetterReturn type]
+  }
+  [/if]
+  [if v.nullableCollector]
+  if ([v.name] == null) {
+    [defineOrResetField v false]
+  } else {
+    [v.name].clear();
+  }
+  [else]
+  [v.name].clear();
+  [/if]
+  [v.names.putAll](entries);
+  [thisSetterReturn type]
+}
+
+/**
+ * Put all mappings from the specified map as entries to the [sourceDocRef type v] map.
+ * Nulls are not permitted as keys or values.
+ * @param entries to be added to [v.name] map
+ * @return {@code this} for use in a chained invocation
+ */
+[deprecation v]
+[atCanIgnoreReturnValue]
+public [thisSetterReturnType type] [v.names.putAll]([if v.multimapType][guava].collect.Multimap[else]java.util.Map[/if]<[gE], ? extends [wV]> entries) {
+  [if v.nullableCollector]
+  if ([v.name] == null) {
+    [defineOrResetField v false]
+  }
+  [/if]
+  for (java.util.Map.Entry<[gE], ? extends [wV]> entry : entries.[if v.multimapType]entries[else]entrySet[/if]()) {
+    [v.name].put(
+        [im.requireNonNull type](entry.getKey(), "[v.name] key"),
+        [im.requireNonNull type](entry.getValue(), "[v.name] value"));
+  }
+  [nondefaultSetter v]
+  [thisSetterReturn type]
+}
+  [/for]
+[else if v.arrayType]
+
+/**
+ * Assigns a value to the [sourceDocRef type v] attribute.
+[if v.generateDefault]
+ * <p><em>If not set, this attribute will have a default value as defined by [sourceDocRef type v].</em>
+[/if]
+ * @param elements The elements for [v.name]
+ * @return {@code this} for use in a chained invocation
+ */
+[varargsSafety v]
+[deprecation v]
+[atCanIgnoreReturnValue]
+public final [thisSetterReturnType type] [v.names.set]([v.elementType]... elements) {
+  this.[v.name] = [if v.nullable]elements == null ? null : [/if]elements.clone();
+  [mandatorySetter v]
+  [nondefaultSetter v]
+  [thisSetterReturn type]
+}
+[else]
+
+/**
+ * Assigns a value to the [sourceDocRef type v] attribute.
+[if v.generateDefault]
+ * <p><em>If not set, this attribute will have a default value returned by the initializer of [sourceDocRef type v].</em>
+[/if]
+ * @param [v.name] The value for [v.name][if v.nullable], can be {@code null}[/if]
+ * @return {@code this} for use in a chained invocation
+ */
+[deprecation v]
+[atCanIgnoreReturnValue]
+public [thisSetterReturnType type] [v.names.set]([v.atNullability][v.type] [v.name]) {
+  [if v.attributeValueKindModifyFrom]
+  this.[v.name] = [if v.nullable][v.name] == null ? null : [/if]([v.name] instanceof [v.attributeValueType.constitution.typeModifiable.absoluteRaw] ? ([v.attributeValueType.constitution.typeModifiable.absolute]) [v.name] : [v.attributeValueType.constitution.factoryCreate]().[v.attributeValueType.names.from]([v.name]));
+  [else if v.primitive or v.nullable]
+  this.[v.name] = [v.name];
+  [else]
+  this.[v.name] = [im.requireNonNull type]([v.name], "[v.name]");
+  [/if]
+  [nondefaultSetter v]
+  [mandatorySetter v]
+  [thisSetterReturn type]
+}
+[/if]
+[/for]
+[/for]
+[/template]
+
+[template constructorAcceptType Attribute a][output.trim]
+[if a.typeKind.isMultimapKind]
+  [guava].collect.Multimap<[a.consumedElementType], ? extends [a.secondaryElementType]>
+[else if a.typeKind.isMapKind]
+  java.util.Map<[a.consumedElementType], ? extends [a.secondaryElementType]>
+[else if a.typeKind.isCollectionKind]
+  Iterable<[a.consumedElementType]>
+[else]
+  [a.type]
+[/if]
+[/output.trim][/template]
+
+[template defineField Attribute v]
+[defineOrResetField v true]
+[/template]
+
+[-- ??? is it used --]
+[template emptyImmutableCollectionType Attribute v][output.trim]
+[if v.multimapType]
+  [guava].collect.Multimap[v.genericArgs]
+[else if v.mapType]
+  java.util.Map[v.genericArgs]
+[else if v.multisetType]
+  [guava].collect.Multiset[v.genericArgs]
+[else if v.typeKind.setKind]
+  java.util.Set[v.genericArgs]
+[else if v.listType]
+  java.util.List[v.genericArgs]
+[else]
+  [output.error]Unsupported type [v.type] for 'emptyImmutableCollectionType' template[/output.error]
+[/if]
+[/output.trim][/template]
+
+[-- ??? is it used --]
+[template emptyImmutableCollection Attribute v String genericsOrEmpty][output.trim]
+[if v.multimapType]
+  [guava].collect.ImmutableMultimap.[genericsOrEmpty]of()
+[else if v.mapType]
+  java.util.Collections.[genericsOrEmpty]emptyMap()
+[else if v.multisetType]
+  [guava].collect.ImmutableMultimap.[genericsOrEmpty]of()
+[else if v.typeKind.setKind]
+  java.util.Collections.[genericsOrEmpty]emptySet()
+[else if v.listType]
+  java.util.Collections.[genericsOrEmpty]emptyList()
+[else]
+  [output.error]Unsupported type [v.type] for 'emptyImmutableCollection' template[/output.error]
+[/if]
+[/output.trim][/template]
+
+[template defineOrResetField Attribute v Boolean declare][defineOrResetFieldAlt v declare false][/template]
+
+[template defineOrResetFieldAlt Attribute v Boolean declare Boolean deferAllocation]
+[let fn][if not v.nullableCollector] final[/if][/let]
+  [if v.containerType]
+    [if v.generateEnumMap]
+[if declare]private[fn] java.util.EnumMap[v.genericArgs] [/if][v.name] = [if declare and v.nullableCollector]null[else]new java.util.EnumMap[v.genericArgs]([v.elementType].class)[/if];
+    [else if v.generateSortedMap]
+[if declare]private[fn] java.util.TreeMap[v.genericArgs] [/if][v.name] = [if declare and v.nullableCollector]null[else]new java.util.TreeMap[v.genericArgs]([if v.hasReverseOrder]java.util.Collections.<[v.elementType]>reverseOrder()[/if])[/if];
+    [else if v.typeKind.biMap]
+[if declare]private[fn] [guava].collect.HashBiMap[v.genericArgs] [/if][v.name] = [if declare and v.nullableCollector]null[else][guava].collect.HashBiMap.create([if deferAllocation]0[/if])[/if];
+    [else if v.typeKind.setMultimap]
+[if declare]private[fn] [guava].collect.HashMultimap[v.genericArgs] [/if][v.name] = [if declare and v.nullableCollector]null[else][guava].collect.HashMultimap.create([if deferAllocation]0, 0[/if])[/if];
+    [else if v.typeKind.multimapKind]
+[if declare]private[fn] [guava].collect.ArrayListMultimap[v.genericArgs] [/if][v.name] = [if declare and v.nullableCollector]null[else][guava].collect.ArrayListMultimap.create([if deferAllocation]0, 0[/if])[/if];
+    [else if v.mapType]
+[if declare]private[fn] java.util.Map[v.genericArgs] [/if][v.name] = [if declare and v.nullableCollector]null[else]new java.util.LinkedHashMap[v.genericArgs]([if deferAllocation]0[/if])[/if];
+    [else if v.typeKind.multiset]
+[if declare]private[fn] [guava].collect.HashMultiset[v.genericArgs] [/if][v.name] = [if declare and v.nullableCollector]null[else][guava].collect.HashMultiset.create([if deferAllocation]0[/if])[/if];
+    [else if v.generateSortedSet]
+[if declare]private[fn] java.util.TreeSet[v.genericArgs] [/if][v.name] = [if declare and v.nullableCollector]null[else]new java.util.TreeSet[v.genericArgs]([if v.hasReverseOrder]java.util.Collections.<[v.elementType]>reverseOrder()[/if])[/if];
+    [else if v.generateEnumSet]
+[if declare]private[fn] java.util.EnumSet[v.genericArgs] [/if][v.name] = [if declare and v.nullableCollector]null[else]java.util.EnumSet.noneOf([v.elementType].class)[/if];
+    [else if v.setType]
+[if declare]private[fn] java.util.LinkedHashSet[v.genericArgs] [/if][v.name] = [if declare and v.nullableCollector]null[else]new java.util.LinkedHashSet[v.genericArgs]([if deferAllocation]0[/if])[/if];
+    [else if v.listType]
+[if declare]private[fn] java.util.ArrayList[v.genericArgs] [/if][v.name] = [if declare and v.nullableCollector]null[else]new java.util.ArrayList[v.genericArgs]([if deferAllocation]0[/if])[/if];
+    [else if v.optionalType]
+[if declare]private [v.type] [/if][v.name] = [optionalEmpty v];
+    [else]
+[output.error]no field generation code for attribute of type [v.type][/output.error]
+    [/if]
+  [else if v.primitive]
+[if declare]private [v.type] [v.name][else][clearField v][/if];
+  [else]
+[if declare]private [v.atNullability][v.implementationModifiableType] [v.name][else][clearField v][/if];
+  [/if]
+[/template]
+
+[template clearField Attribute v]
+  [if v.optionalType]
+[v.name] = [optionalEmpty v];
+  [else if v.containerType andnot v.nullable]
+    [if v.nullableCollector]
+if ([v.name] != null) {
+  [v.name].clear();
+}
+    [else]
+[v.name].clear();
+    [/if]
+  [else if v.boolean]
+[v.name] = false;
+  [else if v.primitive]
+[v.name] = 0;
+  [else]
+[v.name] = null;
+  [/if]
+[/template]
+
+[template buildFromAttribute Attribute v]
+  [if v.collectionType]
+[v.names.addAll](instance.[v.names.get]());
+  [else if v.mapType]
+[v.names.putAll](instance.[v.names.get]());
+  [else if v.optionalType]
+[v.type] [v.name]Optional = instance.[v.names.get]();
+if ([v.name]Optional.[optionalPresent v]) {
+  [v.names.set]([v.name]Optional);
+}
+  [else if v.nullable]
+[v.atNullabilityLocal][v.type] [v.name]Value = instance.[v.names.get]();
+if ([v.name]Value != null) {
+  [v.names.set]([v.name]Value);
+}
+  [else]
+[v.names.set](instance.[v.names.get]());
+  [/if]
+[/template]
+
+[template generateEqualsHashCode Type type]
+[let equalToType][type.names.typeModifiable][/let]
+[for getters = type.equivalenceAttributes]
+
+/**
+ * This instance is equal to all instances of {@code [equalToType]} that have equal attribute values.
+[if type.mandatoryOrEncodingAttributes]
+ * An uninitialized instance is equal only to itself.
+[/if]
+ * @return {@code true} if {@code this} is equal to {@code another} instance
+ */
+@Override
+public boolean equals([atNullable]Object another) {
+  if (this == another) return true;
+  if (!(another instanceof [equalToType])) return false;
+  [equalToType] other = ([equalToType]) another;
+  [if type.mandatoryOrEncodingAttributes]
+  if (![isInitialized type]() || !other.[isInitialized type]()) {
+    return false;
+  }
+  [/if]
+  return equalTo(other);
+}
+
+private boolean equalTo([equalToType] another) {
+  [if type.equalToDefined]
+  return super.equals(another);
+  [else]
+[for v in getters]
+  [if v.generateDerived or v.generateDefault]
+  [v.type] [v.name] = [v.names.get]();
+  [else if v.nullableCollector andnot v.nullable]
+  [emptyImmutableCollectionType v] [v.name] = this.[v.name] != null
+      ? this.[v.name]
+      : [emptyImmutableCollection v v.genericArgs];
+  [/if]
+[/for]
+  return [if not getters]true[/if][for v in getters][if not for.first]
+      && [/if][im.equalsAttribute v (type.annotationType or (v.generateDerived or (v.generateDefault or v.deferCollectionAllocation)))][/for];
+  [/if]
+}
+[let computeHashCodeBody]
+[let h][disambiguateField type 'h'][/let]
+[if type.annotationType]
+  int [h] = 0;
+[for v in getters if not v.generateDerived]
+[if v.arrayType]
+  [h] += 127 * "[v.names.get]".hashCode() ^ java.util.Arrays.hashCode([v.name]);
+[else if v.primitive]
+  [h] += 127 * "[v.names.get]".hashCode() ^ [im.primitiveHashCode v];
+[else]
+  [h] += 127 * "[v.names.get]".hashCode() ^ [v.name].hashCode();
+[/if]
+[/for]
+  return [h];
+[else if getters.isEmpty]
+  return [type.hashCode];
+[else]
+  int [h] = 5381;
+[for v in getters]
+  [if v.generateDerived or v.generateDefault]
+  [v.type] [v.name] = [v.names.get]();
+  [/if]
+[if v.arrayType]
+  [h] += ([h] << 5) + java.util.Arrays.hashCode([v.name]);
+[else if v.nullable]
+  [h] += ([h] << 5) + [im.objectsHashCode type]([v.name]);
+[else if v.primitive]
+  [h] += ([h] << 5) + [im.primitiveHashCode v];
+[else]
+  [h] += ([h] << 5) + [if v.nullableCollector]([v.name] == null ? [if v.typeKind.keyedKind]0[else]1[/if] : [v.name].hashCode())[else][v.name].hashCode()[/if];
+[/if]
+[/for]
+  return [h];
+[/if]
+[/let]
+[if type.hashCodeDefined]
+
+public final int hashCode() {
+  if (![isInitialized type]()) return [type.hashCode];
+  return super.hashCode();
+}
+[else]
+
+/**
+[if not getters]
+ * Returns a constant hash code value.
+[else]
+ * Computes a hash code from attributes: [for a in getters][if not for.first], [/if]{@code [a.name]}[/for].
+[/if]
+ * @return hashCode value
+ */
+@Override
+public int hashCode() {
+[computeHashCodeBody]
+}
+[/if]
+[/for]
+[/template]
+
+[template generateToString Type type]
+[if not type.toStringDefined]
+
+/**
+ * Generates a string representation of this {@code [type.typeAbstract.simple]}.
+ * If uninitialized, some attribute values may appear as question marks.
+ * @return A string representation
+ */
+@Override
+public String toString() {
+[if not type.equivalenceAttributes]
+  return "[type.names.typeModifiable]{}";
+[else if type.generateJdkOnly]
+  return "[type.names.typeModifiable]{"
+  [for v in type.equivalenceAttributes]
+    [if v.generateDerived or v.redactedCompletely][-- nothing for derived, but it here to preserve logic flow --]
+    [else if v.arrayType]
+      + "[if not for.first], [/if][v.names.raw]=" + [maybeMasked v]([if v.nullable or v.generateDefault]java.util.Arrays.toString([v.names.get]())[else][isSet v]() ? java.util.Arrays.toString([v.names.get]()) : "?"[/if])[/maybeMasked]
+    [else if v.generateDefault]
+      + "[if not for.first], [/if][v.names.raw]=" + [maybeMasked v][v.names.get]()[/maybeMasked]
+    [else if v.nullable or v.containerType]
+      + "[if not for.first], [/if][v.names.raw]=" + [maybeMasked v][v.names.get]()[/maybeMasked]
+    [else if v.primitive andnot v.mandatory]
+      + "[if not for.first], [/if][v.names.raw]=" + [maybeMasked v][v.names.get]()[/maybeMasked]
+    [else]
+      + "[if not for.first], [/if][v.names.raw]="  + [maybeMasked v]([isSet v]() ? [v.names.get]() : "?")[/maybeMasked]
+    [/if]
+  [/for]
+      + "}";
+[else]
+  return [type.typeMoreObjects].toStringHelper("[type.names.typeModifiable]")
+[for v in type.equivalenceAttributes]
+    [if v.generateDerived or v.redactedCompletely][-- nothing for derived, but it here to preserve logic flow --]
+    [else if v.arrayType]
+      .add("[v.names.raw]", [maybeMasked v][if v.nullable or v.generateDefault]java.util.Arrays.toString([v.names.get]())[else][isSet v]() ? java.util.Arrays.toString([v.names.get]()) : "?"[/if][/maybeMasked])
+    [else if v.generateDefault]
+      .add("[v.names.raw]", [maybeMasked v][v.names.get]()[/maybeMasked])
+    [else if v.nullable or v.containerType]
+      .add("[v.names.raw]", [maybeMasked v][v.names.get]()[/maybeMasked])
+    [else if v.primitive andnot v.mandatory]
+      .add("[v.names.raw]", [maybeMasked v][v.names.get]()[/maybeMasked])
+    [else]
+      .add("[v.names.raw]", [maybeMasked v][isSet v]() ? [v.names.get]() : "?"[/maybeMasked])
+    [/if]
+[/for]
+      .toString();
+[/if]
+}
+[/if]
+[/template]
+
+[template immutableCollectionCopyOf Attribute a String expression][output.trim]
+[if not a.guavaImmutableDeclared]
+  [output.error]Assertion error: not guava immutable declared[/output.error]
+[else]
+  [if a.generateSortedSet]
+    [guava].collect.ImmutableSortedSet.copyOf(
+      [if a.hasNaturalOrder]
+        [guava].collect.Ordering.<[a.elementType]>natural(),
+      [else]
+        [guava].collect.Ordering.<[a.elementType]>natural().reverse(),
+      [/if]
+        [expression])
+  [else if a.generateEnumSet]
+    [guava].collect.Sets.immutableEnumSet([expression])
+  [else if a.generateOrdinalValueSet]
+    [-- this one is probably will not work correctly anyway with modifiables,
+        but let it stay here --]
+    org.immutables.ordinal.ImmutableOrdinalSet.copyOf([expression])
+  [else if a.generateSortedMultiset]
+    [guava].collect.ImmutableSortedMultiset.copyOf(
+      [if a.hasNaturalOrder]
+        [guava].collect.Ordering.<[a.elementType]>natural(),
+      [else]
+        [guava].collect.Ordering.<[a.elementType]>natural().reverse(),
+      [/if]
+        [expression])
+  [else if a.customCollectionType]
+    [a.rawType].from([expression])
+  [else if a.collectionType]
+    [guava].collect.Immutable[a.rawCollectionType].copyOf([expression])
+  [else if a.generateSortedMap]
+    [guava].collect.ImmutableSortedMap.copyOf([expression],
+    [if a.hasNaturalOrder]
+        [guava].collect.Ordering.<[a.elementType]>natural()
+    [else]
+        [guava].collect.Ordering.<[a.elementType]>natural().reverse()
+    [/if])
+  [else if a.generateEnumMap]
+    [guava].collect.Maps.immutableEnumMap([expression])
+  [else if a.mapType]
+    [guava].collect.Immutable[a.rawMapType].copyOf([expression])
+  [else]
+    [expression]
+  [/if]
+[/if]
+[/output.trim][/template]
+
+[template annotationsWhenTopLevel Type type Boolean is]
+[if is]
+[if type.generatedSuppressWarnings]
+@SuppressWarnings({[for k in type.generatedSuppressWarnings][if not for.first], [/if][literal k][/for]})
+[/if]
+[if classpath.available 'edu.umd.cs.findbugs.annotations.SuppressFBWarnings']
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings
+[/if]
+[if classpath.available 'javax.annotation.ParametersAreNonnullByDefault']
+@javax.annotation.ParametersAreNonnullByDefault
+[/if]
+[if classpath.available 'javax.annotation.Generated']
+@javax.annotation.Generated({"Modifiables.generator", "[type.typeAbstract.relative]"})
+[/if]
+[/if]
+[if classpath.available 'javax.annotation.concurrent.NotThreadSafe']
+@javax.annotation.concurrent.NotThreadSafe
+[/if]
+[for a in type.passedAnnotations]
+[a]
+[/for]
+[/template]
+
+[template packageWhenTopLevel Type type Boolean is]
+[if is]
+[type.sourceHeader]
+  [if type.package]
+package [type.package];
+  [/if]
+
+import java.lang.String;
+  [for starImport in type.requiredSourceStarImports]
+import [starImport];
+  [/for]
+[/if]
+[/template]
+
+[template isInitialized Type t][disambiguateAccessor t t.names.isInitialized][/template]
+
+[template isSet Attribute a][disambiguateAccessor a.containingType a.names.isSet][/template]
+
+[template unset Attribute a][disambiguateAccessor a.containingType a.names.unset][/template]
+
+[template thisReturn Type type]return this;[/template]
+
+[template thisReturnType Type type][type.names.typeModifiable][type.generics.args][/template]
+
+[template thisSetterReturn Type type]return[if not type.beanFriendlyModifiable] this[/if];[/template]
+
+[template thisSetterReturnType Type type][if not type.beanFriendlyModifiable][type.names.typeModifiable][type.generics.args][else]void[/if][/template]
+
+[template invokeSuper Attribute a][for di = a.defaultInterface][if di][di].[/if][/for]super[/template]
+
+[template sourceDocRef Type t Attribute a][if t.kind.isValue]{@link [t.typeAbstract.relativeRaw]#[a.names.get]() [a.names.raw]}[else]{@code [a.names.raw]}[/if][/template]
+
+[template optionalGet Attribute a][if a.jdkSpecializedOptional]getAs[toUpper a.elementType][else]get[/if]()[/template]
+
+[template optionalEmpty Attribute a][a.rawType].[if a.jdkOptional]empty[else if a.fugueOptional or a.javaslangOptional]none[else]absent[/if]()[/template]
+
+[template optionalOf Attribute a][a.rawType].[if not a.optionalAcceptNullable][if a.fugueOptional or a.javaslangOptional]some[else]of[/if][else if a.jdkOptional]ofNullable[else if a.fugueOptional]option[else if a.javaslangOptional]of[else]fromNullable[/if][/template]
+
+[template optionalPresent Attribute a][if a.fugueOptional or a.javaslangOptional]isDefined[else]isPresent[/if]()[/template]
+
+[template unwrappedOptionalType Attribute a][if a.optionalType and a.optionalAcceptNullable][atNullable][a.wrappedElementType][else][a.unwrappedElementType][/if][/template]
+
+[template atNullable][if classpath.available 'javax.annotation.Nullable']@javax.annotation.Nullable [/if][/template]
+
+[template disambiguateField Type type String name][name][for v in type.implementedAttributes if v.name eq name]$$[/for][/template]
+
+[template disambiguateAccessor Type type String name][name][for v in type.implementedAttributes if v.names.get eq name]$$[/for][/template]
+
+[template deprecation Attribute a][if a.deprecated]@Deprecated[/if][/template]
+
+[template varargsSafety Attribute a][if a.nonRawElementType or a.hasTypeVariables]@SafeVarargs[/if][/template]
+
+[template jsonIgnore Type type][if type.generateJacksonIngoreFields]@com.fasterxml.jackson.annotation.JsonIgnore[/if][/template]
+
+[template maybeMasked Attribute a String value][if a.redactedMask][literal.string a.redactedMask][else][value][/if][/template]
+
+[template atCanIgnoreReturnValue][if classpath.available 'com.google.errorprone.annotations.CanIgnoreReturnValue']@com.google.errorprone.annotations.CanIgnoreReturnValue[/if][/template]

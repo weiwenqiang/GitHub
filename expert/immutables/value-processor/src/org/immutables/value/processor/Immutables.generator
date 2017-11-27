@@ -1,0 +1,3929 @@
+[--
+   Copyright 2014-2016 Immutables Authors and Contributors
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+--]
+[template public generate]
+  [for type in values.values]
+    [if type.constitution.hasTopLevelImmutable]
+[-- Top level immutable type --]
+[output.java type.package type.typeImmutable.simple]
+[generateImmutable type true]
+[/output.java]
+      [if type.generateWithInterface]
+[output.java type.package type.typeWith.simple]
+[generateWithInterface type true]
+[/output.java]
+      [/if]
+    [/if]
+    [if type.constitution.hasTopLevelBuilder]
+[-- Top level builder --]
+[output.java type.package type.typeBuilderImpl.simple]
+[generateBuilder type true]
+[/output.java]
+    [/if]
+    [if type.constitution.hasEnclosingNonvalue]
+[-- Enclosing non-value type --]
+[output.java type.package type.typeEnclosing.simple]
+[generateEnclosing type]
+[/output.java]
+    [/if]
+  [/for]
+[/template]
+
+[template annotationsWhenTopLevel Type type Boolean is]
+[if is]
+[if type.generatedSuppressWarnings]
+@SuppressWarnings({[for k in type.generatedSuppressWarnings][if not for.first], [/if][literal k][/for]})
+[/if]
+[if classpath.available 'edu.umd.cs.findbugs.annotations.SuppressFBWarnings']
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings
+[/if]
+[if classpath.available 'javax.annotation.ParametersAreNonnullByDefault']
+@javax.annotation.ParametersAreNonnullByDefault
+[/if]
+[if classpath.available 'javax.annotation.Generated']
+@javax.annotation.Generated({"Immutables.generator", "[type.typeAbstract.relative]"})
+[/if]
+[/if]
+[/template]
+
+[template packageWhenTopLevel Type type Boolean is]
+[if is]
+[type.sourceHeader]
+  [if type.package]
+package [type.package];
+  [/if]
+
+[-- these imports will be deleted if unused, essentially this is plumbing for the imports post-processor  --]
+import java.lang.Object;
+import java.lang.String;
+import java.lang.Float;
+import java.lang.Double;
+  [for starImport in type.requiredSourceStarImports]
+import [starImport];
+  [/for]
+  [for routine in type.immutableCopyOfRoutines]
+import static [routine].immutableCopyOf;
+  [/for]
+[/if]
+[if type.debugLines]
+/*--DEBUG---------------------------------------------------
+[for d in type.debugLines]
+[d]
+[/for]
+----------------------------------------------------------*/
+[/if]
+[/template]
+
+[template generateEnclosing Type type]
+[packageWhenTopLevel type true]
+
+/**
+ * {@code [type.typeEnclosing.simple]} contains immutable implementation classes generated from
+ * abstract value types defined as nested inside {@link [type.typeAbstract.relativeRaw]}.
+[for v in type.nested]
+ * @see [v.typeValue.relativeRaw]
+[/for]
+ */
+[annotationsWhenTopLevel type true]
+[type.typeEnclosing.access]final class [type.typeEnclosing.simple] {
+  private [type.typeEnclosing.simple]() {}
+[for v in type.nested]
+  [generateImmutable v false]
+  [if v.constitution.isOutsideBuilder]
+  [generateBuilder v false]
+  [/if]
+  [if v.generateWithInterface]
+  [generateWithInterface v false]
+  [/if]
+  [forwardingEnclosingFactoryMethods v]
+[/for]
+[if type.generateJdkOnly]
+  [objectsUtility type]
+[/if]
+[if type.generateJdkOnly and type.useCollectionUtility]
+  [collectionUtility type]
+[/if]
+[if type.detectAttributeBuilders]
+  [attributeBuilderTransformUtilities type]
+[/if]
+}
+[/template]
+
+[template generateImmutable Type type Boolean topLevel]
+[packageWhenTopLevel type topLevel]
+
+[for setters = type.settableAttributes]
+/**
+  [if type.docComment]
+[for d in type.docComment]
+ *[d][-- no space before doc line!]
+[/for]
+  [else]
+ * Immutable implementation of {@link [type.typeAbstract.relativeRaw]}.
+ * <p>
+[if type.useBuilder]
+ * Use the builder to create immutable instances:
+ * {@code [type.factoryBuilder.relative]()}.
+[/if]
+[if type.useConstructor]
+ * Use the static factory method to create immutable instances:
+ * {@code [type.factoryOf.relative]()}.
+[/if]
+[if type.useSingleton]
+ * Use the static factory method to get the default singleton instance:
+ * {@code [type.factoryInstance.relative]()}.
+[/if]
+  [/if]
+ */
+[annotationsWhenTopLevel type topLevel]
+[typeDeprecation type]
+[if classpath.available 'javax.annotation.concurrent.Immutable']
+@javax.annotation.concurrent.Immutable
+[/if]
+[if classpath.available 'javax.annotation.CheckReturnValue']
+  [-- only enable if both on/off annotations are available --]
+  [if classpath.available 'com.google.errorprone.annotations.CanIgnoreReturnValue']
+@javax.annotation.CheckReturnValue
+  [/if]
+[/if]
+[for a in type.passedAnnotations]
+[a]
+[/for]
+[type.typeImmutable.access][if not topLevel]static [/if]final [output.linesShortable]class [type.typeImmutable.simple][type.generics]
+    [extendsImplements type][/output.linesShortable]
+[if type.annotationType]
+  [defaultAnnotationValues type]
+[/if]
+[if not type.constitution.outsideBuilder]
+  [rr.staticFields type.implementedAttributes]
+[/if]
+[generateImmutableMembers type]
+[generateLazyValues type]
+[generateInterning type]
+[generateSingletonInstance type]
+[parcelables.generate type]
+[generateConstruction type]
+  [generateImmutableCopyOf type]
+  [generateSerialization type]
+  [rr.valueHelperMethods type.implementedAttributes]
+[if type.useBuilder andnot type.constitution.isOutsideBuilder]
+  [if not type.factoryBuilder.isNew]
+    [for parameters = type.builderParameters]
+
+  /**
+   * Creates a builder for {@link [type.typeValue.relativeRaw] [type.typeValue.simple]}.
+  [javadocGenerics type]
+  [for p in parameters]
+   * @param [p.name] {@code [p.name]} parameter[if p.nullable], can be {@code null}[/if]
+  [/for]
+   * @return A new [type.typeValue.simple] builder
+   */
+  public static[type.generics.def] [factoryBuildStageBuilderType type] [type.factoryBuilder.applied]([for p in parameters][if not for.first], [/if][p.atNullability][constructorAcceptType p] [p.name][/for]) {
+    return new [type.typeBuilderImpl.relative]([for p in parameters][if not for.first], [/if][p.name][/for]);
+  }
+  [if parameters andnot type.kind.isFactory]
+
+  static[type.generics.def] [type.typeBuilderImpl.relative] [type.factoryBuilder.applied]() {
+    return new [type.typeBuilderImpl.relative]();
+  }
+  [/if]
+    [/for]
+  [/if]
+  [generateBuilder type false]
+[/if]
+[if not type.constitution.outsideBuilder]
+  [rr.staticMethods type.implementedAttributes]
+[/if]
+[for v in type.nested]
+  [generateImmutable v false]
+  [if v.generateWithInterface]
+  [generateWithInterface v false]
+  [/if]
+[/for]
+[if topLevel and type.generateJdkOnly]
+  [objectsUtility type]
+[/if]
+[if topLevel and (type.generateJdkOnly and type.useCollectionUtility)]
+  [collectionUtility type]
+[/if]
+[if type.detectAttributeBuilders]
+  [attributeBuilderTransformUtilities type]
+[/if]
+}
+[/for]
+[/template]
+
+[template extendsImplements Type type]
+[if type.implementing]
+implements [type.typeAbstract][if type.serial.shouldImplement], java.io.Serializable[/if] {
+[else]
+extends [type.typeAbstract][if not type.serial.shouldImplement] {[else]
+implements java.io.Serializable {[/if]
+[/if]
+[/template]
+
+[template generateSerialization Type type]
+[serialVersionUID type]
+[if type.serial.simple]
+  [if type.useSimpleReadResolve]
+
+private Object readResolve() throws java.io.ObjectStreamException {
+[if type.useSingletonOnly][-- don't care about validation here, just substitute --]
+  return INSTANCE;
+[else]
+  return [validated type false]this[/validated];
+[/if]
+}
+  [/if]
+[/if]
+[if type.serial.structural]
+
+/**
+ * The serialized form captures the structural content of the value object,
+ * providing the ability to reconstruct values with the capability to migrate
+ * data. Uses optional, nullable, and provides flexible handling of
+ * collection attributes.
+ */
+[if type.generics]
+@SuppressWarnings("unchecked")
+[/if]
+private static class SerialForm[type.generics] implements java.io.Serializable {
+[for serialVersion = type.serialVersionUID, String arr = '[]', String arri = '[i]']
+  private static final long serialVersionUID = [if serialVersion][literal serialVersion][else]0L[/if];
+  private final String['[]'] names;
+  private final Object['[]'] values;
+  SerialForm([type.typeImmutable] instance) {
+[if type.useSingletonOnly]
+    this.names = new String['[]']{};
+    this.values = new Object['[]']{};
+  }
+
+  Object readResolve() {
+    return INSTANCE;
+  }
+[else]
+    java.util.List<String> names = new java.util.ArrayList<String>([size type.settableAttributes]);
+    java.util.List<Object> values = new java.util.ArrayList<Object>([size type.settableAttributes]);
+  [for v in type.settableAttributes]
+    [if v.collectionType]
+    [if v.nullable]if (instance.[v.names.get]() == null) {
+      names.add("[v.name]");
+      values.add(null);
+    } else [/if]if (!instance.[v.names.get]().isEmpty()) {
+      names.add("[v.name]");
+      values.add(instance.[v.names.get]().toArray());
+    }
+    [else if v.mapType]
+    [if v.nullable]if (instance.[v.names.get]() == null) {
+      names.add("[v.name]");
+      values.add(null);
+    } else [/if] if (!instance.[v.names.get]().isEmpty()) {
+      names.add("[v.name]");
+      values.add(toArray(instance.[v.names.get]().[if v.multimapType]entries[else]entrySet[/if]()));
+    }
+    [else if v.optionalType]
+    if (instance.[v.names.get]().[optionalPresent v]) {
+      names.add("[v.name]");
+      values.add(instance.[v.names.get]().[optionalGet v]);
+    }
+    [else if v.nullable]
+    if (instance.[v.names.get]() != null) {
+      names.add("[v.name]");
+      values.add(instance.[v.names.get]());
+    }
+    [else]
+    names.add("[v.name]");
+    values.add(instance.[v.names.get]());
+    [/if]
+  [/for]
+    this.names = names.toArray(new String['[']names.size()[']']);
+    this.values = values.toArray();
+  }
+
+  Object readResolve() {
+[if type.useBuilder]
+    [type.typeBuilder] builder = [castBuildStagedBuilder type][type.factoryBuilder.relative]()[/castBuildStagedBuilder];
+
+    for (int i = 0; i < names.length; i++) {
+      String name = names['[i]'];
+    [for v in type.settableAttributes]
+      if ("[v.name]".equals(name)) {
+      [if v.collectionType]
+        [if v.nullable]
+        if (values[arri] == null) {
+          builder.[v.names.init](null);
+          continue;
+        }
+        [/if]
+        for (Object e : toArray(values[arri])) {
+          builder.[v.names.add]([castObject v.wrappedElementType]e);
+        }
+      [else if v.mapType]
+        [if v.nullable]
+        if (values[arri] == null) {
+          builder.[v.names.init](null);
+          continue;
+        }
+        [/if]
+        [atNullable]Object[arr] entries = (Object[arr]) values[arri];
+        if (entries != null) {
+          for (int j = 0; j < entries.length; j += 2) {
+          [for String j = '[j]', String j1 = '[j + 1]']
+            builder.[v.names.put]([castObject v.wrappedElementType]entries[j], [castObject v.wrappedSecondaryElementType]entries[j1]);
+          [/for]
+          }
+        }
+      [else if v.optionalType]
+        if (values[arri] != null) {
+          builder.[v.names.init]([castObject v.wrappedElementType]values[arri]);
+        }
+      [else if v.nullable]
+        if (values[arri] != null) {
+          builder.[v.names.init]([castObject v.wrapperType]values[arri]);
+        }
+      [else if v.arrayType]
+        builder.[v.names.init]([castObject v.wrapperType]values[arri]);
+      [else]
+        builder.[v.names.init]([castObject v.wrapperType]toSingle("[v.name]", values[arri]));
+      [/if]
+        continue;
+      }
+    [/for]
+    }
+    return builder.[type.names.build]();
+[else]
+  [for constructables = type.constructableAttributes]
+    [for v in constructables]
+      [if v.collectionType or v.mapType]
+    [createBuilderForCollection type v][v.name]Builder[/createBuilderForCollection]
+      [else if v.optionalType]
+    [v.type] [v.name]Value = [optionalEmpty v];
+      [else]
+    [atNullable][v.wrapperType] [v.name]Value = null;
+      [/if]
+    [/for]
+
+    for (int i = 0; i < names.length; i++) {
+      String name = names['[i]'];
+    [for v in constructables]
+      if ("[v.name]".equals(name)) {
+      [if v.collectionType]
+        [if v.nullable]
+        if (values[arri] == null) {
+          [v.name]Builder = null;
+          continue;
+        }
+        [/if]
+        for (Object e : toArray(values[arri])) {
+          [v.name]Builder.add([castObject v.wrappedElementType]e);
+        }
+      [else if v.mapType]
+        [if v.nullable]
+        if (values[arri] == null) {
+          [v.name]Builder = null;
+          continue;
+        }
+        [/if]
+        Object[arr] entries = (Object[arr]) values[arri];
+        if (entries != null) {
+          for (int j = 0; j < entries.length; j += 2) {
+          [for String j = '[j]', String j1 = '[j + 1]']
+            [v.name]Builder.put([castObject v.wrappedElementType]entries[j], [castObject v.wrappedSecondaryElementType]entries[j1]);
+          [/for]
+          }
+        }
+      [else if v.optionalType]
+        if (values[arri] != null) {
+          [v.name]Value = [optionalOf v]([castObject v.wrappedElementType]values[arri]);
+        }
+      [else if v.nullable or v.arrayType]
+        [v.name]Value = [castObject v.wrapperType]values[arri];
+      [else]
+        [v.name]Value = [castObject v.wrapperType]toSingle("[v.name]", values[arri]);
+      [/if]
+        continue;
+      }
+    [/for]
+    }
+  [if type.useConstructor]
+    [type.typeValue.relative] instance = [type.factoryOf.relative]([output.linesShortable][for v in type.constructorArguments][if not for.first],[/if]
+        [if v.collectionType or v.mapType][if v.nullable][v.name]Builder == null ? null : [/if][createBuiltCollection type v][v.name]Builder[/createBuiltCollection][else][v.name]Value[/if][/for]);[/output.linesShortable]
+  [else if type.useSingleton]
+    [type.typeValue.relative] instance = [type.factoryInstance.relative]();
+  [else]
+    [output.error]Cannot generate code when there are no builder, constructor or singleton available[/output.error]
+  [/if]
+    [for o in type.withSettableAfterConstruction]
+      [if o.collectionType or o.mapType]
+    instance = instance.[o.names.with]([if o.nullable][o.name]Builder == null ? null : [/if][createBuiltCollection type o][o.name]Builder[/createBuiltCollection]);
+      [else]
+    if ([o.name]Value != null) {
+      instance = instance.[o.names.with]([o.name]Value);
+    }
+      [/if]
+    [/for]
+    return instance;
+  [/for]
+[/if]
+  }
+
+  private static Object toSingle(String attribute, Object value) {
+    if (value instanceof Object[arr]) {
+      Object[arr] elements = (Object[arr]) value;
+      if (elements.length == 1) {
+        return elements['[0]'];
+      }
+      throw new [type.throwForInvalidImmutableState]("Cannot extract scalar value for attribute '"
+          + attribute + "' from array of length " + elements.length);
+    }
+    return value;
+  }
+  [if type.hasSettableCollection]
+
+  private static Object[arr] toArray([atNullable] Object value) {
+    if (value == null) {
+      return new Object[arr]{};
+    }
+    if (value instanceof Object[arr]) {
+      return (Object[arr]) value;
+    }
+    return new Object[arr]{ value };
+  }
+  [/if]
+  [if type.hasSettableMapping]
+
+  private static Object['[]'] toArray(java.util.Collection<? extends java.util.Map.Entry<?, ?>> entries) {
+    Object['[]'] data = new Object['[']entries.size() * 2[']'];
+    int p = 0;
+    for (java.util.Map.Entry<?, ?> e : entries) {
+      data['[']p++[']'] = e.getKey();
+      data['[']p++[']'] = e.getValue();
+    }
+    return data;
+  }
+  [/if]
+[/if]
+[/for]
+}
+
+private Object writeReplace() {
+  return new SerialForm[type.generics.args](this);
+}
+[/if]
+[/template]
+
+[template generateWithInterface Type type Boolean topLevel]
+[packageWhenTopLevel type topLevel]
+
+[annotationsWhenTopLevel type topLevel]
+[type.typeWith.access]interface [type.typeWith.simple][type.generics] {
+    [for v in type.settableAttributes]
+      [if v.arrayType]
+
+  /**
+   * Copy the current immutable object with elements that replace the content of [sourceDocRef type v].
+   * The array is cloned before being saved as attribute values.
+   * @param elements The non-null elements for [v.name]
+   * @return A modified copy of {@code this} object
+   */
+  [deprecation v]
+  [type.typeAbstract.relative] [v.names.with]([v.elementType]... elements);
+      [else if v.collectionType]
+
+  /**
+   * Copy the current immutable object with elements that replace the content of [sourceDocRef type v].
+   * @param elements The elements to set
+   * @return A modified copy of {@code this} object
+   */
+  [deprecation v]
+  [type.typeAbstract.relative] [v.names.with]([v.unwrappedElementType]... elements);
+
+  /**
+   * Copy the current immutable object with elements that replace the content of [sourceDocRef type v].
+   * A shallow reference equality check is used to prevent copying of the same value by returning {@code this}.
+   * @param elements An iterable of [v.name] elements to set
+   * @return A modified copy of {@code this} object
+   */
+  [deprecation v]
+  [type.typeAbstract.relative] [v.names.with](Iterable<[v.consumedElementType]> elements);
+      [else if v.optionalType]
+
+  /**
+   * Copy the current immutable object by setting a <i>present</i> value for the optional [sourceDocRef type v] attribute.
+   * @param value The value for [v.name][if v.optionalAcceptNullable], {@code null} is accepted as {@code [optionalEmpty v]}[/if]
+   * @return A modified copy of {@code this} object
+   */
+  [deprecation v]
+  [type.typeAbstract.relative] [v.names.with]([unwrappedOptionalType v] value);
+
+  /**
+   * Copy the current immutable object by setting an optional value for the [sourceDocRef type v] attribute.
+   * A shallow reference equality check on the optional value is used to prevent copying of the same value by returning {@code this}.
+   * @param optional A value for [v.name]
+   * @return A modified copy of {@code this} object
+   */
+  [deprecation v]
+  [type.typeAbstract.relative] [v.names.with]([v.rawType][if not v.jdkSpecializedOptional]<[v.consumedElementType]>[/if] optional);
+      [else if v.mapType]
+      [for gE = v.consumedElementType, uK = v.unwrappedElementType, wK = v.wrappedElementType, uV = v.unwrappedSecondaryElementType, wV = v.wrappedSecondaryElementType]
+
+  /**
+   * Copy the current immutable object by replacing the [sourceDocRef type v] map with the specified map.
+   * Nulls are not permitted as keys or values.
+   * A shallow reference equality check is used to prevent copying of the same value by returning {@code this}.
+   * @param entries The entries to be added to the [v.name] map
+   * @return A modified copy of {@code this} object
+   */
+  [deprecation v]
+  [type.typeAbstract.relative] [v.names.with]([if v.multimapType][guava].collect.Multimap[else]java.util.Map[/if]<[gE], ? extends [wV]> entries);
+      [/for]
+      [else]
+
+  /**
+   * Copy the current immutable object by setting a value for the [sourceDocRef type v] attribute.
+   [if v.primitive andnot v.floatType]
+   * A value equality check is used to prevent copying of the same value by returning {@code this}.
+   [else if not v.primitive]
+   * A shallow reference equality check is used to prevent copying of the same value by returning {@code this}.
+   [/if]
+   * @param value A new value for [v.name][if v.nullable] (can be {@code null})[/if]
+   * @return A modified copy of the {@code this} object
+   */
+  [deprecation v]
+  [type.typeAbstract.relative] [v.names.with]([v.atNullability][v.type] value);
+      [/if]
+    [/for]
+}
+[/template]
+
+[template generateJsonWithUnsupported Type type]
+[if type.generateWithInterface]
+[-- we actually don't need those implementation, signatures are good enough --]
+  [for v in type.settableAttributes]
+    [if v.arrayType]
+@Override
+[varargsSafety v]
+public [type.typeAbstract.relative] [v.names.with]([v.elementType]... elements) { throw new UnsupportedOperationException(); }
+    [else if v.collectionType]
+@Override
+[varargsSafety v]
+public [type.typeAbstract.relative] [v.names.with]([v.unwrappedElementType]... elements) { throw new UnsupportedOperationException(); }
+@Override
+public [type.typeAbstract.relative] [v.names.with](Iterable<[v.consumedElementType]> elements) { throw new UnsupportedOperationException(); }
+    [else if v.optionalType]
+@Override
+public [type.typeAbstract.relative] [v.names.with]([unwrappedOptionalType v] value) { throw new UnsupportedOperationException(); }
+@Override
+public [type.typeAbstract.relative] [v.names.with]([v.rawType][if not v.jdkSpecializedOptional]<[v.consumedElementType]>[/if] optional) { throw new UnsupportedOperationException(); }
+    [else if v.mapType]
+      [for gE = v.consumedElementType, uK = v.unwrappedElementType, wK = v.wrappedElementType, uV = v.unwrappedSecondaryElementType, wV = v.wrappedSecondaryElementType]
+@Override
+public [type.typeAbstract.relative] [v.names.with]([if v.multimapType][guava].collect.Multimap[else]java.util.Map[/if]<[gE], ? extends [wV]> entries) { throw new UnsupportedOperationException(); }
+      [/for]
+    [else]
+@Override
+public [type.typeAbstract.relative] [v.names.with]([v.atNullability][v.type] value) { throw new UnsupportedOperationException(); }
+    [/if]
+  [/for]
+[/if]
+[/template]
+
+[template generateInterning Type type]
+[if type.useInterned or type.generateOrdinalValue]
+  [if not type.useSingletonOnly]
+
+  private static class InternProxy {
+    final [type.typeImmutable.relativeRaw] instance;
+
+    InternProxy([type.typeImmutable.relativeRaw] instance) {
+      this.instance = instance;
+    }
+
+    @Override
+    public boolean equals([atNullable]Object another) {
+      return another != null && instance.equalTo(((InternProxy) another).instance);
+    }
+
+    @Override
+    public int hashCode() {
+      return instance.hashCode();
+    }
+  }
+  [/if]
+[/if]
+[if type.generateOrdinalValue]
+
+  /**
+   * Copy constructor used for interning of objects implementing
+   * {@link org.immutables.ordinal.OrdinalValue}
+   */
+  private [type.typeImmutable.simple]([type.typeImmutable.relative] instance, int ordinal) {
+  [for v in type.implementedAttributes]
+    this.[v.name] = instance.[v.name];
+  [/for]
+  [if type.usePrehashed]
+    this.hashCode = instance.hashCode;
+  [/if]
+    this.domain = instance.domain;
+    this.ordinal = ordinal;
+  }
+
+  /**
+   * Instances of {@code [type.name]} will be interned and registered with the domain.
+   */
+  public static final class Domain
+      extends org.immutables.ordinal.InterningOrdinalDomain<InternProxy, [type.typeAbstract]> {
+
+    private static final Domain INSTANCE = new Domain();
+
+    /** Construct the ordinal domain of [type.name] values. */
+    public Domain() {}
+
+    protected [type.typeAbstract] extractValue(InternProxy proxy, int ordinal) {
+      return new [type.typeImmutable.relative][type.generics.diamond](proxy.instance, ordinal);
+    }
+
+    @Override
+    public String toString() {
+      if (this == INSTANCE) return "[type.typeImmutable.simple].Domain.get()";
+      return [type.typeMoreObjects].toStringHelper("[type.typeImmutable.simple].Domain")
+          .add("length", length())
+          .toString();
+    }
+
+    /**
+     * Retrieves the static singleton instance of {@link OrdinalDomain}.
+     * All instances that were not built with the specified domain will be
+     * bound to a static domain.
+     * @return The ordinal domain of all instances
+     */
+    public static Domain get() {
+      return INSTANCE;
+    }
+  }
+
+  @Override
+  public org.immutables.ordinal.OrdinalDomain<[type.typeAbstract]> domain() {
+    return domain;
+  }
+[else if type.useSingletonOnly][-- deliberately left empty --]
+[else if type.useInterned]
+
+  [if type.generateJdkOnly]
+  private static final java.util.concurrent.ConcurrentHashMap<InternProxy, [type.typeImmutable.simple]> INTERNER =
+      new java.util.concurrent.ConcurrentHashMap<InternProxy, [type.typeImmutable.simple]>();
+  [else]
+  private static final [guava].collect.Interner<InternProxy> INTERNER = [guava].collect.Interners.newStrongInterner();
+  [/if]
+[/if]
+[/template]
+
+[template generateConstruction Type type]
+[if type.useConstructor andnot type.factoryOf.new]
+  [if type.requiresAlternativeStrictConstructor]
+
+  /**
+   * Construct a new immutable {@code [type.name]} instance.
+[for v in type.constructorArguments]
+   * @param [v.name] The value for the {@code [v.name]} attribute
+[/for]
+   * @return An immutable [type.name] instance
+   */
+  public static [type.generics.spaceAfter][type.typeValue] [type.names.of]([for v in type.constructorArguments][if not for.first], [/if][v.atNullability][v.type] [v.name][/for]) {
+    return [type.names.of]([for v in type.constructorArguments][if not for.first], [/if][if v.requiresAlternativeStrictConstructor]([constructorAcceptType v]) [/if][v.name][/for]);
+  }
+  [/if]
+
+  /**
+   * Construct a new immutable {@code [type.name]} instance.
+[for v in type.constructorArguments]
+   * @param [v.name] The value for the {@code [v.name]} attribute
+[/for]
+   * @return An immutable [type.name] instance
+   */
+  public static [type.generics.spaceAfter][type.typeValue] [type.names.of]([for v in type.constructorArguments][if not for.first], [/if][v.atNullability][constructorAcceptType v] [v.name][/for]) {
+    return [validated type false]new [type.typeImmutable.relativeRaw][type.generics.diamond]([for v in type.constructorArguments][if not for.first], [/if][v.name][/for])[/validated];
+  }
+[/if]
+[if type.useValidation]
+
+[if type.useJavaValidationApi]
+  private static final javax.validation.Validator [disambiguateField type 'validator'] = javax.validation.Validation.buildDefaultValidatorFactory().getValidator();
+[/if]
+
+  private static [type.generics.spaceAfter][type.typeImmutable.relative] validate([type.typeImmutable.relative] instance) {
+[if type.useJavaValidationApi]
+    java.util.Set<javax.validation.ConstraintViolation<[type.typeImmutable.relative]>> constraintViolations = [disambiguateField type 'validator'].validate(instance);
+    if (!constraintViolations.isEmpty()) {
+      throw new javax.validation.ConstraintViolationException(constraintViolations);
+    }
+[/if]
+[for vm in type.validationMethods]
+  [if vm.normalize]
+    instance = ([type.typeImmutable.relative]) instance.[vm.name]();
+  [else]
+    instance.[vm.name]();
+  [/if]
+[/for]
+[if type.useSingletonOnly]
+    return INSTANCE != null ? INSTANCE : instance;[-- may be null during initialization --]
+[else if type.generateOrdinalValue]
+    return ([type.typeImmutable.relative]) instance.domain.internOrdinal(new InternProxy(instance));
+[else if type.useInterned]
+  [if type.generateJdkOnly]
+    [atNullable][type.typeImmutable.relative] interned = INTERNER.putIfAbsent(new InternProxy(instance), instance);
+    return interned != null ? interned : instance;
+  [else]
+    return INTERNER.intern(new InternProxy(instance)).instance;
+  [/if]
+[else if type.useSingleton]
+  [if type.useSingletonOnlyForConstruction]
+    return instance;
+  [else]
+    return INSTANCE != null && INSTANCE.equalTo(instance) ? INSTANCE : instance;[-- may be null during initialization --]
+  [/if]
+[else]
+    return instance;
+[/if]
+  }
+[/if]
+[/template]
+
+[template generateSingletonInstance Type type]
+[if type.useSingleton]
+
+  private static final [type.typeImmutable.relative] INSTANCE = [validated type false]new [type.typeImmutable.relativeRaw]()[/validated];
+
+  /**
+   * Returns the default immutable singleton value of {@code [type.name]}
+   * @return An immutable instance of [type.name]
+   */
+  public static [type.typeValue.relative] [type.names.instance]() {
+    return INSTANCE;
+  }
+[/if]
+[/template]
+
+[template generateImmutableCopyOf Type type]
+[if type.useCopyConstructor andnot type.constitution.isImplementationHidden]
+
+/**
+ * Creates an immutable copy of a {@link [type.typeAbstract.relativeRaw]} value.
+ * Uses accessors to get values to initialize the new immutable instance.
+ * If an instance is already immutable, it is returned as is.
+[javadocGenerics type]
+ * @param instance The instance to copy
+ * @return A copied immutable [type.name] instance
+ */
+[if not type.constitution.isImplementationPrimary]public [/if]static[type.generics.def] [type.typeValue.relative] [type.factoryCopyOf.applied]([type.typeAbstract.relative] instance) {
+  if (instance instanceof [type.typeImmutable.relativeRaw][type.generics.unknown]) {
+    return ([type.typeImmutable.relative]) instance;
+  }
+[if type.useBuilder]
+  return [castBuildStagedBuilder type][type.factoryBuilder.relative]()[/castBuildStagedBuilder]
+    [if type.generateBuilderFrom]
+      .[type.names.from](instance)
+    [else]
+      [for v in type.settableAttributes]
+        [if v.encoding]
+      .[rr.builderCopyFrom v](instance.[v.names.get]())
+        [else if v.nullable]
+      .[v.names.init](instance.[v.names.get]())
+        [else if v.collectionType]
+      .[v.names.addAll](instance.[v.names.get]())
+        [else if v.mapType]
+      .[v.names.putAll](instance.[v.names.get]())
+        [else]
+      .[v.names.init](instance.[v.names.get]())
+        [/if]
+      [/for]
+    [/if]
+      .[type.names.build]();
+[else]
+  return [type.factoryOf.relative]([for v in type.constructorArguments][if not for.first], [/if]instance.[v.names.get]()[/for])[for
+          o in type.withSettableAfterConstruction]
+      .[o.names.with](instance.[o.names.get]())[/for];
+[/if]
+}
+[/if]
+[/template]
+
+[template generateLazyValues Type type]
+[for lz = type.lazyAttributes]
+  [if lz]
+
+  [for LongPositions positions = longsFor lz]
+  [for l in positions.longs]
+  [jsonIgnore type]
+  private [if type.serial.simple]transient [/if]volatile long lazyInitBitmap[emptyIfZero l.index];
+  [/for]
+  [for l in lz, BitPosition pos = positions l]
+  [let maskConstantName][toConstant l.name]_LAZY_INIT_BIT[/let]
+  [let bitmapFieldName]lazyInitBitmap[emptyIfZero pos.index][/let]
+
+  private static final long [maskConstantName] = [literal.hex pos.mask];
+
+  [jsonIgnore type]
+  private [if type.serial.simple]transient [/if][l.type] [l.name];
+
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Returns a lazily initialized value of the [sourceDocRef type l] attribute.
+   * Initialized once and only once and stored for subsequent access with proper synchronization.
+   * @return A lazily initialized value of the {@code l.name} attribute
+   */
+  @Override
+  public [l.type] [l.names.get]() {
+    if (([bitmapFieldName] & [maskConstantName]) == 0) {
+      synchronized (this) {
+        if (([bitmapFieldName] & [maskConstantName]) == 0) {
+          this.[l.name] = [maybeNonNullValue l][invokeSuper l].[l.names.get]()[/maybeNonNullValue];
+          [bitmapFieldName] |= [maskConstantName];
+        }
+      }
+    }
+    return [l.name];
+  }
+  [/for]
+  [/for][/if]
+[/for]
+[/template]
+
+[template castBuildStagedBuilder Type type String expression][for tb = type.telescopicBuild][if tb andnot type.innerBuilder.isExtending](([type.typeBuilderImpl.relative]) [expression])[else][expression][/if][/for][/template]
+
+[template factoryBuildStageBuilderType Type type][for tb = type.telescopicBuild][if tb][toUpper tb.firstStage.attribute.name]BuildStage[type.generics.args][else][type.typeBuilderImpl.relative][/if][/for][/template]
+
+[template telescopicBuilderImplementInterfaces Type type][for tb = type.telescopicBuild][if tb][for nt in tb.stages, v = nt.attribute][toUpper v.name]BuildStage[type.generics.args], [/for]BuildFinal[type.generics.args][/if][/for][/template]
+
+[template generateTelescopicBuilderInterfaces Type type]
+[for tb = type.telescopicBuild]
+[if tb]
+[for nt in tb.stages, v = nt.attribute]
+[let builderReturn][if nt.next][toUpper nt.next.attribute.name]BuildStage[type.generics.args][else]BuildFinal[type.generics.args][/if][/let]
+
+public interface [toUpper v.name]BuildStage[type.generics] {
+  /**
+   * Initializes the value for the [sourceDocRef type v] attribute.
+   * @param [v.name] The value for [v.name] [if v.nullable](can be {@code null})[/if]
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [deprecation v]
+  [builderReturn] [v.names.init]([v.type] [v.name]);
+}
+[/for]
+
+public interface BuildFinal[type.generics] {
+[for v in tb.finals]
+[if v.encoding]
+  [-- not implemented --]
+[else if v.collectionType]
+
+  /**
+   * Adds one element to [sourceDocRef type v] [toLower v.rawCollectionType].
+   * @param element A [v.name] element
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [deprecation v]
+  BuildFinal[type.generics.args] [v.names.add]([v.unwrappedElementType] element);
+
+  /**
+   * Adds elements to [sourceDocRef type v] [toLower v.rawCollectionType].
+   * @param elements An array of [v.name] elements
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [deprecation v]
+  BuildFinal[type.generics.args] [v.names.add]([v.unwrappedElementType]... elements);
+
+  /**
+   * Adds elements to [sourceDocRef type v] [toLower v.rawCollectionType].
+   * @param elements An iterable of [v.name] elements
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [deprecation v]
+  BuildFinal[type.generics.args] [v.names.addAll](Iterable<[v.consumedElementType]> elements);
+[else if v.optionalType]
+
+  /**
+   * Initializes the optional value [sourceDocRef type v] to [v.name].
+   * @param [v.name] The value for [v.name][if v.optionalAcceptNullable], {@code null} is accepted as {@code [optionalEmpty v]}[/if]
+   * @return {@code this} builder for chained invocation
+   */
+  [deprecation v]
+  BuildFinal[type.generics.args] [v.names.init]([unwrappedOptionalType v] [v.name]);
+
+  /**
+   * Initializes the optional value [sourceDocRef type v] to [v.name].
+   * @param [v.name] The value for [v.name]
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [deprecation v]
+  BuildFinal[type.generics.args] [v.names.init]([v.rawType][if not v.jdkSpecializedOptional]<[v.consumedElementType]>[/if] [v.name]);
+[else if v.mapType]
+  [for gE = v.consumedElementType, uK = v.unwrappedElementType, wK = v.wrappedElementType, uV = v.unwrappedSecondaryElementType, wV = v.wrappedSecondaryElementType]
+    [if v.multimapType]
+
+  /**
+   * Put all mappings from the specified key to values for [sourceDocRef type v] [toLower v.mapType]. Nulls are not permitted
+   * @param key The key for [v.name]
+   * @param values The values for [v.name]
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [deprecation v]
+  BuildFinal[type.generics.args] [v.names.put]([uK] key, [uV]... values);
+
+  /**
+   * Put all mappings from the specified key to values for [sourceDocRef type v] [toLower v.mapType]. Nulls are not permitted
+   * @param key The key for [v.name]
+   * @param values The values for [v.name]
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [deprecation v]
+  BuildFinal[type.generics.args] [v.names.putAll]([uK] key, Iterable<[wV]> values);
+    [/if]
+
+  /**
+   * Put one entry to the [sourceDocRef type v] map.
+   * @param key The key in the [v.name] map
+   * @param value The associated value in the [v.name] map
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [deprecation v]
+  BuildFinal[type.generics.args] [v.names.put]([uK] key, [uV] value);
+
+  /**
+   * Put one entry to the [sourceDocRef type v] map. Nulls are not permitted
+   * @param entry The key and value entry
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [deprecation v]
+  BuildFinal[type.generics.args] [v.names.put](java.util.Map.Entry<[gE], ? extends [wV]> entry);
+
+  /**
+   * Put all mappings from the specified map as entries to [sourceDocRef type v] map. Nulls are not permitted
+   * @param [v.name] The entries that will be added to the [v.name] map
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [deprecation v]
+  BuildFinal[type.generics.args] [v.names.putAll]([if v.multimapType][guava].collect.Multimap[else]java.util.Map[/if]<[gE], ? extends [wV]> [v.name]);
+  [/for]
+[else if v.arrayType]
+
+  /**
+   * Initializes the value for the [sourceDocRef type v] attribute.
+  [if v.generateDefault]
+   * <p><em>If not set, this attribute will have a default value as defined by [sourceDocRef type v].</em>
+  [/if]
+   * @param [v.name] The elements for [v.name]
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [deprecation v]
+  BuildFinal[type.generics.args] [v.names.init]([v.elementType]... [v.name]);
+[else]
+
+  /**
+   * Initializes the value for the [sourceDocRef type v] attribute.
+  [if v.generateDefault]
+   * <p><em>If not set, this attribute will have a default value as returned by the initializer of [sourceDocRef type v].</em>
+  [/if]
+   * @param [v.name] The value for [v.name] [if v.nullable](can be {@code null})[/if]
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [deprecation v]
+  BuildFinal[type.generics.args] [v.names.init]([v.atNullability][v.type] [v.name]);
+[/if]
+[/for]
+
+  /**
+   * Builds a new {@link [type.typeValue.relativeRaw] [type.typeValue.simple]}.
+   * @return An immutable instance of [type.name]
+   * @throws [type.throwForInvalidImmutableState] if any required attributes are missing
+   */
+  [type.typeValue.relative] [type.names.build]();
+}
+[/if]
+[/for]
+[/template]
+
+[template generateBuilder Type type Boolean topLevel]
+[packageWhenTopLevel type topLevel]
+[for setters = type.settableAttributes,
+     getters = type.implementedAttributes,
+     mandatories = type.mandatoryAttributes,
+     nondefaults = type.requiresTrackedIsSetNonMandatoryAttributes,
+     LongPositions positions = longsFor mandatories,
+     LongPositions nondefaultsPositions = longsFor nondefaults]
+
+/**
+[if type.kind.isFactory]
+ * {@code [type.typeBuilderImpl.simple]} collects parameters and invokes the static factory method:
+ * {@code [type.factoryOf](..)}.
+ * Call the {@link #[type.names.build]()} method to get a result of type {@code [type.typeValue]}.
+[else]
+ * Builds instances of type {@link [type.typeValue.relativeRaw] [type.typeValue.simple]}.
+ * Initialize attributes and then invoke the {@link #[type.names.build]()} method to create an
+ * immutable instance.
+[/if]
+ * <p><em>{@code [type.typeBuilderImpl.simple]} is not thread-safe and generally should not be stored in a field or collection,
+ * but instead used immediately to create instances.</em>
+ */
+[annotationsWhenTopLevel type topLevel]
+[if classpath.available 'javax.annotation.concurrent.NotThreadSafe']
+@javax.annotation.concurrent.NotThreadSafe
+[/if]
+[for a in type.builderAnnotations]
+[a]
+[/for]
+[type.typeBuilderImpl.access][if not topLevel]static [/if][if not type.innerBuilder.isExtending]final [/if]class [type.typeBuilderImpl.simple][type.generics] [if type.innerBuilder.isSuper]
+    [if type.innerBuilder.isInterface]implements[if type.telescopicBuild][telescopicBuilderImplementInterfaces type][/if][else]extends[/if] [type.typeAbstract.relativeRaw].[type.innerBuilder.simpleName][type.innerBuilder.generics.args] {[else if type.telescopicBuild]implements [telescopicBuilderImplementInterfaces type] {[else]{[/if]
+[if type.constitution.outsideBuilder]
+  [rr.staticFields setters]
+  [rr.staticMethods setters]
+[/if]
+  [for m in mandatories, BitPosition pos = positions m]
+  private static final long INIT_BIT_[toConstant m.name] = [literal.hex pos.mask];
+  [/for]
+  [for p in nondefaults, BitPosition pos = nondefaultsPositions p]
+  private static final long OPT_BIT_[toConstant p.name] = [literal.hex pos.mask];
+  [/for]
+  [rr.builderStaticFields setters]
+  [for l in positions.longs]
+  private long [disambiguateField type 'initBits'][emptyIfZero l.index] = [literal.hex l.occupation];
+  [/for]
+  [for l in nondefaultsPositions.longs]
+  private long [disambiguateField type 'optBits'][emptyIfZero l.index];
+  [/for]
+  [if positions.longs or nondefaultsPositions.longs][-- just to separate sections --]
+
+  [/if]
+  [rr.builderFields setters]
+  [for v in setters if not v.encoding]
+  [defineOrResetBuildingFieldAlt v true v.nullableCollector]
+  [/for]
+  [if type.generateOrdinalValue]
+  private Domain domain = Domain.get();
+  [/if]
+[for Boolean useFactoryMethod = not type.factoryBuilder.isNew]
+  [for parameters = type.builderParameters]
+
+  [if not useFactoryMethod]
+  /**
+[if type.kind.isFactory]
+   * Creates a {@code [type.typeBuilderImpl.simple]} factory builder.
+[else]
+   * Creates a builder for {@link [type.typeValue.relativeRaw] [type.typeValue.simple]} instances.
+[/if]
+[for p in parameters]
+   * @param [p.name] {@code [p.name]} parameter[if p.nullable], can be {@code null}[/if]
+[/for]
+   */
+  [/if]
+  [if useFactoryMethod]private [else][type.typeBuilderImpl.access][/if][type.typeBuilderImpl.simple]([for p in parameters][if not for.first], [/if][p.atNullability][constructorAcceptType p] [p.name][/for]) {
+    [if type.innerBuilder.isExtending]
+    if (!(this instanceof [type.typeBuilder.relativeRaw][type.generics.unknown])) {
+      throw new UnsupportedOperationException("Use: [type.factoryBuilder.relative]()");
+    }
+    [/if]
+    [for v in setters]
+      [if v.builderSwitcher]
+        [for o in v.builderSwitcherModel.options if o.isDefault]
+    [v.names.init]([v.rawType].[o.constantName]);
+        [/for]
+      [/if]
+      [if v.isBuilderParameter]
+        [if v.collectionType]
+    [v.names.addAll]([v.name]);
+        [else if v.mapType]
+    [v.names.putAll]([v.name]);
+        [else]
+    [v.names.init]([v.name]);
+        [/if]
+      [/if]
+    [/for]
+  }
+  [if parameters andnot type.kind.isFactory]
+
+  [if useFactoryMethod]private [/if][type.typeBuilderImpl.simple]() {
+    [if type.innerBuilder.isExtending]
+    if (!(this instanceof [type.typeBuilder.relativeRaw][type.generics.unknown])) {
+      throw new UnsupportedOperationException("Use: [type.factoryBuilder.relative]()");
+    }
+    [/if]
+  }
+  [/if]
+    [if useFactoryMethod]
+[if type.kind.isFactory or type.constitution.isOutsideBuilder]
+
+  /**
+[if type.kind.isFactory]
+   * Creates a {@code [type.typeBuilderImpl.simple]} factory builder.
+[else]
+   * Creates a builder for {@link [type.typeValue.relativeRaw] [type.typeValue.simple]} instances.
+[/if]
+  [javadocGenerics type]
+  [for p in parameters]
+   * @param [p.name] {@code [p.name]} parameter[if p.nullable], can be {@code null}[/if]
+  [/for]
+   * @return A new builder
+   */
+  public static[type.generics.def] [type.typeBuilderImpl.simple][type.generics.args] [type.factoryBuilder.applied]([for p in parameters][if not for.first], [/if][p.atNullability][constructorAcceptType p] [p.name][/for]) {
+    return new [type.typeBuilderImpl.simple][type.generics.diamond]([for p in parameters][if not for.first], [/if][p.name][/for]);
+  }
+  [if parameters andnot type.kind.isFactory]
+
+  static[type.generics.def] [type.typeBuilderImpl.simple] [type.factoryBuilder.applied]() {
+    return new [type.typeBuilderImpl.simple][type.generics.diamond]();
+  }
+  [/if]
+[/if]
+    [/if]
+  [/for]
+[/for]
+[if type.generateOrdinalValue]
+
+  /**
+   * Specify a non-default {@link Domain} for ordinal values.
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  public final [builderReturnType type] domain(Domain domain) {
+    this.domain = [requireNonNull type](domain, "domain");
+    return [builderReturnThis type];
+  }
+[/if]
+[if type.kind.isValue]
+  [if type.generateBuilderFrom]
+    [if type.buildFromTypes and type.buildFromTypes.hasManySupertypes]
+      [for s in type.buildFromTypes.supertypes]
+  [if type.constitution.isImplementationPrimary and (s.type eq type.typeAbstract.toString)]
+
+  /**
+   * Fill a builder with attribute values from the provided {@code [type.typeImmutable.simple]} instance.
+   * @param instance The instance from which to copy values
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  public final [builderReturnType type] [type.names.from]([type.typeImmutable.relative] instance) {
+    [requireNonNull type](instance, "instance");
+    from((Object) instance);
+    return [builderReturnThis type];
+  }
+
+  /**
+   * Copy abstract value type {@code [type.typeAbstract.simple]} instance into builder.
+   * @param instance The instance from which to copy values
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  [type.typeAbstract.access]final [builderReturnType type] [type.names.from]([type.typeAbstract.relative] instance) {
+    [requireNonNull type](instance, "instance");
+    from((Object) instance);
+    return [builderReturnThis type];
+  }
+  [else]
+
+  /**
+   * Fill a builder with attribute values from the provided {@code [s.type]} instance.
+   * @param instance The instance from which to copy values
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  public final [builderReturnType type] [type.names.from]([s.type] instance) {
+    [requireNonNull type](instance, "instance");
+    from((Object) instance);
+    return [builderReturnThis type];
+  }
+  [/if]
+      [/for]
+
+[for bs = type.buildFromTypes]
+[if bs.hasWildcards and (not type.suppressesUncheckedWarning)]
+  @SuppressWarnings("unchecked")
+[/if]
+  private void from(Object object) {
+    [for l in bs.positions.longs]
+    long bits[emptyIfZero l.index] = 0;
+    [/for]
+  [for s in bs.supertypes if s.attributes]
+    if (object instanceof [s.wildcard]) {
+      [s.type] instance = ([s.type]) object;
+      [for v in s.attributes, BitPosition pos = bs.positions v.name]
+      [if pos]
+      if ((bits[emptyIfZero pos.index] & [literal.hex pos.mask]) == 0) {
+        [buildFromAttribute v]
+        bits[emptyIfZero pos.index] |= [literal.hex pos.mask];
+      }
+      [else]
+      [buildFromAttribute v]
+      [/if]
+      [/for]
+    }
+  [/for]
+  }
+[/for]
+    [else]
+
+  /**
+   * Fill a builder with attribute values from the provided {@code [if type.constitution.isImplementationPrimary][type.typeImmutable.simple][else][type.typeAbstract.simple][/if]} instance.
+   * Regular attribute values will be replaced with those from the given instance.
+   * Absent optional values will not replace present values.
+  [if type.hasSettableCollection or type.hasSettableMapping]
+   * Collection elements and entries will be added, not replaced.
+  [/if]
+   * @param instance The instance from which to copy values
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [if type.constitution.isImplementationPrimary]
+  public final [builderReturnType type] [type.names.from]([type.typeImmutable.relative] instance) {
+    return [type.names.from](([type.typeAbstract.relative]) instance);
+  }
+
+  /**
+   * Copy abstract value type {@code [type.typeAbstract.simple]} instance into builder.
+   * @param instance The instance from which to copy values
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  [type.typeAbstract.access]final [builderReturnType type] [type.names.from]([type.typeAbstract.relative] instance) {
+    [requireNonNull type](instance, "instance");
+    [for v in setters]
+    [buildFromAttribute v]
+    [/for]
+    return [builderReturnThis type];
+  }
+  [else]
+  [atCanIgnoreReturnValue]
+  public final [builderReturnType type] [type.names.from]([type.typeAbstract.relative] instance) {
+    [requireNonNull type](instance, "instance");
+    [for v in setters]
+    [buildFromAttribute v]
+    [/for]
+    return [builderReturnThis type];
+  }
+  [/if]
+    [/if]
+  [/if]
+[/if]
+[-- Being called from builder initializer methods --]
+[let checkNotIsSet Attribute v]
+[if v.containingType.useStrictBuilder]
+checkNotIsSet([v.names.isSet](), "[v.names.raw]");
+[/if]
+[/let]
+[-- Being called from builder initializer methods --]
+[let nondefaultSetInBuilder Attribute v]
+[if v.requiresTrackIsSet][for BitPosition pos = nondefaultsPositions v]
+[disambiguateField type 'optBits'][emptyIfZero pos.index] |= OPT_BIT_[toConstant v.name];
+[/for][/if]
+[/let]
+[-- Being called from builder initializer methods --]
+[let mandatorySetInBuilder Attribute v]
+[if v.mandatory][for BitPosition pos = positions v]
+[disambiguateField type 'initBits'][emptyIfZero pos.index] &= ~INIT_BIT_[toConstant v.name];
+[/for][/if]
+[/let]
+  [for v in setters]
+  [if v.builderSwitcher]
+    [for o in v.builderSwitcherModel.options]
+
+  /**
+   * Switches {@code [v.name]} to {@code [o.constantName]}.
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [deprecation v]
+  [if o.isDefault]private[else]public[/if] final [builderReturnType type] [o.switcherName]() {
+    return [v.names.init]([v.rawType].[o.constantName]);
+  }
+    [/for]
+  [/if]
+  [if v.encoding]
+  [rr.builderInit v]
+  [else if v.collectionType]
+    [if not v.isBuilderParameter]
+
+  /**
+   * Adds one element to [sourceDocRef type v] [toLower v.rawCollectionType].
+   * @param element A [v.name] element
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  [deprecation v]
+  public final [builderReturnType type] [v.names.add]([v.unwrappedElementType] element) {
+    [if v.nullableCollector]
+    if (this.[v.name] == null) {
+      [defineOrResetBuildingFieldAlt v false false]
+    }
+    [/if]
+    [if v.generateJdkOnly andnot v.primitiveElement]
+      [if v.hasAttributeValue]
+    [if not v.nullElements.ban]if (element != null) [/if]element = [deepCopyOf v]element[/deepCopyOf];
+      [/if]
+      [if v.nullElements.skip]
+    if (element != null) this.[v.name].add([maybeToBuilder v]element[/maybeToBuilder]);
+      [else if v.nullElements.allow]
+    this.[v.name].add([maybeToBuilder v]element[/maybeToBuilder]);
+      [else]
+    this.[v.name].add([maybeToBuilder v][requireNonNull type](element, "[v.name] element")[/maybeToBuilder]);
+      [/if]
+    [else]
+    [if v.hasAttributeValue]
+    element = [deepCopyOf v]element[/deepCopyOf];
+    [/if]
+    this.[v.name].add([maybeToBuilder v]element[/maybeToBuilder]);
+    [/if]
+    [nondefaultSetInBuilder v]
+    return [builderReturnThis type];
+  }
+  [if v.constructorParameters]
+
+  /**
+   * Constructs and adds an element for the [sourceDocRef type v] [toLower v.rawCollectionType].
+  [for c in v.constructorParameters]
+   * @param [c.name] The value for {@code [v.name].[c.name]} [if c.nullable](can be {@code null})[/if]
+  [/for]
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [deprecation v]
+  public final [builderReturnType type] [v.names.add]([for c in v.constructorParameters][if not for.first], [/if][c.atNullability][c.type] [c.name][/for]) {
+    return [v.names.add]([v.attributeValueType.factoryOf]([for c in v.constructorParameters][if not for.first], [/if][c.name][/for]));
+  }
+  [/if]
+
+  /**
+   * Adds elements to [sourceDocRef type v] [toLower v.rawCollectionType].
+   * @param elements An array of [v.name] elements
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  [deprecation v]
+  [varargsSafety v]
+  public final [builderReturnType type] [v.names.add]([v.unwrappedElementType]... elements) {
+    [if v.nullableCollector]
+    if (this.[v.name] == null) {
+      [defineOrResetBuildingFieldAlt v false false]
+    }
+    [/if]
+    [if v.generateJdkOnly or v.hasAttributeValue]
+    for ([v.unwrappedElementType] element : elements) {
+      [if v.hasAttributeValue]
+      [if not v.nullElements.ban]if (element != null) [/if]element = [deepCopyOf v]element[/deepCopyOf];
+      [/if]
+      [if v.primitiveElement or v.nullElements.allow]
+      this.[v.name].add([maybeToBuilder v]element[/maybeToBuilder]);
+      [else if v.nullElements.skip]
+      if (element != null) this.[v.name].add([maybeToBuilder v]element[/maybeToBuilder]);
+      [else]
+      this.[v.name].add([maybeToBuilder v][requireNonNull type](element, "[v.name] element")[/maybeToBuilder]);
+      [/if]
+    }
+    [else]
+      [if v.wrapArrayToIterable]
+    this.[v.name].addAll([if v.isAttributeBuilder][convertToBuilderType v.getAttributeBuilderDescriptor](elements)[else][arrayAsList v 'elements'][/if]);
+      [else]
+    this.[v.name].[if v.isAttributeBuilder]addAll([convertToBuilderType v.getAttributeBuilderDescriptor](elements))[else]add(elements)[/if];
+      [/if]
+    [/if]
+    [nondefaultSetInBuilder v]
+    return [builderReturnThis type];
+  }
+
+  [if v.isAttributeBuilder]
+  /**
+   * Adds a new builder to the [sourceDocRef type v] [toLower v.rawCollectionType] and returns
+   * the builder.
+   */
+  [atCanIgnoreReturnValue]
+  [deprecation v]
+  [varargsSafety v]
+  public final [attributeBuilderBuilderType v.getAttributeBuilderDescriptor] [v.names.addBuilder]() {
+    [if v.nullableCollector]
+    if (this.[v.name] == null) {
+      [defineOrResetBuildingFieldAlt v false false]
+    }
+    [/if]
+    [attributeBuilderBuilderType v.getAttributeBuilderDescriptor] builder = [createAttributeBuilder v.getAttributeBuilderDescriptor];
+    this.[v.name].add(builder);
+
+    return builder;
+  }
+
+  /**
+   * Adds elements to [sourceDocRef type v] [toLower v.rawCollectionType].
+   * @param elements An array of [v.name] builder elements
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  [deprecation v]
+  [varargsSafety v]
+  public final [builderReturnType type] [v.names.addAllBuilder]([attributeBuilderBuilderType v.getAttributeBuilderDescriptor]... elements) {
+    [if v.nullableCollector]
+    if (this.[v.name] == null) {
+      [defineOrResetBuildingFieldAlt v false false]
+    }
+    [/if]
+    [if v.generateJdkOnly or v.hasAttributeValue]
+    for ([attributeBuilderBuilderType v.getAttributeBuilderDescriptor] element : elements) {
+      [if v.primitiveElement or v.nullElements.allow]
+      this.[v.name].add(element);
+      [else if v.nullElements.skip]
+      if (element != null) this.[v.name].add(element);
+      [else]
+      this.[v.name].add([requireNonNull type](element, "[v.name] element"));
+      [/if]
+    }
+    [else]
+      [if v.wrapArrayToIterable]
+    this.[v.name].addAll([arrayAsList v 'elements']);
+      [else]
+    this.[v.name].add(elements);
+      [/if]
+    [/if]
+    [nondefaultSetInBuilder v]
+    return [builderReturnThis type];
+  }
+
+  /**
+   * Gets the builder elements to [sourceDocRef type v] [toLower v.rawCollectionType].
+   * @return {@code this} unmodifiable list of modifiable builders.
+   */
+  [deprecation v]
+  [varargsSafety v]
+  public final java.util.List<[attributeBuilderBuilderType v.getAttributeBuilderDescriptor]> [v.names.getBuilders]() {
+  [if v.generateJdkOnly]
+    return createUnmodifiableList(false, this.[v.name]);
+  [else]
+    return this.[v.name].build();
+  [/if]
+  }
+  [/if]
+      [if not type.useStrictBuilder]
+
+  /**
+   * Sets or replaces all elements for [sourceDocRef type v] [toLower v.rawCollectionType].
+   * @param elements An iterable of [v.name] elements
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  [builderInitAnnotations v]
+  [deprecation v]
+  public final [builderReturnType type] [v.names.init]([v.atNullability]Iterable<[v.consumedElementType]> elements) {
+    [if v.nullable]
+    if (elements == null) {
+      [defineOrResetBuildingFieldAlt v false true]
+      [nondefaultSetInBuilder v]
+      return [builderReturnThis type];
+    }
+    [/if]
+    [defineOrResetBuildingField v false]
+    return [v.names.addAll](elements);
+  }
+      [/if]
+    [/if]
+
+  /**
+   * Adds elements to [sourceDocRef type v] [toLower v.rawCollectionType].
+   * @param elements An iterable of [v.name] elements
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  [deprecation v]
+  [builderInitAccess v]final [builderReturnType type] [v.names.addAll](Iterable<[v.consumedElementType]> elements) {
+    [if v.nullableCollector]
+    [requireNonNull type](elements, "[v.name] element");
+    if (this.[v.name] == null) {
+      [defineOrResetBuildingFieldAlt v false false]
+    }
+    [/if]
+    [if v.generateJdkOnly or v.hasAttributeValue]
+    for ([v.unwrappedElementType] element : elements) {
+      [if v.hasAttributeValue]
+      [if not v.nullElements.ban]if (element != null) [/if]element = [deepCopyOf v]element[/deepCopyOf];
+      [/if]
+      [if v.nullElements.allow]
+      this.[v.name].add([maybeToBuilder v]element[/maybeToBuilder]);
+      [else if v.nullElements.skip]
+      if (element != null) this.[v.name].add([maybeToBuilder v]element[/maybeToBuilder]);
+      [else]
+      this.[v.name].add([maybeToBuilder v][requireNonNull type](element, "[v.name] element")[/maybeToBuilder]);
+      [/if]
+    }
+    [else]
+    this.[v.name].addAll([if v.isAttributeBuilder][convertToBuilderType v.getAttributeBuilderDescriptor](elements)[else]elements[/if]);
+    [/if]
+    [nondefaultSetInBuilder v]
+    return [builderReturnThis type];
+  }
+  [if v.isAttributeBuilder]
+
+  /**
+   * Adds elements to [sourceDocRef type v] [toLower v.rawCollectionType].
+   * @param elements An iterable of [v.name] builder elements
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  [deprecation v]
+  [builderInitAccess v]final [builderReturnType type] [v.names.addAllBuilder](Iterable<[attributeBuilderBuilderType v.getAttributeBuilderDescriptor]> elements) {
+    [if v.nullableCollector]
+    [requireNonNull type](elements, "[v.name] element");
+    if (this.[v.name] == null) {
+      [defineOrResetBuildingFieldAlt v false false]
+    }
+    [/if]
+    [if v.generateJdkOnly or v.hasAttributeValue]
+    for ([attributeBuilderBuilderType v.getAttributeBuilderDescriptor] element : elements) {
+      [if v.nullElements.allow]
+      this.[v.name].add(element);
+      [else if v.nullElements.skip]
+      if (element != null) this.[v.name].add(element);
+      [else]
+      this.[v.name].add([requireNonNull type](element, "[v.name] element"));
+      [/if]
+    }
+    [else]
+    this.[v.name].addAll(elements);
+    [/if]
+    [nondefaultSetInBuilder v]
+    return [builderReturnThis type];
+  }
+  [/if]
+  [else if v.optionalType]
+    [if not v.isBuilderParameter]
+
+  /**
+   * Initializes the optional value [sourceDocRef type v] to [v.name].
+   * @param [v.name] The value for [v.name][if v.optionalAcceptNullable], {@code null} is accepted as {@code [optionalEmpty v]}[/if]
+   * @return {@code this} builder for chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  [deprecation v]
+  public final [builderReturnType type] [v.names.init]([unwrappedOptionalType v] [v.name]) {
+    [checkNotIsSet v]
+  [if v.jdkOptional and type.kind.isFactory]
+    this.[v.name] = [optionalOf v]([v.name]);
+  [else if v.jdkOptional and ((v.jdkSpecializedOptional or v.optionalAcceptNullable) or v.primitiveElement)]
+    this.[v.name] = [v.name];
+  [else if v.jdkOptional]
+    this.[v.name] = [requireNonNull type]([v.name], "[v.name]");
+  [else]
+    this.[v.name] = [optionalOf v]([v.name]);
+  [/if]
+    [nondefaultSetInBuilder v]
+    return [builderReturnThis type];
+  }
+  [if v.constructorParameters]
+
+  /**
+   * Constructs and initializes the optional value for the [sourceDocRef type v] attribute.
+  [for c in v.constructorParameters]
+   * @param [c.name] The value for {@code [v.name].[c.name]} [if c.nullable](can be {@code null})[/if]
+  [/for]
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  [deprecation v]
+  [builderInitAccess v]final [builderReturnType type] [v.names.init]([for c in v.constructorParameters][if not for.first], [/if][c.atNullability][c.type] [c.name][/for]) {
+    return [v.names.init]([v.attributeValueType.factoryOf]([for c in v.constructorParameters][if not for.first], [/if][c.name][/for]));
+  }
+  [/if]
+    [/if]
+
+  /**
+   * Initializes the optional value [sourceDocRef type v] to [v.name].
+   * @param [v.name] The value for [v.name]
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [if type.kind.isFactory ornot v.jdkOptional]
+  @SuppressWarnings("unchecked") // safe covariant cast
+  [/if]
+  [atCanIgnoreReturnValue]
+  [builderInitAnnotations v]
+  [deprecation v]
+  [builderInitAccess v]final [builderReturnType type] [v.names.init]([v.rawType][if not v.jdkSpecializedOptional]<[v.consumedElementType]>[/if] [v.name]) {
+    [checkNotIsSet v]
+  [if v.jdkOptional and type.kind.isFactory]
+    this.[v.name] = ([v.type]) [requireNonNull type]([v.name], "[v.name]");
+  [else]
+    this.[v.name] = [valueFromValue v v.name];
+  [/if]
+    [nondefaultSetInBuilder v]
+    return [builderReturnThis type];
+  }
+  [else if v.mapType]
+    [for gE = v.consumedElementType, uK = v.unwrappedElementType, wK = v.wrappedElementType, uV = v.unwrappedSecondaryElementType, wV = v.wrappedSecondaryElementType]
+      [if v.multimapType]
+        [if not v.isBuilderParameter]
+
+  /**
+   * Put all mappings from the specified key to values for [sourceDocRef type v] [toLower v.mapType]. Nulls are not permitted
+   * @param key The key for [v.name]
+   * @param values The values for [v.name]
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  [varargsSafety v]
+  [deprecation v]
+  public final [builderReturnType type] [v.names.put]([uK] key, [uV]... values) {
+    [if v.nullable]
+    if (this.[v.name] == null) {
+      [defineOrResetBuildingFieldAlt v false false]
+    }
+    [/if]
+    this.[v.name].putAll(key, [arrayAsListSecondary v 'values']);
+    [nondefaultSetInBuilder v]
+    return [builderReturnThis type];
+  }
+
+  /**
+   * Put all mappings from the specified key to values for [sourceDocRef type v] [toLower v.mapType]. Nulls are not permitted
+   * @param key The key for [v.name]
+   * @param values The values for [v.name]
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  [deprecation v]
+  public final [builderReturnType type] [v.names.putAll]([uK] key, Iterable<[wV]> values) {
+    [if v.nullable]
+    if (this.[v.name] == null) {
+      [defineOrResetBuildingFieldAlt v false false]
+    }
+    [/if]
+    this.[v.name].putAll(key, values);
+    [nondefaultSetInBuilder v]
+    return [builderReturnThis type];
+  }
+        [/if]
+      [/if]
+        [if not v.isBuilderParameter]
+
+  /**
+   * Put one entry to the [sourceDocRef type v] map.
+   * @param key The key in the [v.name] map
+   * @param value The associated value in the [v.name] map
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  [deprecation v]
+  [if v.jacksonAnyGetter]@com.fasterxml.jackson.annotation.JsonAnySetter[/if]
+  public final [builderReturnType type] [v.names.put]([uK] key, [uV] value) {
+    [if v.nullableCollector]
+    if (this.[v.name] == null) {
+      [defineOrResetBuildingFieldAlt v false false]
+    }
+    [/if]
+    [if v.generateJdkOnly]
+      [if v.nullElements.allow]
+    this.[v.name].put(key, value);
+      [else if v.nullElements.skip]
+    if (value != null[if not v.primitiveElement] && key != null[/if]) this.[v.name].put(key, value);
+      [else]
+    this.[v.name].put(
+        [requireNonNull type](key, "[v.name] key"),
+        [requireNonNull type](value, "[v.name] value"));
+      [/if]
+    [else]
+    this.[v.name].put(key, value);
+    [/if]
+    [nondefaultSetInBuilder v]
+    return [builderReturnThis type];
+  }
+
+  /**
+   * Put one entry to the [sourceDocRef type v] map. Nulls are not permitted
+   * @param entry The key and value entry
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  [deprecation v]
+  public final [builderReturnType type] [v.names.put](java.util.Map.Entry<[gE], ? extends [wV]> entry) {
+    [if v.nullableCollector]
+    if (this.[v.name] == null) {
+      [defineOrResetBuildingFieldAlt v false false]
+    }
+    [/if]
+    [if v.generateJdkOnly]
+    [wK] k = entry.getKey();
+    [wV] v = entry.getValue();
+      [if v.nullElements.allow]
+    this.[v.name].put(k, v);
+      [else if v.nullElements.skip]
+    if (k != null && v != null) this.[v.name].put(k, v);
+      [else]
+    this.[v.name].put(
+        [requireNonNull type](k, "[v.name] key"),
+        [requireNonNull type](v, "[v.name] value"));
+      [/if]
+    [else]
+    this.[v.name].put(entry);
+    [/if]
+    [nondefaultSetInBuilder v]
+    return [builderReturnThis type];
+  }
+          [if not type.useStrictBuilder]
+
+  /**
+   * Sets or replaces all mappings from the specified map as entries for the [sourceDocRef type v] map. Nulls are not permitted[if v.nullable] as keys or values, but parameter itself can be null[/if]
+   * @param [v.name] The entries that will be added to the [v.name] map
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  [builderInitAnnotations v]
+  [deprecation v]
+  [builderInitAccess v]final [builderReturnType type] [v.names.init]([v.atNullability][if v.multimapType][guava].collect.Multimap[else]java.util.Map[/if]<[gE], ? extends [wV]> [v.name]) {
+    [if v.nullable]
+    if ([v.name] == null) {
+      [defineOrResetBuildingFieldAlt v false true]
+      [nondefaultSetInBuilder v]
+      return [builderReturnThis type];
+    }
+    [/if]
+    [defineOrResetBuildingField v false]
+    [nondefaultSetInBuilder v]
+    return [v.names.putAll]([v.name]);
+  }
+          [/if]
+        [/if]
+
+  /**
+   * Put all mappings from the specified map as entries to [sourceDocRef type v] map. Nulls are not permitted
+   * @param [v.name] The entries that will be added to the [v.name] map
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  [deprecation v]
+  [builderInitAccess v]final [builderReturnType type] [v.names.putAll]([if v.multimapType][guava].collect.Multimap[else]java.util.Map[/if]<[gE], ? extends [wV]> [v.name]) {
+    [if v.nullableCollector]
+    if (this.[v.name] == null) {
+      [defineOrResetBuildingFieldAlt v false false]
+    }
+    [/if]
+    [if v.generateJdkOnly]
+    for (java.util.Map.Entry<[gE], ? extends [wV]> entry : [v.name].entrySet()) {
+      [wK] k = entry.getKey();
+      [wV] v = entry.getValue();
+        [if v.nullElements.allow]
+      this.[v.name].put(k, v);
+        [else if v.nullElements.skip]
+      if (k != null && v != null) this.[v.name].put(k, v);
+        [else]
+      this.[v.name].put(
+          [requireNonNull type](k, "[v.name] key"),
+          [requireNonNull type](v, "[v.name] value"));
+        [/if]
+    }
+    [else]
+    this.[v.name].putAll([v.name]);
+    [/if]
+    [nondefaultSetInBuilder v]
+    return [builderReturnThis type];
+  }
+    [/for]
+  [else if v.arrayType]
+
+  /**
+   * Initializes the value for the [sourceDocRef type v] attribute.
+  [if v.generateDefault]
+   * <p><em>If not set, this attribute will have a default value as defined by [sourceDocRef type v].</em>
+  [/if]
+   * @param [v.name] The elements for [v.name]
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  [varargsSafety v]
+  [builderInitAnnotations v]
+  [deprecation v]
+  [builderInitAccess v]final [builderReturnType type] [v.names.init]([v.elementType]... [v.name]) {
+    [checkNotIsSet v]
+    this.[v.name] = [valueFromValue v v.name];
+    [mandatorySetInBuilder v]
+    [nondefaultSetInBuilder v]
+    return [builderReturnThis type];
+  }
+  [else]
+  [if v.constructorParameters]
+
+  /**
+   * Constructs and initializes the value for the [sourceDocRef type v] attribute.
+  [for c in v.constructorParameters]
+   * @param [c.name] The value for {@code [v.name].[c.name]} [if c.nullable](can be {@code null})[/if]
+  [/for]
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  [deprecation v]
+  [builderInitAccess v]final [builderReturnType type] [v.names.init]([for c in v.constructorParameters][if not for.first], [/if][c.atNullability][c.type] [c.name][/for]) {
+    return [v.names.init]([v.attributeValueType.factoryOf]([for c in v.constructorParameters][if not for.first], [/if][c.name][/for]));
+  }
+  [/if]
+
+  /**
+   * Initializes the value for the [sourceDocRef type v] attribute.
+  [if v.generateDefault]
+   * <p><em>If not set, this attribute will have a default value as returned by the initializer of [sourceDocRef type v].</em>
+  [/if]
+   * @param [v.name] The value for [v.name] [if v.nullable](can be {@code null})[/if]
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  [builderInitAnnotations v]
+  [deprecation v]
+  [builderInitAccess v]final [builderReturnType type] [v.names.init]([v.atNullability][v.type] [v.name]) {
+    [checkNotIsSet v]
+    [if v.isBuilderSwitcher and type.kind.isFactory][-- considered always null safe because method call is private/internal --]
+    this.[v.name] = [v.name];
+    [else]
+    this.[v.name] = [maybeToBuilder v][valueFromValue v v.name][/maybeToBuilder];
+    [/if]
+    [nondefaultSetInBuilder v]
+    [mandatorySetInBuilder v]
+    return [builderReturnThis type];
+  }
+
+  [if v.isAttributeBuilder]
+  /**
+   * Returns a builder for [sourceDocRef type v].
+   *
+   * Once called, the attribute builder field is set to a new instance of the builder.
+   * If called more than once, returns the same builder instance.
+   */
+  [builderInitAnnotations v]
+  [deprecation v]
+  [builderInitAccess v]final [attributeBuilderBuilderType v.getAttributeBuilderDescriptor] [v.names.getBuilder]() {
+    if (this.[v.name] == null) {
+      this.[v.name] = [createAttributeBuilder v.getAttributeBuilderDescriptor];
+    }
+    [nondefaultSetInBuilder v]
+    [mandatorySetInBuilder v]
+
+    return this.[v.name];
+  }
+
+  /**
+   * Sets [sourceDocRef type v] to the provided builder.
+   */
+  [atCanIgnoreReturnValue]
+  [builderInitAnnotations v]
+  [deprecation v]
+  [builderInitAccess v]final [builderReturnType type] [v.names.setBuilder]([v.atNullability][v.getAttributeBuilderDescriptor.getQualifiedBuilderTypeName] [v.name]) {
+    [checkNotIsSet v]
+    this.[v.name] = [v.name];
+    [nondefaultSetInBuilder v]
+    [mandatorySetInBuilder v]
+    return [builderReturnThis type];
+  }
+  [/if]
+  [/if]
+  [/for]
+[if type.generateClearBuilder]
+
+  /**
+   * Clear the builder to the initial state.
+   * @return {@code this} builder for use in a chained invocation
+   */
+  [atCanIgnoreReturnValue]
+  public [builderReturnType type] [type.names.clear]() {
+    [for l in positions.longs]
+    [disambiguateField type 'initBits'][emptyIfZero l.index] = [literal.hex l.occupation];
+    [/for]
+    [for l in nondefaultsPositions.longs]
+    [disambiguateField type 'optBits'][emptyIfZero l.index] = 0;
+    [/for]
+    [for v in setters]
+    [if v.containerType and (v.generateJdkOnly and (v.nullableCollector andnot v.nullable))][-- it's hard to push it down to defineOrResetBuildingFieldAlt --]
+    if ([v.name] != null) {
+      [v.name].clear();
+    }
+    [else]
+    [defineOrResetBuildingFieldAlt v false v.nullableCollector]
+    [/if]
+    [/for]
+    return [builderReturnThis type];
+  }
+[/if]
+
+  /**
+  [if type.kind.isFactory]
+   * Invokes {@code [type.factoryOf](..)} using the collected parameters and returns the result of the invocation
+   * @return A result of type {@code [type.typeValue]}
+  [else]
+   * Builds a new {@link [type.typeValue.relativeRaw] [type.typeValue.simple]}.
+   * @return An immutable instance of [type.name]
+  [/if]
+   * @throws [type.throwForInvalidImmutableState] if any required attributes are missing
+   */
+[let returnType][if type.constitution.isSimple][type.typeValue.simple][type.generics.args][else][type.typeValue][/if][/let]
+[if type.throwing or type.customizedThrowForInvalidImmutableState]
+  public [returnType] [output.linesShortable][type.names.build]()
+      throws [type.throwForInvalidImmutableState][for t in type.throwing], [t][/for] {[/output.linesShortable]
+[else]
+  public [returnType] [type.names.build]() {
+[/if]
+  [if positions.longs]
+    [if type.useCompactBuilder]
+    if ([for l in positions.longs][if not for.first] || [/if][disambiguateField type 'initBits'][emptyIfZero l.index] != 0[/for]) {
+      throw new java.lang.IllegalStateException(formatRequiredAttributesMessage());
+    }
+    [else]
+    checkRequiredAttributes();
+    [/if]
+  [/if]
+    [builderReturnValue type]
+  }
+  [if type.isGenerateBuildOrThrow]
+  [if classpath.isJava8 ornot type.generateJdkOnly]
+
+  /**
+  [if type.kind.isFactory]
+   * Invokes {@code [type.factoryOf](..)} using the collected parameters and returns the result of the invocation
+   * @param <BOT> exception type
+   * @param exceptionSupplier used to create new exception from supplied error message
+   * @return A result of type {@code [type.typeValue]}
+  [else]
+   * Builds a new {@link [type.typeValue.relativeRaw] [type.typeValue.simple]}.
+   * @param <BOT> exception type
+   * @param exceptionSupplier used to create new exception from supplied error message
+   * @return An immutable instance of [type.name]
+  [/if]
+   * @throws BOT The supplied exception {@code BOT} if any required attributes are missing
+   */
+  public <BOT extends Exception> [if type.constitution.isSimple][type.typeValue.simple][type.generics.args][else][type.typeValue][/if] [type.names.buildOrThrow]([functionClass]<String, BOT> exceptionSupplier)
+      throws BOT[for t in type.throwing], [t][/for] {
+    [if positions.longs]
+    checkRequiredAttributesOrThrow(exceptionSupplier);
+    [/if]
+    [builderReturnValue type]
+  }
+  [/if]
+  [/if]
+  [for p in nondefaults, BitPosition pos = nondefaultsPositions p]
+
+  private boolean [p.names.isSet]() {
+    return ([disambiguateField type 'optBits'][emptyIfZero pos.index] & OPT_BIT_[toConstant p.name]) != 0;
+  }
+  [/for]
+[if not type.useCompactBuilder]
+  [for m in mandatories, BitPosition pos = positions m]
+
+  private boolean [m.names.isSet]() {
+    return ([disambiguateField type 'initBits'][emptyIfZero pos.index] & INIT_BIT_[toConstant m.name]) == 0;
+  }
+  [/for]
+  [if type.useStrictBuilder and (nondefaultsPositions.longs or positions.longs)]
+
+  private static void checkNotIsSet(boolean isSet, String name) {
+    if (isSet) throw new java.lang.IllegalStateException("Builder of [type.name] is strict, attribute is already set: ".concat(name));
+  }
+  [/if]
+  [if positions.longs]
+
+  private void checkRequiredAttributes() throws [type.throwForInvalidImmutableState] {
+    [checkRequiredOrThrow type positions]new [type.throwForInvalidImmutableState][/checkRequiredOrThrow]
+  }
+  [if type.isGenerateBuildOrThrow]
+    [if classpath.isJava8 ornot type.generateJdkOnly]
+
+  private <T extends Exception> void checkRequiredAttributesOrThrow([functionClass]<String, T> exceptionSupplier) throws T {
+    [checkRequiredOrThrow type positions]exceptionSupplier.apply[/checkRequiredOrThrow]
+  }
+    [/if]
+  [/if]
+  [/if]
+[/if]
+  [if positions.longs]
+
+  private String formatRequiredAttributesMessage() {
+    java.util.List<String> attributes = [if type.generateJdkOnly]new java.util.ArrayList<String>()[else][guava].collect.Lists.newArrayList()[/if];
+    [if type.useCompactBuilder]
+      [for m in mandatories, BitPosition pos = positions m]
+    if (([disambiguateField type 'initBits'][emptyIfZero pos.index] & INIT_BIT_[toConstant m.name]) != 0) attributes.add("[m.names.raw]");
+      [/for]
+    [else]
+      [for m in mandatories]
+    if (![m.names.isSet]()) attributes.add("[m.names.raw]");
+      [/for]
+    [/if]
+    return "Cannot build [type.name], some of required attributes are not set " + attributes;
+  }
+  [/if]
+  [rr.builderHelperMethods setters]
+[if type.constitution.hasImmutableInBuilder]
+  [generateImmutable type false]
+  [if type.generateWithInterface]
+  [generateWithInterface type false]
+  [/if]
+[/if]
+[if topLevel and type.generateJdkOnly]
+  [objectsUtility type]
+[/if]
+[if topLevel and (type.generateJdkOnly and type.useCollectionUtility)]
+  [collectionUtility type]
+[/if]
+[if type.detectAttributeBuilders]
+  [attributeBuilderTransformUtilities type]
+[/if]
+}
+[if type.telescopicBuild andnot topLevel]
+[generateTelescopicBuilderInterfaces type]
+[/if]
+[/for]
+[/template]
+
+[template builderInitAnnotations Attribute v]
+[for a in v.builderAttributeAnnotation]
+[a]
+[/for]
+[/template]
+
+[template builderReturnValue Type type]
+[if type.kind.isFactory]
+[returnFactoryBuild type]
+[else if type.useSingleton andnot type.settableAttributes]
+return [type.factoryInstance.relative]();
+[else if type.generateBuilderUseCopyConstructor]
+[generateReturnBuilderConstructed type]
+[else]
+return [validated type true]new [type.typeImmutable.relative](this)[/validated];
+[/if]
+[/template]
+
+[template checkRequiredOrThrow Type type LongPositions positions String throwSupplier]
+if ([for l in positions.longs][if not for.first] || [/if][disambiguateField type 'initBits'][emptyIfZero l.index] != 0[/for]) {
+  throw [throwSupplier](formatRequiredAttributesMessage());
+}
+[/template]
+
+[template buildFromAttribute Attribute v]
+  [if v.encoding]
+[rr.builderCopyFrom v](instance.[v.names.get]());
+  [else if v.collectionType]
+    [if v.nullable]
+[v.atNullabilityLocal][v.type] [v.name]Value = instance.[v.names.get]();
+if ([v.name]Value != null) {
+  [v.names.addAll]([v.name]Value);
+}
+    [else]
+[v.names.addAll](instance.[v.names.get]());
+    [/if]
+  [else if v.mapType]
+    [if v.nullable]
+[v.atNullabilityLocal][v.type] [v.name]Value = instance.[v.names.get]();
+if ([v.name]Value != null) {
+  [v.names.putAll]([v.name]Value);
+}
+    [else]
+[v.names.putAll](instance.[v.names.get]());
+    [/if]
+  [else if v.optionalType]
+[v.type] [v.name]Optional = instance.[v.names.get]();
+if ([v.name]Optional.[optionalPresent v]) {
+  [v.names.init]([v.name]Optional);
+}
+  [else if v.nullable]
+[v.atNullabilityLocal][v.type] [v.name]Value = instance.[v.names.get]();
+if ([v.name]Value != null) {
+  [v.names.init]([v.name]Value);
+}
+  [else]
+[v.names.init](instance.[v.names.get]());
+  [/if]
+[/template]
+
+[template returnFactoryBuild Type type]
+return [type.factoryOf]([output.linesShortable][for v in type.settableAttributes][if not for.first],
+    [/if][valueFromBuilder v ''][/for][/output.linesShortable]);
+[/template]
+
+[template valueFromSuper Attribute v String expression][if v.guavaImmutableDeclared][if not v.nullable][requireNonNull v.containingType]([expression], "[v.name]")[else][expression][/if][else][valueFromValue v expression][/if][/template]
+
+[template maybeToBuilder Attribute v String expression][if v.isAttributeBuilder][valueToBuilder v.getAttributeBuilderDescriptor][expression][/valueToBuilder][else][expression][/if][/template]
+
+[template valueToBuilder AttributeBuilder n String expression][if n.isCopyMethodOnValueInstance][expression].[n.getQualifiedValueToBuilderMethod]()[else][n.getQualifiedValueToBuilderMethod]([expression])[/if][/template]
+
+[template valueFromValue Attribute v String expression][output.trim]
+[if v.encoding]
+  [rr.from v expression]
+[else if v.jdkOptional]
+  [if v.jdkSpecializedOptional][expression].isPresent() ? [expression].getAs[toUpper v.unwrappedElementType]() : null[else][expression].orElse(null)[/if]
+[else if v.optionalType]
+  [if v.consumedElementType ne v.wrappedElementType]([v.type]) [/if][expression]
+[else if v.arrayType][-- we don't make a safe copy for nullable array --]
+  [if v.nullable][expression][else][expression].clone()[/if]
+[else if v.attributeValueKindCopy]
+  [if v.nullable][expression] == null ? null : [/if][deepCopyOf v][expression][/deepCopyOf]
+[else if v.collectionType or v.mapType]
+  [if v.nullable][expression] == null ? null : [/if][immutableCollectionCopyOf v expression]
+[else]
+  [maybeNonNullValue v][maybeCopyOf v expression][/maybeNonNullValue]
+[/if]
+[/output.trim][/template]
+
+[template deepCopyOf Attribute v String expression][if v.isAttributeBuilder][convertToValueType v.getAttributeBuilderDescriptor]([expression])[else][v.attributeValueType.factoryCopyOf]([expression])[/if][/template]
+
+[template valueFromBuilder Attribute v String expressionPrefix][valueFromBuilderAlt v true expressionPrefix][/template]
+
+[template valueFromBuilderAlt Attribute v Boolean mayBeNull String expressionPrefix][output.trim]
+[if v.encoding]
+    [expressionPrefix][rr.fromBuild v]
+[else if v.attributeValueKindCopy]
+  [if v.nullable][expressionPrefix][v.name] == null ? null : [/if][deepCopyOf v][expressionPrefix][v.name][/deepCopyOf]
+[else if v.collectionType or v.mapType]
+  [if v.nullable]
+    [expressionPrefix][v.name] == null ? null : [immutableCollectionBuild v (expressionPrefix v.name)]
+  [else if v.nullableCollector and mayBeNull]
+    [expressionPrefix][v.name] == null ? [emptyImmutableInstance v v.genericArgs] : [immutableCollectionBuild v (expressionPrefix v.name)]
+  [else]
+    [immutableCollectionBuild v (expressionPrefix v.name)]
+  [/if]
+[else if v.isAttributeBuilder]
+  [expressionPrefix][v.name].[v.getAttributeBuilderDescriptor.getBuildMethod]()
+[else]
+  [expressionPrefix][v.name]
+[/if]
+[/output.trim][/template]
+
+[template emptyImmutableInstance Attribute v String genericArgsOrEmpty][output.trim]
+[if v.encoding]
+  [rr.defaultValue v]
+[else if v.jdkOptional or v.nullable]
+  null
+[else if v.optionalType]
+  [optionalEmpty v]
+[else if v.mapType]
+  [if v.generateJdkOnly]
+    [if v.typeKind.isSortedMap]
+      [immutableCollectionCopyOfSafe v false]java.util.Collections.[v.genericArgs]emptyMap()[/immutableCollectionCopyOfSafe]
+    [else]
+      java.util.Collections.[genericArgsOrEmpty]emptyMap()
+    [/if]
+  [else]
+    [guava].collect.Immutable[v.rawMapType].[genericArgsOrEmpty]of()
+  [/if]
+[else if v.collectionType]
+  [if v.generateOrdinalValueSet]
+    org.immutables.ordinal.ImmutableOrdinalSet.[genericArgsOrEmpty]of()
+  [else if v.generateJdkOnly]
+    [if v.typeKind.isSortedSet]
+      [immutableCollectionCopyOfSafe v false]java.util.Collections.[v.genericArgs]emptyList()[/immutableCollectionCopyOfSafe]
+    [else]
+      java.util.Collections.[genericArgsOrEmpty]empty[v.rawCollectionType]()
+    [/if]
+  [else if v.customCollectionType]
+    [v.rawType].[genericArgsOrEmpty]of()
+  [else]
+    [guava].collect.Immutable[v.rawCollectionType].[genericArgsOrEmpty]of()
+  [/if]
+[else]
+  null
+  [output.error]
+    Could not generate constructor. Attribute '[v.name]' does not have default value.
+  [/output.error]
+[/if]
+[/output.trim][/template]
+
+[template generateConstructorNoAttributes Type type Attribute... attributes]
+[for v in attributes, n = v.name]
+[if v.primitive]
+  [if v.boolean]
+this.[n] = false;
+  [else]
+this.[n] = 0;
+  [/if]
+[else]
+this.[n] = null;
+[/if]
+[/for]
+[/template]
+
+[template generateConstructorDefaultAttributes Type type Attribute... attributes]
+[for v in attributes if not (v.generateDefault or v.generateDerived), n = v.name]
+this.[n] = [emptyImmutableInstance v ''];
+[/for]
+[for v in attributes if v.generateDefault or v.generateDerived, n = v.name]
+[if type.annotationType]
+this.[n] = DEFAULT_VALUE_[toConstant v.name];
+[else]
+  [if type.generateSafeDerived]
+this.[n] = [disambiguateField type 'initShim'].[v.names.get]();
+  [else]
+this.[n] = [valueFromValue v][invokeSuper v].[v.names.get]()[/valueFromValue];
+  [/if]
+[/if]
+[/for]
+[/template]
+
+[template generateImmutableMembers Type type]
+[for setters = type.settableAttributes, getters = type.implementedAttributes]
+[for v in getters]
+  [if v.encoding]
+  [rr.declareFields v]
+  [else]
+  [jsonIgnore type]
+  private final [v.atNullability][immutableImplementationType v] [v.name];
+  [/if]
+[/for]
+[if type.usePrehashed]
+  [jsonIgnore type]
+  private final int hashCode;
+[/if]
+[if type.generateOrdinalValue]
+  [jsonIgnore type]
+  private final int ordinal;
+  [jsonIgnore type]
+  private final Domain domain;
+[/if]
+[if type.useSingleton]
+
+  private [type.typeImmutable.simple]() {[output.collapsible]
+    [generateConstructorDefaultAttributes type type.implementedAttributes]
+    [generateAfterConstruction type false true]
+  [/output.collapsible]}
+[else if type.generatePrivateNoargConstructor]
+
+  private [type.typeImmutable.simple]() {[output.collapsible]
+    [generateConstructorNoAttributes type type.implementedAttributes]
+    [generateAfterConstruction type false true]
+  [/output.collapsible]}
+[/if]
+[if type.useConstructor andnot type.generateConstructorUseCopyConstructor]
+
+  [if type.factoryOf.new]
+  /**
+   * Construct a new immutable {@code [type.name]} instance.
+  [for v in type.constructorArguments]
+   * @param [v.name] The value for the {@code [v.name]} attribute[if v.nullable], can be {@code null}[/if]
+  [/for]
+   */
+  [for ann in type.constructorAnnotations]
+  [ann]
+  [/for]
+  public [type.typeImmutable.simple]([output.linesShortable][for v in type.constructorArguments][if not for.first],[/if]
+      [v.constructorParameterAnnotations][v.atNullability][constructorAcceptType v] [v.name][/for][/output.linesShortable]) {
+  [else]
+  private [type.typeImmutable.simple]([output.linesShortable][for v in type.constructorArguments][if not for.first],[/if]
+      [v.atNullability][constructorAcceptType v] [v.name][/for][/output.linesShortable]) {
+  [/if]
+  [for v in type.constructorArguments, n = v.name]
+    [if v.hasVirtualImpl]
+      [if not v.instantiation.trivialOf]
+    [rr.virtualImpl v] = [valueFromValue v n];
+      [/if]
+    [else]
+    this.[n] = [valueFromValue v n];
+    [/if]
+  [/for]
+[if type.generateSafeDerived]
+  [for v in type.constructorArguments if v.generateDefault]
+    [disambiguateField type 'initShim'].[v.names.init](this.[v.name]);
+  [/for]
+[/if]
+    [generateConstructorDefaultAttributes type type.constructorOmited]
+    [generateAfterConstruction type false false]
+  }
+[/if]
+[if type.generateBuilderConstructor]
+
+  private [type.typeImmutable.simple]([type.typeBuilderImpl.relative] builder) {
+  [for v in getters if not (v.generateDerived or v.generateDefault), n = v.name]
+    [if v.hasVirtualImpl]
+    [rr.virtualImpl v] = [valueFromBuilder v]builder.[/valueFromBuilder];
+    [else]
+    this.[n] = [valueFromBuilder v]builder.[/valueFromBuilder];
+    [/if]
+  [/for]
+[-- Generate default values comes after required values]
+[if type.generateSafeDerived]
+  [for v in getters if v.generateDefault, n = v.name]
+    if ([if v.requiresTrackIsSet]builder.[v.names.isSet]()[else]builder.[n] != null[/if]) {
+      [disambiguateField type 'initShim'].[v.names.init]([valueFromBuilderAlt v v.requiresTrackIsSet]builder.[/valueFromBuilderAlt]);
+    }
+  [/for]
+[/if]
+[for v in getters, n = v.name]
+[if v.generateDefault]
+  [if type.generateSafeDerived]
+    this.[n] = [disambiguateField type 'initShim'].[v.names.get]();
+  [else]
+    this.[n] = [if v.requiresTrackIsSet]builder.[v.names.isSet]()[else]builder.[n] != null[/if]
+        ? [valueFromBuilderAlt v v.requiresTrackIsSet]builder.[/valueFromBuilderAlt]
+        : [if type.annotationType]DEFAULT_VALUE_[toConstant v.name][else][valueFromSuper v][invokeSuper v].[v.names.get]()[/valueFromSuper][/if];
+  [/if]
+[/if]
+[/for]
+    [generateDerivedConstruction type]
+    [generateAfterConstruction type true false]
+  }
+[/if]
+[if type.useCopyMethods]
+
+  [if type.factoryOf.new and type.generateConstructorUseCopyConstructor]
+  /**
+   * Construct a new immutable {@code [type.name]} instance.
+  [for v in type.constructorArguments]
+   * @param [v.name] The value for the {@code [v.name]} attribute[if v.nullable], can be {@code null}[/if]
+  [/for]
+   */
+  [for ann in type.constructorAnnotations]
+  [ann]
+  [/for]
+  public [type.typeImmutable.simple]([output.linesShortable]
+      [for v in getters if not v.generateDerived][if not for.first],
+      [/if][v.constructorParameterAnnotations][v.atNullability][immutableImplementationType v] [v.name][/for][/output.linesShortable]) {
+  [else]
+  private [type.typeImmutable.simple]([output.linesShortable]
+      [if type.synthCopyConstructor][type.typeImmutable.simple] [disambiguateField type 'original'],
+      [/if][for v in getters if not v.generateDerived][if not for.first],
+      [/if][v.atNullability][immutableImplementationType v] [v.name][/for][/output.linesShortable]) {
+  [/if]
+  [for v in getters if not v.generateDerived]
+    [if not v.hasVirtualImpl]
+    this.[v.name] = [v.name];
+    [/if]
+  [/for]
+  [if type.generateSafeDerived and type.hasDerivedAttributes]
+  [for v in getters if v.generateDefault]
+    [disambiguateField type 'initShim'].[v.names.init](this.[v.name]);
+  [/for]
+  [/if]
+    [generateDerivedConstruction type]
+    [generateAfterConstruction type false true]
+  }
+[/if]
+[if type.generateSafeDerived]
+  [generateSafeDerivedShim type]
+[/if]
+  [generateAccessorMethods type]
+  [generateCopyMethods type]
+  [generateObjectUtilityMethods type]
+  [generateJacksonMapped type]
+[/for]
+[/template]
+
+[template generateDerivedConstruction Type type]
+[for v in type.implementedAttributes if v.generateDerived]
+  [if type.generateSafeDerived]
+this.[v.name] = [disambiguateField type 'initShim'].[v.names.get]();
+  [else]
+this.[v.name] = [maybeNonNullValue v][invokeSuper v].[v.names.get]()[/maybeNonNullValue];
+  [/if]
+[/for]
+[/template]
+
+[template generateSafeDerivedShim Type type]
+[for deriveds = v for v in type.implementedAttributes if v.generateDefault or v.generateDerived]
+
+private static final int STAGE_INITIALIZING = -1;
+private static final int STAGE_UNINITIALIZED = 0;
+private static final int STAGE_INITIALIZED = 1;
+[-- would it remain thread safe if remove volatile? --]
+private transient volatile InitShim [disambiguateField type 'initShim'] = new InitShim();
+
+private final class InitShim {
+[for v in deriveds]
+  [let stage][disambiguateField type][v.name]BuildStage[/disambiguateField][/let]
+  [let invokeSuperGet][disambiguateAccessor type][v.names.get]Initialize[/disambiguateAccessor][/let]
+  private [immutableImplementationType v] [v.name];
+  private int [stage];
+
+  [immutableImplementationType v] [v.names.get]() {
+    if ([stage] == STAGE_INITIALIZING) throw new [type.throwForInvalidImmutableState](formatInitCycleMessage());
+    if ([stage] == STAGE_UNINITIALIZED) {
+      [stage] = STAGE_INITIALIZING;
+      this.[v.name] = [valueFromSuper v][if v.defaultInterface][invokeSuperGet][else][invokeSuperQualified v].[v.names.get][/if]()[/valueFromSuper];
+      [stage] = STAGE_INITIALIZED;
+    }
+    return this.[v.name];
+  }
+  [if v.generateDefault]
+
+  void [v.names.init]([immutableImplementationType v] [v.name]) {
+    this.[v.name] = [v.name];
+    [stage] = STAGE_INITIALIZED;
+  }
+  [/if]
+[/for]
+
+  private String formatInitCycleMessage() {
+    java.util.ArrayList<String> attributes = [if type.generateJdkOnly]new java.util.ArrayList<String>()[else][guava].collect.Lists.newArrayList()[/if];
+    [for v in deriveds]
+    [let stage][disambiguateField type][v.name]BuildStage[/disambiguateField][/let]
+    if ([stage] == STAGE_INITIALIZING) attributes.add("[v.name]");
+    [/for]
+    return "Cannot build [type.name], attribute initializers form cycle" + attributes;
+  }
+}
+[for v in deriveds if v.defaultInterface]
+[let invokeSuperGet][disambiguateAccessor type][v.names.get]Initialize[/disambiguateAccessor][/let]
+
+private [v.atNullability][v.type] [invokeSuperGet]() {
+  return [invokeSuper v].[v.names.get]();
+}
+[/for]
+[/for]
+[/template]
+
+[template constructorAcceptType Attribute a][output.trim]
+[if a.encoding]
+  [rr.constructorAcceptType a]
+[else if a.typeKind.isMultimapKind]
+  [guava].collect.Multimap<[a.consumedElementType], ? extends [a.secondaryElementType]>
+[else if a.typeKind.isMapKind]
+  java.util.Map<[a.consumedElementType], ? extends [a.secondaryElementType]>
+[else if a.typeKind.isCollectionKind]
+  Iterable<[a.consumedElementType]>
+[else if a.optionalType andnot a.jdkSpecializedOptional]
+  [a.rawType]<[a.consumedElementType]>
+[else]
+  [a.type]
+[/if]
+[/output.trim][/template]
+
+[template generateJacksonMapped Type type]
+[if type.generateJacksonMapped and (classpath.available 'com.fasterxml.jackson.annotation.JsonCreator')]
+  [if type.jacksonValue]
+[for jval = type.jacksonValue]
+
+/**
+[javadocGenerics type]
+ * @param jsonValue to construct object from
+ * @return An immutable value type
+ * @deprecated Do not use this method directly, it exists only for the <em>Jackson</em>-binding infrastructure
+ */
+@Deprecated
+[if classpath.available 'com.fasterxml.jackson.annotation.JsonCreator.Mode']
+@com.fasterxml.jackson.annotation.JsonCreator(mode = com.fasterxml.jackson.annotation.JsonCreator.Mode.DELEGATING)
+[else]
+@com.fasterxml.jackson.annotation.JsonCreator
+[/if]
+static[type.generics.def] [type.typeImmutable.relative] fromJson([jval.type] jsonValue) {
+[let cast][if type.constitution.returnsAbstractValueType or type.innerBuilder.isExtending]([type.typeImmutable.relative]) [/if][/let]
+[if type.useBuilder]
+  [type.typeBuilder.relative] builder = [castBuildStagedBuilder type][type.factoryBuilder.relative]()[/castBuildStagedBuilder];
+  [for v in type.settableAttributes if v eq jval]
+    [if v.encoding]
+  builder.[rr.builderCopyFrom v](jsonValue);
+    [else if v.collectionType]
+  builder.[v.names.addAll](jsonValue);
+    [else if v.mapType]
+  builder.[v.names.putAll](jsonValue);
+    [else]
+  builder.[v.names.init](jsonValue);
+    [/if]
+  [/for]
+  return [cast]builder.[type.names.build]();
+[else if type.useSingletonOnly]
+  return [cast][type.factoryInstance.relative]();
+[else]
+    [if type.useConstructor]
+  [type.typeImmutable.relative] instance = [cast][type.factoryOf.relative]([for v in type.constructorArguments if v eq jval]jsonValue[/for]);
+    [else if type.useSingleton]
+  [type.typeImmutable.relative] instance = [cast][type.factoryInstance.relative]();
+    [else]
+  [output.error]Cannot generate JSON code when there are no builders, constructors or singletons available[/output.error]
+    [/if]
+  [for o in type.withSettableAfterConstruction if o eq jval]
+  instance = instance.[o.names.with](jsonValue);
+  [/for]
+  return instance;
+[/if]
+}
+[/for]
+  [else]
+
+/**
+ * Utility type used to correctly read immutable object from JSON representation.
+ * @deprecated Do not use this type directly, it exists only for the <em>Jackson</em>-binding infrastructure
+ */
+@Deprecated
+[overrideJsonDeserialize type]
+[overrideJsonTypeInfo type]
+@com.fasterxml.jackson.annotation.JsonAutoDetect(fieldVisibility = com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE)
+static final [output.linesShortable]class Json[type.generics]
+    [extendsImplements type][/output.linesShortable]
+  [serialVersionUID type]
+[for v in type.settableAttributes if not v.jacksonAnyGetter]
+  [if v.encoding]
+  [v.type] [v.name] = [rr.defaultValue v];
+  [else if v.optionalType]
+  [atNullable][v.type] [v.name] = [optionalEmpty v];
+  [else if v.collectionType or v.mapType]
+  [atNullable][v.type] [v.name] = [emptyImmutableInstance v ''];
+  [else if v.primitive]
+  [v.type] [v.name];
+  [else]
+  [atNullable][v.type] [v.name];
+  [/if]
+  [if v.primitive or (v.requiresTrackIsSet andnot v.jacksonAnyGetter)]
+  boolean [disambiguateField type (v.name 'IsSet')];
+  [/if]
+[/for]
+[for v in type.settableAttributes if v.jacksonAnyGetter]
+  final [v.type] [v.name] = new java.util.HashMap[v.genericArgs]();
+[/for]
+[for v in type.settableAttributes if not v.jacksonAnyGetter]
+  [for a in v.annotations]
+  [a]
+  [/for]
+  public void [v.names.beanSet]([v.atNullability][v.type] [v.name]) {
+    this.[v.name] = [v.name];
+    [if v.primitive or (v.requiresTrackIsSet andnot v.jacksonAnyGetter)]
+    this.[disambiguateField type (v.name 'IsSet')] = true;
+    [/if]
+  }
+[/for]
+[for v in type.settableAttributes if v.jacksonAnyGetter]
+
+  @com.fasterxml.jackson.annotation.JsonAnySetter
+  public void set[toUpper v.name]([v.wrappedElementType] key, [v.wrappedSecondaryElementType] value) {
+    this.[v.name].put(key, value);
+  }
+[/for]
+[for signature in type.nonAttributeAbstractMethodSignatures]
+  @Override[-- we actually don't need this implementation, signature is good enough --]
+  [signature] { throw new UnsupportedOperationException(); }
+[/for]
+[for v in type.allAccessibleAttributes]
+  @Override[-- we actually don't need this implementation, signature is good enough --]
+  [v.toSignature] { throw new UnsupportedOperationException(); }
+[/for]
+  [generateJsonWithUnsupported type]
+}
+
+/**
+[javadocGenerics type]
+ * @param json A JSON-bindable data structure
+ * @return An immutable value type
+ * @deprecated Do not use this method directly, it exists only for the <em>Jackson</em>-binding infrastructure
+ */
+@Deprecated
+[if classpath.available 'com.fasterxml.jackson.annotation.JsonCreator.Mode']
+@com.fasterxml.jackson.annotation.JsonCreator(mode = com.fasterxml.jackson.annotation.JsonCreator.Mode.DELEGATING)
+[else]
+@com.fasterxml.jackson.annotation.JsonCreator
+[/if]
+static[type.generics.def] [type.typeImmutable.relative] fromJson(Json[type.generics.args] json) {
+[let cast][if type.constitution.returnsAbstractValueType or type.innerBuilder.isExtending]([type.typeImmutable.relative]) [/if][/let]
+[if type.useBuilder]
+  [type.typeBuilder.relative] builder = [castBuildStagedBuilder type][type.factoryBuilder.relative]()[/castBuildStagedBuilder];
+  [for v in type.settableAttributes]
+    [if v.requiresTrackIsSet or v.primitive]
+  if (json.[disambiguateField type (v.name 'IsSet')]) {
+    [else]
+  if (json.[v.name] != null) {
+    [/if]
+    [if v.encoding]
+    builder.[rr.builderCopyFrom v](json.[v.name]);
+    [else if v.collectionType]
+    builder.[v.names.addAll](json.[v.name]);
+    [else if v.mapType]
+    builder.[v.names.putAll](json.[v.name]);
+    [else]
+    builder.[v.names.init](json.[v.name]);
+    [/if]
+  }
+  [/for]
+  return [cast]builder.[type.names.build]();
+[else if type.useSingletonOnly]
+  return [cast][type.factoryInstance.relative]();
+[else]
+    [if type.useConstructor]
+  [type.typeImmutable.relative] instance = [cast][type.factoryOf.relative]([for v in type.constructorArguments][if not for.first], [/if]json.[v.name][/for]);
+    [else if type.useSingleton]
+  [type.typeImmutable.relative] instance = [cast][type.factoryInstance.relative]();
+    [else]
+  [output.error]Cannot generate JSON code when there are no builders, constructors or singletons available[/output.error]
+    [/if]
+  [for v in type.withSettableAfterConstruction]
+    [if v.requiresTrackIsSet or v.primitive]
+  if (json.[disambiguateField type (v.name 'IsSet')]) {
+    [else]
+  if (json.[v.name] != null) {
+    [/if]
+    instance = instance.[v.names.with](json.[v.name]);
+  }
+  [/for]
+  return instance;
+[/if]
+}
+  [/if]
+[/if]
+[/template]
+
+[template generateAccessorMethods Type type]
+[if type.annotationType]
+
+/** {@inheritDoc} */
+@Override
+public Class<? extends java.lang.annotation.Annotation> annotationType() {
+  return [type.typeAbstract].class;
+}
+[/if]
+  [for v in type.implementedAttributes]
+
+/**
+  [if v.docComment]
+[for d in v.docComment]
+ *[d][-- no space before doc line!]
+[/for]
+  [else]
+[if v.arrayType]
+ * @return A cloned {@code [v.name]} array
+[else if v.generateDerived]
+ * @return The computed-at-construction value of the {@code [v.name]} attribute
+[else]
+ * @return The value of the {@code [v.name]} attribute
+[/if]
+  [/if]
+ */
+[for a in v.annotations if a ne '@com.fasterxml.jackson.annotation.JsonAnyGetter']
+[a]
+[/for]
+[if v.jacksonAnyGetter]@com.fasterxml.jackson.annotation.JsonAnyGetter[/if]
+[if v.jacksonValue]@com.fasterxml.jackson.annotation.JsonValue[/if]
+[deprecation v]
+@Override
+  [if v.encoding]
+[rr.accessor v]
+  [else if v.jdkOptional]
+[v.access][v.type] [v.names.get]() {
+[if v.jdkSpecializedOptional]
+  return [v.name] != null
+      ? [v.rawType].of([v.name])
+      : [v.rawType].empty();
+[else]
+  return [v.rawType].ofNullable([v.name]);
+[/if]
+}
+  [else]
+[v.access][v.atNullabilityOriginal][immutableImplementationType v] [v.names.get]() {
+[if type.generateSafeDerived and (v.generateDerived or v.generateDefault)]
+  InitShim shim = this.[disambiguateField type 'initShim'];
+  [if v.arrayType andnot v.nullable]
+  return shim != null
+    ? shim.[v.names.get]().clone()
+    : this.[v.name].clone();
+  [else]
+  return shim != null
+      ? shim.[v.names.get]()
+      : this.[v.name];
+  [/if]
+[else if v.arrayType]
+  return [valueFromValue v v.name];
+[else]
+  return [v.name];
+[/if]
+}
+  [/if]
+  [/for]
+  [if type.generateOrdinalValue]
+
+/** {@inheritDoc} */
+@Override
+public int ordinal() {
+  return ordinal;
+}
+  [/if]
+[/template]
+
+[template generateObjectUtilityMethods Type type]
+[let equalToTypeRaw][if type.annotationType][type.typeAbstract.relativeRaw][else][type.typeImmutable.relativeRaw][type.generics.unknown][/if][/let]
+[let equalToType][if type.annotationType][type.typeAbstract.relativeRaw][else][type.typeImmutable.relative][/if][/let]
+[for getters = type.equivalenceAttributes]
+[if type.useReferenceEquality ornot type.equalToDefined]
+
+/**
+[if type.annotationType]
+ * This instance is equal to any implementation of the {@link [type.typeAbstract.relativeRaw]} type with equal attribute values.
+[else]
+ * This instance is equal to all instances of {@code [type.typeImmutable.simple]} that have equal attribute values.
+[/if]
+[if type.useReferenceEquality]
+ * As instances of the {@code [type.typeImmutable.simple]} class are interned, the {@code equals} method is implemented
+ * as an efficient reference equality check.
+[/if]
+ * @return {@code true} if {@code this} is equal to {@code another} instance
+ */
+[if type.generics and (not type.suppressesUncheckedWarning)]@SuppressWarnings("unchecked")[/if]
+@Override
+public boolean equals([atNullable]Object another) {
+  [if type.useReferenceEquality]
+  return this == another;
+  [else]
+  if (this == another) return true;
+  return another instanceof [equalToTypeRaw]
+      && equalTo(([equalToType]) another);
+  [/if]
+}
+[/if]
+[if type.useEqualTo]
+
+private boolean equalTo([equalToType] another) {
+  [if type.equalToDefined]
+  return super.equals(another);
+  [else]
+    [if type.usePrehashed]
+  if (hashCode != another.hashCode) return false;
+    [/if]
+  return [if not getters]true[/if][for v in getters][if not for.first]
+      && [/if][equalsAttribute v type.annotationType][/for];
+  [/if]
+}
+[/if]
+[let computeHashCodeBody]
+[let h][disambiguateField type 'h'][/let]
+[if type.annotationType]
+  int [h] = 0;
+[for v in getters]
+[if v.arrayType]
+  [h] += 127 * "[v.names.get]".hashCode() ^ java.util.Arrays.hashCode([v.name]);
+[else if v.primitive]
+  [h] += 127 * "[v.names.get]".hashCode() ^ [primitiveHashCode v];
+[else]
+  [h] += 127 * "[v.names.get]".hashCode() ^ [v.name].hashCode();
+[/if]
+[/for]
+  return [h];
+[else if getters.isEmpty]
+  return [type.hashCode];
+[else]
+  int [h] = 5381;
+[for v in getters]
+[if v.encoding]
+  [h] += ([h] << 5) + ([rr.hash v]);
+[else if v.arrayType]
+  [h] += ([h] << 5) + java.util.Arrays.hashCode([v.name]);
+[else if v.nullable or v.jdkOptional]
+  [h] += ([h] << 5) + [objectsHashCode type]([v.name]);
+[else if v.primitive]
+  [h] += ([h] << 5) + [primitiveHashCode v];
+[else]
+  [h] += ([h] << 5) + [v.name].hashCode();
+[/if]
+[/for]
+  return [h];
+[/if]
+[/let]
+[if type.hashCodeDefined]
+  [if type.usePrehashed]
+
+/**
+ * Returns the precomputed-on-construction hash code from the supertype implementation of {@code super.hashCode()}.
+ * @return The hashCode value
+ */
+@Override
+public int hashCode() {
+  return hashCode;
+}
+  [/if]
+[else]
+
+/**
+[if not getters]
+ * Returns a constant hash code value.
+[else if type.usePrehashed]
+ * Returns a precomputed-on-construction hash code from attributes: [for a in getters][if not for.first], [/if]{@code [a.name]}[/for].
+[else]
+ * Computes a hash code from attributes: [for a in getters][if not for.first], [/if]{@code [a.name]}[/for].
+[/if]
+ * @return hashCode value
+ */
+@Override
+public int hashCode() {
+  [if type.usePrehashed]
+  return hashCode;
+  [else]
+[computeHashCodeBody]
+  [/if]
+}
+  [if type.usePrehashed]
+
+private int [disambiguateAccessor type 'computeHashCode']() {
+[computeHashCodeBody]
+}
+  [/if]
+[/if]
+[/for]
+[generateToString type]
+[/template]
+
+[template generateToString Type type]
+[if not type.toStringDefined]
+
+/**
+ * Prints the immutable value {@code [type.name]}[if type.equivalenceAttributes] with attribute values[/if].
+ * @return A string representation of the value
+ */
+@Override
+public String toString() {
+[if not type.equivalenceAttributes]
+  [if type.annotationType]
+  return "@[type.name]";
+  [else]
+  return "[type.name]{}";
+  [/if]
+[else if type.generateJdkOnly]
+  [if type.hasOptionalAttributes]
+  [flag.set][-- When flag is set we are expecting that any attribute might be first so we do need to decide if leading comma is necessary  --]
+  java.lang.StringBuilder builder = new java.lang.StringBuilder([if type.annotationType]"@[type.name]("[else]"[type.name]{"[/if]);
+  [let startLen][output.length][if type.annotationType]@[type.name]([else][type.name]{[/if][/output.length][/let]
+  [for v in type.equivalenceAttributes]
+    [if v.redactedCompletely][-- Nothing --]
+    [else if v.encoding]
+  [if not for.first][if flag.is]if (builder.length() > [startLen]) [/if]builder.append(", ");[/if][flag.clear]
+  builder.append("[v.names.raw]=").append([maybeMasked v][rr.string v][/maybeMasked]);
+    [else if v.arrayType]
+  [if not for.first][if flag.is]if (builder.length() > [startLen]) [/if]builder.append(", ");[/if][flag.clear]
+  builder.append("[v.names.raw]=").append([maybeMasked v]java.util.Arrays.toString([v.name])[/maybeMasked]);
+    [else if v.jdkOptional or v.nullable]
+  if ([v.name] != null) {
+    [if not for.first][if flag.is]if (builder.length() > [startLen]) [/if]builder.append(", ");[/if]
+    builder.append("[v.names.raw]=").append([maybeMasked v][v.name][/maybeMasked]);
+  }
+    [else if v.optionalType]
+  if ([v.name].[optionalPresent v]) {
+    [if not for.first][if flag.is]if (builder.length() > [startLen]) [/if]builder.append(", ");[/if]
+    builder.append("[v.names.raw]=").append([maybeMasked v][v.name].[optionalGet v][/maybeMasked]);
+  }
+    [else]
+  [if not for.first][if flag.is]if (builder.length() > [startLen]) [/if]builder.append(", ");[/if][flag.clear]
+  builder.append("[v.names.raw]=").append([maybeMasked v][v.name][/maybeMasked]);
+    [/if]
+  [/for]
+  return builder.append([if type.annotationType]")"[else]"}"[/if]).toString();
+  [else]
+  return [if type.annotationType]"@[type.name]("[else]"[type.name]{"[/if]
+    [for v in type.equivalenceAttributes]
+      [if v.redactedCompletely][-- Nothing --]
+      [else if v.arrayType]
+      + "[if not for.first], [/if][v.names.raw]=" + [maybeMasked v]java.util.Arrays.toString([v.name])[/maybeMasked]
+      [else if v.encoding]
+      + "[if not for.first], [/if][v.names.raw]=" + [maybeMasked v]([rr.string v])[/maybeMasked]
+      [else]
+      + "[if not for.first], [/if][v.names.raw]=" + [maybeMasked v][v.name][/maybeMasked]
+      [/if]
+    [/for]
+      + [if type.annotationType]")"[else]"}"[/if];
+  [/if]
+[else]
+  return [type.typeMoreObjects].toStringHelper("[if type.annotationType]@[/if][type.name]")
+      .omitNullValues()
+  [for v in type.equivalenceAttributes]
+  [if v.redactedCompletely][-- Nothing --]
+  [else if v.encoding]
+      .add("[v.names.raw]", [maybeMasked v][rr.string v][/maybeMasked])
+  [else if v.arrayType]
+      .add("[v.names.raw]", [maybeMasked v]java.util.Arrays.toString([v.name])[/maybeMasked])
+  [else if v.jdkOptional]
+      .add("[v.names.raw]", [maybeMasked v][v.name][/maybeMasked])
+  [else if v.guavaOptional]
+      .add("[v.names.raw]", [maybeMasked v][v.name].orNull()[/maybeMasked])
+  [else if v.optionalType]
+      .add("[v.names.raw]", [maybeMasked v][v.name].[optionalPresent v] ? [v.name].[optionalGet v] : null[/maybeMasked])
+  [else]
+      .add("[v.names.raw]", [maybeMasked v][v.name][/maybeMasked])
+  [/if]
+  [/for]
+      .toString();
+  [/if]
+}
+[/if]
+[/template]
+
+[template generateAfterConstruction Type type Boolean usingBuilder Boolean pureCopy]
+[rr.assignDefaultFields type.implementedAttributes pureCopy]
+  [if type.usePrehashed]
+this.hashCode = [if type.hashCodeDefined]super.hashCode()[else][disambiguateAccessor type 'computeHashCode']()[/if];
+  [/if]
+  [if type.generateOrdinalValue][-- Assigning dummy ordinal value to be changed on interning --]
+this.ordinal = 0;
+    [if usingBuilder]
+this.domain = builder.domain;
+    [else]
+[-- Default static ordinal domain --]
+this.domain = Domain.get();
+    [/if]
+  [/if]
+  [if type.generateSafeDerived]
+this.[disambiguateField type 'initShim'] = null;
+  [/if]
+[/template]
+
+[template generateReturnCopy Type type Attribute modified String expression]
+return [validated type false]new [type.typeImmutable.relativeRaw][type.generics.diamond]([output.linesShortable]
+    [if type.synthCopyConstructor]this,
+    [/if][for a in type.implementedAttributes if not a.generateDerived][if not for.first],
+    [/if][if a.name eq modified.name][expression][else]this.[if a.hasVirtualImpl][a.names.get]()[else][a.name][/if][/if][/for][/output.linesShortable])[/validated];
+[/template]
+
+[template generateReturnCopyContextual Type type Attribute modified]
+[generateReturnCopy type modified 'newValue']
+[/template]
+
+[template generateReturnBuilderConstructed Type type]
+return [validated type true]new [type.typeImmutable.relativeRaw][type.generics.diamond]([output.linesShortable]
+    [if type.synthCopyConstructor]null,
+    [/if][for v in type.implementedAttributes if not v.generateDerived][if not for.first],
+    [/if][valueFromBuilder v ''][/for][/output.linesShortable])[/validated];
+[/template]
+
+[template generateCopyMethods Type type]
+[if type.useCopyMethods]
+  [for v in type.settableAttributes]
+    [if v.encoding]
+[rr.copyMethods v]
+[generateReturnCopyContextual type v]
+[/rr.copyMethods]
+    [else if v.arrayType]
+
+/**
+ * Copy the current immutable object with elements that replace the content of [sourceDocRef type v].
+ * The array is cloned before being saved as attribute values.
+ * @param elements The non-null elements for [v.name]
+ * @return A modified copy of {@code this} object
+ */
+[varargsSafety v]
+[deprecation v]
+public final [type.typeImmutable.relative] [v.names.with]([v.atNullability][v.elementType]... elements) {
+  [v.atNullabilityLocal][immutableImplementationType v] newValue = [if v.nullable]elements == null ? null : [/if]elements.clone();
+  [generateReturnCopyContextual type v]
+}
+    [else if v.collectionType]
+
+/**
+ * Copy the current immutable object with elements that replace the content of [sourceDocRef type v].
+ * @param elements The elements to set
+ * @return A modified copy of {@code this} object
+ */
+[varargsSafety v]
+[deprecation v]
+public final [type.typeImmutable.relative] [v.names.with]([v.atNullability][v.unwrappedElementType]... elements) {
+  [if v.nullable]
+  if (elements == null) {
+    [generateReturnCopy type v 'null']
+  }
+  [/if]
+  [if v.generateJdkOnly and v.primitiveElement]
+  java.util.ArrayList<[v.wrappedElementType]> wrappedList = new java.util.ArrayList<[v.wrappedElementType]>(elements.length);
+  for ([v.unwrappedElementType] element : elements) {
+    wrappedList.add(element);
+  }
+  [immutableImplementationType v] newValue = [immutableCollectionCopyOfSafe v false]wrappedList[/immutableCollectionCopyOfSafe];
+  [else]
+  [v.atNullabilityLocal][immutableImplementationType v] newValue = [valueFromValue v][if v.wrapArrayToIterable][arrayAsList v 'elements'][else]elements[/if][/valueFromValue];
+  [/if]
+  [generateReturnCopyContextual type v]
+}
+
+/**
+ * Copy the current immutable object with elements that replace the content of [sourceDocRef type v].
+ * A shallow reference equality check is used to prevent copying of the same value by returning {@code this}.
+ * @param elements An iterable of [v.name] elements to set
+ * @return A modified copy of {@code this} object
+ */
+[deprecation v]
+public final [type.typeImmutable.relative] [v.names.with]([v.atNullability]Iterable<[v.consumedElementType]> elements) {
+  if (this.[v.name] == elements) return this;
+  [v.atNullabilityLocal][immutableImplementationType v] newValue = [if v.nullable]elements == null ? null : [/if][immutableCollectionCopyOf v 'elements'];
+  [generateReturnCopyContextual type v]
+}
+    [else if v.optionalType]
+
+/**
+ * Copy the current immutable object by setting a <i>present</i> value for the optional [sourceDocRef type v] attribute.
+ * @param value The value for [v.name][if v.optionalAcceptNullable], {@code null} is accepted as {@code [optionalEmpty v]}[/if]
+ * @return A modified copy of {@code this} object
+ */
+[deprecation v]
+public final [type.typeImmutable.relative] [v.names.with]([unwrappedOptionalType v] value) {
+[if v.jdkOptional]
+  [if v.primitiveElement or (v.jdkSpecializedOptional or v.optionalAcceptNullable)]
+  [immutableImplementationType v] newValue = value;
+  [else]
+  [immutableImplementationType v] newValue = [requireNonNull type](value, "[v.name]");
+  [/if]
+  [if v.hasSimpleScalarElementType andnot v.enumType]
+  if ([objectsEqual type](this.[v.name], newValue)) return this;
+  [else]
+  if (this.[v.name] == newValue) return this;
+  [/if]
+  [generateReturnCopyContextual type v]
+[else]
+  [immutableImplementationType v] newValue = [optionalOf v](value);
+  [if v.hasSimpleScalarElementType andnot v.enumType]
+  if (this.[v.name].equals(newValue)) return this;
+  [else]
+  if (this.[v.name].[optionalPresent v] && this.[v.name].[optionalGet v] == value) return this;
+  [/if]
+  [generateReturnCopyContextual type v]
+[/if]
+}
+
+/**
+ * Copy the current immutable object by setting an optional value for the [sourceDocRef type v] attribute.
+[if v.jdkOptional and v.hasSimpleScalarElementType]
+ * An equality check is used on inner nullable value to prevent copying of the same value by returning {@code this}.
+[else if v.jdkOptional]
+ * A shallow reference equality check is used on unboxed optional value to prevent copying of the same value by returning {@code this}.
+[else if v.hasSimpleScalarElementType]
+ * An equality check is used to prevent copying of the same value by returning {@code this}.
+[else]
+ * A shallow reference equality check on the optional value is used to prevent copying of the same value by returning {@code this}.
+[/if]
+ * @param optional A value for [v.name]
+ * @return A modified copy of {@code this} object
+ */
+[if not v.jdkOptional]
+@SuppressWarnings("unchecked") // safe covariant cast
+[/if]
+[deprecation v]
+public final [type.typeImmutable.relative] [v.names.with]([v.rawType][if not v.jdkSpecializedOptional]<[v.consumedElementType]>[/if] optional) {
+  [immutableImplementationType v] value = [valueFromValue v 'optional'];
+[if v.jdkOptional]
+  [if v.hasSimpleScalarElementType]
+  if ([objectsEqual type](this.[v.name], value)) return this;
+  [else]
+  if (this.[v.name] == value) return this;
+  [/if]
+[else]
+  [if v.hasSimpleScalarElementType]
+  if (this.[v.name].equals(value)) return this;
+  [else]
+  if (!this.[v.name].[optionalPresent v] && !value.[optionalPresent v]) return this;
+  if (this.[v.name].[optionalPresent v] && value.[optionalPresent v] && this.[v.name].[optionalGet v] == value.[optionalGet v]) return this;
+  [/if]
+[/if]
+  [generateReturnCopy type v 'value']
+}
+    [else if v.mapType]
+    [for gE = v.consumedElementType, uK = v.unwrappedElementType, wK = v.wrappedElementType, uV = v.unwrappedSecondaryElementType, wV = v.wrappedSecondaryElementType]
+
+/**
+ * Copy the current immutable object by replacing the [sourceDocRef type v] map with the specified map.
+ * Nulls are not permitted as keys or values.
+ * A shallow reference equality check is used to prevent copying of the same value by returning {@code this}.
+ * @param entries The entries to be added to the [v.name] map
+ * @return A modified copy of {@code this} object
+ */
+[deprecation v]
+public final [type.typeImmutable.relative] [v.names.with]([v.atNullability][if v.multimapType][guava].collect.Multimap[else]java.util.Map[/if]<[gE], ? extends [wV]> entries) {
+  if (this.[v.name] == entries) return this;
+  [v.atNullabilityLocal][immutableImplementationType v] newValue = [valueFromValue v 'entries'];
+  [generateReturnCopyContextual type v]
+}
+    [/for]
+    [else]
+
+/**
+ * Copy the current immutable object by setting a value for the [sourceDocRef type v] attribute.
+ [if v.primitive and v.floatType]
+ * A value strict bits equality used to prevent copying of the same value by returning {@code this}.
+ [else if v.primitive or v.enumType]
+ * A value equality check is used to prevent copying of the same value by returning {@code this}.
+ [else if v.hasSimpleScalarElementType or v.isSuppressedOptional]
+ * An equals check used to prevent copying of the same value by returning {@code this}.
+ [else]
+ * A shallow reference equality check is used to prevent copying of the same value by returning {@code this}.
+ [/if]
+ * @param value A new value for [v.name][if v.nullable] (can be {@code null})[/if]
+ * @return A modified copy of the {@code this} object
+ */
+[deprecation v]
+public final [type.typeImmutable.relative] [v.names.with]([v.atNullability][v.type] value) {
+    [if v.float]
+  if (Float.floatToIntBits(this.[v.name]) == Float.floatToIntBits(value)) return this;
+    [else if v.double]
+  if (Double.doubleToLongBits(this.[v.name]) == Double.doubleToLongBits(value)) return this;
+    [else if v.primitive or v.enumType]
+  if (this.[v.name] == value) return this;
+    [else if v.hasSimpleScalarElementType or v.isSuppressedOptional]
+      [if v.nullable]
+  if ([objectsEqual type](this.[v.name], value)) return this;
+      [else]
+  if (this.[v.name].equals(value)) return this;
+      [/if]
+    [else]
+  if (this.[v.name] == value) return this;
+    [/if]
+    [if v.attributeValueType and v.typeKind.isRegular]
+      [if v.isAttributeBuilder]
+  [v.atNullabilityLocal][immutableImplementationType v] newValue = [valueToBuilder v.getAttributeBuilderDescriptor]value[/valueToBuilder].[v.getAttributeBuilderDescriptor.getBuildMethod]();
+      [else]
+  [v.atNullabilityLocal][immutableImplementationType v] newValue = [valueFromValue v 'value'];
+      [/if]
+  [generateReturnCopyContextual type v]
+    [else if v.nullable or v.primitive]
+  [generateReturnCopy type v 'value']
+    [else]
+  [v.atNullabilityLocal][immutableImplementationType v] newValue = [valueFromValue v 'value'];
+  [generateReturnCopyContextual type v]
+    [/if]
+}
+    [/if]
+  [/for]
+[/if]
+[/template]
+
+[template defaultAnnotationValues Type type]
+[for defaults = type.defaultAttributes]
+[if defaults]
+[for a in defaults]
+private static final [a.type] DEFAULT_VALUE_[toConstant a.name];
+[/for]
+
+static {
+  try {
+  [for a in defaults]
+    DEFAULT_VALUE_[toConstant a.name] =
+        cast([type.typeAbstract.relative].class.getDeclaredMethod("[a.name]").getDefaultValue());
+  [/for]
+  } catch(Exception e) {
+    throw new ExceptionInInitializerError(e);
+  }
+}
+
+@SuppressWarnings("unchecked")
+private static <T> T cast(Object object) {
+  return (T) object;
+}
+[/if]
+[/for]
+[/template]
+
+[template forwardingEnclosingFactoryMethods Type type]
+  [if type.constitution.isImplementationHidden]
+    [if type.useSingleton]
+
+/**
+ * Returns a default immutable singleton value of [type.name].
+[javadocGenerics type]
+ * @return An immutable instance of [type.name]
+ */
+public static[type.generics.def] [type.typeValue.relative] [type.factoryInstance.simple]() {
+  return [type.typeImmutable.relative].[type.names.instance]();
+}
+    [/if]
+    [if type.useConstructor]
+      [if type.requiresAlternativeStrictConstructor]
+
+/**
+ * Construct a new immutable {@code [type.name]} instance.
+[javadocGenerics type]
+[for v in type.constructorArguments]
+ * @param [v.name] The value for the {@code [v.name]} attribute[if v.nullable], can be {@code null}[/if]
+[/for]
+ * @return An immutable [type.name] instance
+ */
+[for ann in type.constructorAnnotations]
+[ann]
+[/for]
+public static[type.generics.def] [type.typeValue.relative] [type.factoryOf.simple]([for v in type.constructorArguments][if not for.first], [/if][v.constructorParameterAnnotations][v.atNullability][v.type] [v.name][/for]) {
+  return [type.factoryOf.simple]([for v in type.constructorArguments][if not for.first], [/if][if v.requiresAlternativeStrictConstructor]([constructorAcceptType v]) [/if][v.name][/for]);
+}
+      [/if]
+
+/**
+ * Construct a new immutable {@code [type.name]} instance.
+[javadocGenerics type]
+[for v in type.constructorArguments]
+ * @param [v.name] The value for the {@code [v.name]} attribute[if v.nullable], can be {@code null}[/if]
+[/for]
+ * @return An immutable [type.name] instance
+ */
+[for ann in type.constructorAnnotations]
+[ann]
+[/for]
+public static[type.generics.def] [type.typeValue.relative] [type.factoryOf.simple]([for v in type.constructorArguments][if not for.first], [/if][v.constructorParameterAnnotations][v.atNullability][constructorAcceptType v] [v.name][/for]) {
+  return [type.typeImmutable.relative].[type.names.of]([for v in type.constructorArguments][if not for.first], [/if][v.name][/for]);
+}
+    [/if]
+  [/if]
+[/template]
+
+[template immutableImplementationType Attribute v][output.trim]
+[if v.encoding]
+  [rr.implType v]
+[else if v.jdkOptional][-- need to watch out that here atNullable goes inside! --]
+  [atNullable][v.wrappedElementType]
+[else if v.customCollectionType]
+  [v.implementationType]
+[else if v.generateOrdinalValueSet andnot v.generateJdkOnly]
+  org.immutables.ordinal.ImmutableOrdinalSet[v.genericArgs]
+[else if v.generateSortedSet andnot v.generateJdkOnly]
+  [guava].collect.ImmutableSortedSet[v.genericArgs]
+[else if v.collectionType andnot v.generateJdkOnly]
+  [guava].collect.Immutable[v.rawCollectionType][v.genericArgs]
+[else if v.generateSortedMap andnot v.generateJdkOnly]
+  [guava].collect.ImmutableSortedMap[v.genericArgs]
+[else if v.mapType andnot v.generateJdkOnly]
+  [guava].collect.Immutable[v.rawMapType][v.genericArgs]
+[else]
+  [v.implementationType]
+[/if]
+[/output.trim][/template]
+
+[template immutableCollectionBuild Attribute a String expression][output.trim]
+[if a.generateJdkOnly]
+  [if a.generateSortedSet]
+    createUnmodifiableSortedSet([a.hasReverseOrder], createSafeList([expression], false, false))
+  [else if a.generateEnumSet]
+    createUnmodifiableEnumSet([expression])
+  [else if a.generateOrdinalValueSet]
+    [output.error]Not implemented generate OrdinalValue set for JDK only[/output.error]
+  [else if a.listType]
+    createUnmodifiableList(true, [if a.isAttributeBuilder][convertToValueType a.getAttributeBuilderDescriptor]([expression])[else][expression][/if])
+  [else if a.setType]
+    createUnmodifiableSet([expression])
+  [else if a.generateEnumMap]
+    createUnmodifiableEnumMap(false, false, [expression])
+  [else if a.generateSortedMap]
+    createUnmodifiableSortedMap([a.hasReverseOrder], false, false, [expression])
+  [else if a.mapType]
+    createUnmodifiableMap(false, false, [expression])
+  [/if]
+[else]
+  [if a.generateOrdinalValueSet or (a.generateEnumSet or a.generateEnumMap)]
+    [immutableCollectionCopyOf a][expression].build()[/immutableCollectionCopyOf]
+  [else]
+    [if a.isAttributeBuilder][guava].collect.ImmutableList.copyOf([convertToValueType a.getAttributeBuilderDescriptor]([expression].build()))[else][expression].build()[/if]
+  [/if]
+[/if]
+[/output.trim][/template]
+
+[template immutableCollectionCopyOf Attribute a String expression][immutableCollectionCopyOfSafe a true expression][/template]
+
+[template immutableCollectionCopyOfSafe Attribute a Boolean safe String expression][output.trim]
+[if a.generateJdkOnly]
+[let safeList][if safe]createSafeList([expression], [a.nullElements.ban], [a.nullElements.skip])[else][expression][/if][/let]
+  [if a.generateSortedSet]
+    createUnmodifiableSortedSet([a.hasReverseOrder], [safeList])
+  [else if a.generateEnumSet]
+    createUnmodifiableEnumSet([expression])
+  [else if a.generateOrdinalValueSet]
+    [output.error]Not implemented generate OrdinalValue set for JDK only[/output.error]
+  [else if a.listType]
+    createUnmodifiableList(false, [safeList])
+  [else if a.setType]
+    createUnmodifiableSet([safeList])
+  [else if a.generateEnumMap]
+    createUnmodifiableEnumMap([safe and a.nullElements.ban], [a.nullElements.skip], [expression])
+  [else if a.generateSortedMap]
+    createUnmodifiableSortedMap([a.hasReverseOrder], [safe and a.nullElements.ban], [a.nullElements.skip], [expression])
+  [else if a.mapType]
+    createUnmodifiableMap([safe and a.nullElements.ban], [a.nullElements.skip], [expression])
+  [else]
+    [expression]
+  [/if]
+[else]
+  [if a.generateSortedSet]
+    [guava].collect.ImmutableSortedSet.copyOf(
+      [if a.hasNaturalOrder]
+        [guava].collect.Ordering.<[a.elementType]>natural(),
+      [else]
+        [guava].collect.Ordering.<[a.elementType]>natural().reverse(),
+      [/if]
+        [expression])
+  [else if a.generateEnumSet]
+    [guava].collect.Sets.immutableEnumSet([expression])
+  [else if a.generateOrdinalValueSet]
+    org.immutables.ordinal.ImmutableOrdinalSet.copyOf([expression])
+  [else if a.generateSortedMultiset]
+    [guava].collect.ImmutableSortedMultiset.copyOf(
+      [if a.hasNaturalOrder]
+        [guava].collect.Ordering.<[a.elementType]>natural(),
+      [else]
+        [guava].collect.Ordering.<[a.elementType]>natural().reverse(),
+      [/if]
+        [expression])
+  [else if a.customCollectionType]
+    [a.rawType].from([expression])
+  [else if a.collectionType]
+    [guava].collect.Immutable[a.rawCollectionType].copyOf([expression])
+  [else if a.generateSortedMap]
+    [guava].collect.ImmutableSortedMap.copyOf([expression],
+    [if a.hasNaturalOrder]
+        [guava].collect.Ordering.<[a.elementType]>natural()
+    [else]
+        [guava].collect.Ordering.<[a.elementType]>natural().reverse()
+    [/if])
+  [else if a.generateEnumMap]
+    [guava].collect.Maps.immutableEnumMap([expression])
+  [else if a.mapType]
+    [guava].collect.Immutable[a.rawMapType].copyOf([expression])
+  [else]
+    [expression]
+  [/if]
+[/if]
+[/output.trim][/template]
+
+[template public equalsAttribute Attribute a Boolean useAccessor][output.trim]
+[let thisAttr][if a.name eq 'another']this.[/if][a.name][/let]
+[let getOther]another.[if useAccessor][a.names.get]()[else][a.name][/if][/let]
+[if a.encoding]
+  [rr.equals a]another[/rr.equals]
+[else if a.float]
+  Float.floatToIntBits([thisAttr]) == Float.floatToIntBits([getOther])
+[else if a.double]
+  Double.doubleToLongBits([thisAttr]) == Double.doubleToLongBits([getOther])
+[else if a.primitive]
+  [thisAttr] == [getOther]
+[else if a.arrayType]
+  java.util.Arrays.equals([thisAttr], [getOther])
+[else if a.nullable or a.jdkOptional]
+  [objectsEqual a.containingType]([thisAttr], [getOther])
+[else]
+  [thisAttr].equals([getOther])
+[/if]
+[/output.trim][/template]
+
+[template public arrayAsList Attribute a String expression][output.trim]
+[if a.unwrappedElementPrimitiveType]
+  [if a.generateJdkOnly]
+    [output.error]Template methods 'arrayAsList' could not be used for primitive jdk only conversion[/output.error]
+  [else]
+    [guava].primitives.[toUpper a.unwrappedElementType]s.asList([expression])
+  [/if]
+[else]
+  java.util.Arrays.asList([expression])
+[/if]
+[/output.trim][/template]
+
+[template public arrayAsListSecondary Attribute a String expression][output.trim]
+[if a.unwrappedSecondaryElementPrimitiveType]
+  [if a.generateJdkOnly]
+    [output.error]Template methods 'arrayAsList' could not be used for primitive jdk only conversion[/output.error]
+  [else]
+    [guava].primitives.[toUpper a.unwrappedSecondaryElementType]s.asList([expression])
+  [/if]
+[else]
+  java.util.Arrays.asList([expression])
+[/if]
+[/output.trim][/template]
+
+[template public primitiveHashCode Attribute v][output.trim]
+[if v.int]
+  [v.name]
+[else if v.generateJdkOnly]
+  [if classpath.isJava8 andnot (classpath.available 'android.R')]
+    [v.wrapperType].hashCode([v.name])
+  [else if v.long]
+    (int) ([v.name] ^ ([v.name] >>> 32))
+  [else if v.boolean]
+    ([v.name] ? 1231 : 1237)
+  [else if v.float]
+    Float.floatToIntBits([v.name])
+  [else if v.double][-- Microbenchmark showed that it's ok to new Double, probably due escape analysis --]
+    Double.valueOf([v.name]).hashCode()
+  [else]
+    (int) [v.name]
+  [/if]
+[else]
+  [guava].primitives.[toUpper v.type]s.hashCode([v.name])
+[/if]
+[/output.trim][/template]
+
+[template public objectsEqual Type type][output.trim]
+[for Boolean hasObjects = classpath.available 'java.util.Objects',
+    Boolean hasAndroid = classpath.available 'android.R']
+[if type.generateJdkOnly]
+  [if hasAndroid]
+    [topSimplePrefix type]equals
+  [else if hasObjects]
+    java.util.Objects.equals
+  [else]
+    [topSimplePrefix type]equals
+  [/if]
+[else]
+  [if hasObjects andnot hasAndroid]
+    java.util.Objects.equals
+  [else]
+    [guava].base.Objects.equal
+  [/if]
+[/if]
+[/for]
+[/output.trim][/template]
+
+[template public objectsHashCode Type type][output.trim]
+[for Boolean hasObjects = classpath.available 'java.util.Objects',
+    Boolean hasAndroid = classpath.available 'android.R']
+[if type.generateJdkOnly]
+  [if hasAndroid]
+    [topSimplePrefix type]hashCode
+  [else if hasObjects]
+    java.util.Objects.hashCode
+  [else]
+    [topSimplePrefix type]hashCode
+  [/if]
+[else]
+  [if hasObjects andnot hasAndroid]
+    java.util.Objects.hashCode
+  [else]
+    [guava].base.Objects.hashCode
+  [/if]
+[/if]
+[/for]
+[/output.trim][/template]
+
+[template public requireNonNull Type type][output.trim]
+[for Boolean hasObjects = classpath.available 'java.util.Objects',
+    Boolean hasAndroid = classpath.available 'android.R']
+[if type.generateJdkOnly]
+  [if hasAndroid]
+    [topSimplePrefix type]requireNonNull
+  [else if hasObjects]
+    java.util.Objects.requireNonNull
+  [else]
+    [topSimplePrefix type]requireNonNull
+  [/if]
+[else]
+  [if hasObjects andnot hasAndroid]
+    java.util.Objects.requireNonNull
+  [else]
+    [guava].base.Preconditions.checkNotNull
+  [/if]
+[/if]
+[/for]
+[/output.trim][/template]
+
+[template public objectsUtility Type type]
+[for Boolean haveObjects = classpath.available 'java.util.Objects',
+     Boolean haveAndroid = classpath.available 'android.R']
+  [if haveAndroid ornot haveObjects]
+
+private static <T> T requireNonNull(T object, String message) {
+  if (object == null) throw new NullPointerException(message);
+  return object;
+}
+    [if type.useNullSafeUtilities]
+
+private static int hashCode(Object object) {
+  return object != null ? object.hashCode() : 0;
+}
+
+private static boolean equals(Object left, Object right) {
+  return left == right || (left != null && left.equals(right));
+}
+    [/if]
+  [/if]
+[/for]
+[/template]
+
+[template public attributeBuilderTransformUtilities Type type]
+
+[if type.detectAttributeBuilders]
+
+[for v in type.uniqueAttributeBuilderAttributes]
+
+[atNullable]
+[-- getTopSimple is here to return the concrete class. AttributeBuilders trigger the deepImmutables... --]
+private [v.getAttributeBuilderDescriptor.getQualifiedValueTypeName] [convertToValueType v.getAttributeBuilderDescriptor]([atNullable] [v.getAttributeBuilderDescriptor.getQualifiedBuilderTypeName] builder) {
+  if (builder == null) {
+    return null;
+  }
+
+  return builder.[v.getAttributeBuilderDescriptor.getBuildMethod]();
+}
+
+[atNullable]
+[-- getTopSimple is here to return the concrete class. AttributeBuilders trigger the deepImmutables... --]
+private [if v.hasAttributeValue][v.attributeValueType.typeAbstract.absolute][else][v.getAttributeBuilderDescriptor.getQualifiedValueTypeName][/if] [convertToValueType v.getAttributeBuilderDescriptor]([atNullable] [if v.hasAttributeValue][v.attributeValueType.typeAbstract.absolute][else][v.getAttributeBuilderDescriptor.getQualifiedValueTypeName][/if] value) {
+  if (value == null) {
+    return null;
+  }
+
+  return [valueToBuilder v.getAttributeBuilderDescriptor]value[/valueToBuilder].[v.getAttributeBuilderDescriptor.getBuildMethod]();
+}
+
+[atNullable]
+private [v.getAttributeBuilderDescriptor.getQualifiedBuilderTypeName] [convertToBuilderType v.getAttributeBuilderDescriptor]([atNullable] [v.getAttributeBuilderDescriptor.getQualifiedValueTypeName] value) {
+  if (value == null) {
+    return null;
+  }
+
+  return [valueToBuilder v.getAttributeBuilderDescriptor]value[/valueToBuilder];
+}
+[/for]
+
+
+[for v in type.uniqueAttributeBuilderListAttributes]
+[let listType][if v.hasAttributeValue][v.attributeValueType.typeAbstract.absolute][else][v.getAttributeBuilderDescriptor.getQualifiedValueTypeName][/if][/let]
+private java.util.List<[listType]> [convertToValueType v.getAttributeBuilderDescriptor](Iterable<? extends [v.getAttributeBuilderDescriptor.getQualifiedBuilderTypeName]> builderList) {
+[copyBuilderListBody v true false]builderList[/copyBuilderListBody]
+}
+
+private java.util.List<[listType]> [convertToValueType v.getAttributeBuilderDescriptor]([v.getAttributeBuilderDescriptor.getQualifiedBuilderTypeName]... builderArray) {
+[copyBuilderListBody v true true]builderArray[/copyBuilderListBody]
+}
+
+private java.util.List<[v.getAttributeBuilderDescriptor.getQualifiedBuilderTypeName]> [convertToBuilderType v.getAttributeBuilderDescriptor](Iterable<? extends [v.getAttributeBuilderDescriptor.getQualifiedValueTypeName]> valueList) {
+[copyBuilderListBody v false false]valueList[/copyBuilderListBody]
+}
+
+private java.util.List<[v.getAttributeBuilderDescriptor.getQualifiedBuilderTypeName]> [convertToBuilderType v.getAttributeBuilderDescriptor]([v.getAttributeBuilderDescriptor.getQualifiedValueTypeName]... valueArray) {
+[copyBuilderListBody v false true]valueArray[/copyBuilderListBody]
+}
+[/for]
+[/if]
+[/template]
+
+[template convertToBuilderType AttributeBuilder n]convertToBuilderType[n.getQualifiedValueTypeNameWithUnderscores][/template]
+[template convertToValueType AttributeBuilder n]convertToValueType[n.getQualifiedValueTypeNameWithUnderscores][/template]
+
+[template copyBuilderListBody Attribute v Boolean toValueType Boolean vargs String listToTransform]
+[let listType][if toValueType][if v.hasAttributeValue][v.attributeValueType.typeAbstract.absolute][else][v.getAttributeBuilderDescriptor.getQualifiedValueTypeName][/if][else][v.getAttributeBuilderDescriptor.getQualifiedBuilderTypeName][/if][/let]
+  [if v.generateJdkOnly]
+  java.util.ArrayList<[listType]> list;
+    [if vargs]
+  if ([listToTransform].length == 0) return java.util.Collections.emptyList();
+    [else]
+  if ([listToTransform] instanceof java.util.Collection<?>) {
+    int size = ((java.util.Collection<?>) [listToTransform]).size();
+    if (size == 0) return java.util.Collections.emptyList();
+  }
+    [/if]
+  list = new java.util.ArrayList<[listType]>();
+  [else]
+    [-- This is a mess, we don't want to use listType because of reasons --]
+  [guava].collect.ImmutableList.Builder<[listType]> list = [guava].collect.ImmutableList.builder();
+  [/if]
+
+  [-- todo: skip nulls and such? --]
+  for ([if toValueType][v.getAttributeBuilderDescriptor.getQualifiedBuilderTypeName][else][v.getAttributeBuilderDescriptor.getQualifiedValueTypeName][/if] element : [listToTransform]) {
+    [if toValueType]
+    list.add(element.[v.getAttributeBuilderDescriptor.getBuildMethod]());
+    [else]
+    list.add([valueToBuilder v.getAttributeBuilderDescriptor]element[/valueToBuilder]);
+    [/if]
+  }
+
+  [if v.generateJdkOnly]
+  return list;
+  [else]
+  return list.build();
+  [/if]
+[/template]
+
+[template public collectionUtility Type type]
+[if type.useListUtility or (type.useSetUtility or (type.useEnumSetUtility or type.useSortedSetUtility))]
+
+private static <T> java.util.List<T> createSafeList(Iterable<? extends T> iterable, boolean checkNulls, boolean skipNulls) {
+  java.util.ArrayList<T> list;
+  if (iterable instanceof java.util.Collection<?>) {
+    int size = ((java.util.Collection<?>) iterable).size();
+    if (size == 0) return java.util.Collections.emptyList();
+    list = new java.util.ArrayList<T>();
+  } else {
+    list = new java.util.ArrayList<T>();
+  }
+  for (T element : iterable) {
+    if (skipNulls && element == null) continue;
+    if (checkNulls) [requireNonNull type](element, "element");
+    list.add(element);
+  }
+  return list;
+}
+[/if]
+[if type.useListUtility]
+
+private static <T> java.util.List<T> createUnmodifiableList(boolean clone, java.util.List<T> list) {
+  switch(list.size()) {
+  case 0: return java.util.Collections.emptyList();
+  case 1: return java.util.Collections.singletonList(list.get(0));
+  default:
+    if (clone) {
+      return java.util.Collections.unmodifiableList(new java.util.ArrayList<T>(list));
+    } else {
+      if (list instanceof java.util.ArrayList<?>) {
+        ((java.util.ArrayList<?>) list).trimToSize();
+      }
+      return java.util.Collections.unmodifiableList(list);
+    }
+  }
+}
+[/if]
+[if type.useSetUtility]
+
+/** Unmodifiable set constructed from list to avoid rehashing. */
+private static <T> java.util.Set<T> createUnmodifiableSet(java.util.List<T> list) {
+  switch(list.size()) {
+  case 0: return java.util.Collections.emptySet();
+  case 1: return java.util.Collections.singleton(list.get(0));
+  default:
+    java.util.Set<T> set = new java.util.LinkedHashSet<T>(list.size());
+    set.addAll(list);
+    return java.util.Collections.unmodifiableSet(set);
+  }
+}
+[/if]
+[if type.useEnumSetUtility]
+
+private static <T extends Enum<T>> java.util.Set<T> createUnmodifiableEnumSet(Iterable<T> iterable) {
+  if (iterable instanceof java.util.EnumSet<?>) {
+    return java.util.Collections.unmodifiableSet(java.util.EnumSet.copyOf((java.util.EnumSet<T>) iterable));
+  }
+  java.util.List<T> list = createSafeList(iterable, true, false);
+  switch(list.size()) {
+  case 0: return java.util.Collections.emptySet();
+  case 1: return java.util.Collections.singleton(list.get(0));
+  default: return java.util.Collections.unmodifiableSet(java.util.EnumSet.copyOf(list));
+  }
+}
+[/if]
+[if type.useSortedSetUtility]
+[let unmodifiableSortedSetInterface][output.trim]
+[if classpath.available 'java.lang.FunctionalInterface']
+  NavigableSet
+[else]
+  SortedSet
+[/if]
+[/output.trim][/let]
+
+private static <T extends Comparable<T>> java.util.[unmodifiableSortedSetInterface]<T> createUnmodifiableSortedSet(boolean reverse, java.util.List<T> list) {
+  java.util.TreeSet<T> set = reverse
+      ? new java.util.TreeSet<T>(java.util.Collections.reverseOrder())
+      : new java.util.TreeSet<T>();
+  set.addAll(list);
+  return java.util.Collections.unmodifiable[unmodifiableSortedSetInterface](set);
+}
+[/if]
+[if type.useMapUtility]
+
+private static <K, V> java.util.Map<K, V> createUnmodifiableMap(boolean checkNulls, boolean skipNulls, java.util.Map<? extends K, ? extends V> map) {
+  switch (map.size()) {
+  case 0: return java.util.Collections.emptyMap();
+  case 1: {
+    java.util.Map.Entry<? extends K, ? extends V> e = map.entrySet().iterator().next();
+    K k = e.getKey();
+    V v = e.getValue();
+    if (checkNulls) {
+      [requireNonNull type](k, "key");
+      [requireNonNull type](v, "value");
+    }
+    if (skipNulls && (k == null || v == null)) {
+      return java.util.Collections.emptyMap();
+    }
+    return java.util.Collections.singletonMap(k, v);
+  }
+  default: {
+    java.util.Map<K, V> linkedMap = new java.util.LinkedHashMap<K, V>(map.size());
+    if (skipNulls || checkNulls) {
+      for (java.util.Map.Entry<? extends K, ? extends V> e : map.entrySet()) {
+        K k = e.getKey();
+        V v = e.getValue();
+        if (skipNulls) {
+          if (k == null || v == null) continue;
+        } else if (checkNulls) {
+          [requireNonNull type](k, "key");
+          [requireNonNull type](v, "value");
+        }
+        linkedMap.put(k, v);
+      }
+    } else {
+      linkedMap.putAll(map);
+    }
+    return java.util.Collections.unmodifiableMap(linkedMap);
+  }
+  }
+}
+[/if]
+[if type.useEnumMapUtility]
+
+private static <K extends Enum<K>, V> java.util.Map<K, V> createUnmodifiableEnumMap(boolean checkNulls, boolean skipNulls, java.util.Map<K, ? extends V> map) {
+  java.util.EnumMap<K, V> enumMap = new java.util.EnumMap<K, V>(map);
+  if (checkNulls || skipNulls) {
+    java.util.Iterator<? extends V> it = map.values().iterator();
+    while(it.hasNext()) {
+      V v = it.next();
+      if (checkNulls) {
+        [requireNonNull type](v, "value");
+      } else if (skipNulls) {
+        if (v == null) it.remove();
+      }
+    }
+  }
+  return java.util.Collections.unmodifiableMap(enumMap);
+}
+[/if]
+[if type.useSortedMapUtility]
+[let unmodifiableSortedMapInterface][output.trim]
+[if classpath.available 'java.lang.FunctionalInterface']
+  NavigableMap
+[else]
+  SortedMap
+[/if]
+[/output.trim][/let]
+
+private static <K extends Comparable<K>, V> java.util.[unmodifiableSortedMapInterface]<K, V> createUnmodifiableSortedMap(boolean reverse, boolean checkNulls, boolean skipNulls, java.util.Map<? extends K, ? extends V> map) {
+  java.util.TreeMap<K, V> sortedMap = reverse
+      ? new java.util.TreeMap<K, V>(java.util.Collections.reverseOrder())
+      : new java.util.TreeMap<K, V>();
+
+  if (checkNulls || skipNulls) {
+    for (java.util.Map.Entry<? extends K, ? extends V> e : map.entrySet()) {
+      K k = e.getKey();
+      V v = e.getValue();
+      if (skipNulls) {
+        if (k == null || v == null) continue;
+      } else if (checkNulls) {
+        [requireNonNull type](k, "key");
+        [requireNonNull type](v, "value");
+      }
+      sortedMap.put(k, v);
+    }
+  } else {
+    sortedMap.putAll(map);
+  }
+  return java.util.Collections.unmodifiable[unmodifiableSortedMapInterface](sortedMap);
+}
+[/if]
+[/template]
+
+[template public javadocGenerics Type type]
+[for p in type.generics.vars]
+ * @param <[p]> generic parameter [p]
+[/for]
+[/template]
+
+[template defineOrResetBuildingField Attribute v Boolean declare][defineOrResetBuildingFieldAlt v declare false][/template]
+
+[template defineOrResetBuildingFieldAlt Attribute v Boolean declare Boolean toNull]
+[let accessModifier][if v.containingType.innerBuilder.isAccessibleFields]protected[else]private[/if][/let]
+  [if v.jdkOptional and v.containingType.kind.isFactory]
+[if declare][accessModifier] [v.type] [else]this.[/if][v.name] = [optionalEmpty v];
+  [else if v.jdkOptional][-- Combine with else case at the bottom?  --]
+    [if declare]
+[accessModifier] [atNullable][v.wrappedElementType] [v.name];
+    [else]
+this.[v.name] = null;
+    [/if]
+  [else if v.containerType]
+    [if v.generateJdkOnly]
+      [if v.optionalType]
+[if declare][accessModifier] [v.type] [else]this.[/if][v.name] = [optionalEmpty v];
+      [else if not (declare or v.nullableCollector)]
+this.[v.name].clear();
+      [else if v.generateEnumMap]
+[if declare][accessModifier] java.util.EnumMap<[v.wrappedElementType], [v.wrappedSecondaryElementType]> [else]this.[/if][v.name] = [if toNull]null[else]new java.util.EnumMap<[v.wrappedElementType], [v.wrappedSecondaryElementType]>([v.wrappedElementType].class)[/if];
+      [else if v.mapType]
+[if declare][accessModifier] java.util.Map<[v.wrappedElementType], [v.wrappedSecondaryElementType]> [else]this.[/if][v.name] = [if toNull]null[else]new java.util.LinkedHashMap<[v.wrappedElementType], [v.wrappedSecondaryElementType]>()[/if];
+      [else if v.generateEnumSet]
+[if declare][accessModifier] java.util.EnumSet[v.genericArgs] [else]this.[/if][v.name] = [if toNull]null[else]java.util.EnumSet.noneOf([v.elementType].class)[/if];
+      [else]
+        [if v.isAttributeBuilder]
+[if declare][accessModifier] java.util.List<[attributeBuilderBuilderType v.getAttributeBuilderDescriptor]> [else]this.[/if][v.name] = [if toNull]null[else]new java.util.ArrayList<[attributeBuilderBuilderType v.getAttributeBuilderDescriptor]>()[/if];
+        [else]
+[if declare][accessModifier] java.util.List[v.genericArgs] [else]this.[/if][v.name] = [if toNull]null[else]new java.util.ArrayList[v.genericArgs]()[/if];
+        [/if]
+      [/if]
+    [else]
+      [if v.generateSortedSet]
+[if declare][accessModifier] [guava].collect.ImmutableSortedSet.Builder[v.genericArgs] [else]this.[/if][v.name] = [if toNull]null[else][guava].collect.ImmutableSortedSet.[if v.hasNaturalOrder]naturalOrder[else]reverseOrder[/if]()[/if];
+      [else if v.generateSortedMultiset]
+[if declare][accessModifier] [guava].collect.ImmutableSortedMultiset.Builder[v.genericArgs] [else]this.[/if][v.name] = [if toNull]null[else][guava].collect.ImmutableSortedMultiset.[if v.hasNaturalOrder]naturalOrder[else]reverseOrder[/if]()[/if];
+      [else if v.customCollectionType]
+[if declare][accessModifier] [v.rawType].Builder[v.genericArgs] [else]this.[/if][v.name] = [if toNull]null[else][v.rawType].builder()[/if];
+      [else if v.collectionType]
+        [if v.isAttributeBuilder]
+[if declare][accessModifier] [guava].collect.Immutable[v.rawCollectionType].Builder<[attributeBuilderBuilderType v.getAttributeBuilderDescriptor]> [else]this.[/if][v.name] = [if toNull]null[else][guava].collect.Immutable[v.rawCollectionType].builder()[/if];
+        [else]
+[if declare][accessModifier] [guava].collect.Immutable[v.rawCollectionType].Builder[v.genericArgs] [else]this.[/if][v.name] = [if toNull]null[else][guava].collect.Immutable[v.rawCollectionType].builder()[/if];
+        [/if]
+      [else if v.optionalType]
+[if declare][accessModifier] [v.type] [else]this.[/if][v.name] = [optionalEmpty v];
+      [else if v.generateSortedMap]
+[if declare][accessModifier] [guava].collect.ImmutableSortedMap.Builder[v.genericArgs] [else]this.[/if][v.name] = [if toNull]null[else][guava].collect.ImmutableSortedMap.[if v.hasNaturalOrder]naturalOrder[else]reverseOrder[/if]()[/if];
+      [else if v.mapType]
+[if declare][accessModifier] [guava].collect.Immutable[v.rawMapType].Builder[v.genericArgs] [else]this.[/if][v.name] = [if toNull]null[else][guava].collect.Immutable[v.rawMapType].builder()[/if];
+      [/if]
+    [/if]
+  [else if v.primitive]
+    [if declare]
+[accessModifier] [v.type] [v.name];
+    [else if v.boolean]
+this.[v.name] = false;
+    [else]
+this.[v.name] = 0;
+    [/if]
+  [else if v.isAttributeBuilder]
+    [if declare]
+[accessModifier] [atNullable][attributeBuilderBuilderType v.getAttributeBuilderDescriptor] [v.name];
+    [else]
+this.[v.name] = null;
+    [/if]
+  [else]
+    [if declare]
+[accessModifier] [atNullable][v.type] [v.name];
+    [else]
+this.[v.name] = null;
+    [/if]
+  [/if]
+[/template]
+
+[template createBuilderForCollection Type type Attribute a String variableName]
+[if a.mapType]
+  [if type.generateJdkOnly or a.typeKind.isSortedKind]
+java.util.Map[a.genericArgs] [variableName] = new java.util.LinkedHashMap[a.genericArgs]();
+  [else]
+[guava].collect.Immutable[a.rawMapType].Builder[a.genericArgs] [variableName] = [guava].collect.Immutable[a.rawMapType].builder();
+  [/if]
+[else if a.collectionType]
+  [if a.customCollectionType]
+[a.rawType].Builder[a.genericArgs] [variableName] = [a.rawType].builder();
+  [else if type.generateJdkOnly or a.typeKind.isSortedKind]
+java.util.List[a.genericArgs] [variableName] = new java.util.ArrayList[a.genericArgs]();
+  [else]
+[guava].collect.Immutable[a.rawCollectionType].Builder[a.genericArgs] [variableName] = [guava].collect.Immutable[a.rawCollectionType].builder();
+  [/if]
+[/if]
+[/template]
+
+[template createBuiltCollection Type type Attribute a String variableName][output.trim]
+[if a.mapType or a.collectionType]
+  [if type.generateJdkOnly or a.typeKind.isSortedKind]
+    [variableName]
+  [else]
+    [variableName].build()
+  [/if]
+[else]
+  [variableName]
+[/if]
+[/output.trim][/template]
+
+[template serialVersionUID Type type]
+[for serialVersion = type.serialVersionUID]
+  [if serialVersion]
+
+private static final long serialVersionUID = [literal serialVersion];
+  [/if]
+[/for]
+[/template]
+
+[-- templates below are one-liners so they auto-inlined --]
+[template topSimplePrefix Type type][if topLevelSimple][topLevelSimple].[else][type.topSimple].[/if][/template]
+
+[template maybeCopyOf Attribute v String expression][if v.generateImmutableCopyOf]immutableCopyOf([expression])[else][expression][/if][/template]
+
+[template maybeNonNullValue Attribute v String expression][if v.primitive or v.nullable][expression][else][requireNonNull v.containingType]([expression], "[v.name]")[/if][/template]
+
+[template builderReturnThis Type type][if type.innerBuilder.isExtending]([type.typeBuilder]) [/if]this[/template]
+
+[template builderReturnType Type type][if type.innerBuilder.isExtending][type.typeBuilder][else][type.typeBuilder.simple][type.generics.args][/if][/template]
+
+[template attributeBuilderBuilderType AttributeBuilder n][n.getQualifiedBuilderTypeName][/template]
+
+[template createAttributeBuilder AttributeBuilder n][n.getQualifiedBuilderConstructorMethod]()[/template]
+
+[template validated Type type Boolean qualified String expression][if type.useValidation][if qualified][type.typeImmutable.relativeRaw].[/if]validate([expression])[else][expression][/if][/template]
+
+[template builderInitAccess Attribute a][if a.isBuilderParameter or a.isBuilderSwitcher][if a.containingType.kind.isFactory]private [/if][else]public [/if][/template]
+
+[template invokeSuper Attribute a][for di = a.defaultInterface][if di][di].[/if][/for]super[/template]
+
+[template invokeSuperQualified Attribute a][a.containingType.typeImmutable.simple].super[/template]
+
+[template sourceDocRef Type t Attribute a][if t.kind.isValue]{@link [t.typeAbstract.relativeRaw]#[a.names.get]() [a.names.raw]}[else]{@code [a.names.raw]}[/if][/template]
+
+[template optionalGet Attribute a][if a.jdkSpecializedOptional]getAs[toUpper a.elementType][else]get[/if]()[/template]
+
+[template optionalEmpty Attribute a][a.rawType].[if a.jdkOptional]empty[else if a.fugueOptional or a.javaslangOptional]none[else]absent[/if]()[/template]
+
+[template optionalOf Attribute a][a.rawType].[if not a.optionalAcceptNullable][if a.fugueOptional or a.javaslangOptional]some[else]of[/if][else if a.jdkOptional]ofNullable[else if a.fugueOptional]option[else if a.javaslangOptional]of[else]fromNullable[/if][/template]
+
+[template optionalPresent Attribute a][if a.fugueOptional or a.javaslangOptional]isDefined[else]isPresent[/if]()[/template]
+
+[template unwrappedOptionalType Attribute a][if a.optionalType and a.optionalAcceptNullable][atNullable][a.wrappedElementType][else][a.unwrappedElementType][/if][/template]
+
+[template atCanIgnoreReturnValue][if classpath.available 'com.google.errorprone.annotations.CanIgnoreReturnValue']@com.google.errorprone.annotations.CanIgnoreReturnValue [/if][/template]
+
+[template atNullable][if classpath.available 'javax.annotation.Nullable']@javax.annotation.Nullable [/if][/template]
+
+[template disambiguateField Type type String name][name][for v in type.implementedAttributes if v.name eq name]$$[/for][/template]
+
+[template disambiguateAccessor Type type String name][name][for v in type.implementedAttributes if v.names.get eq name]$$[/for][/template]
+
+[template deprecation Attribute a][if a.deprecated]@Deprecated[/if][/template]
+
+[template typeDeprecation Type t][if t.deprecated]@Deprecated[/if][/template]
+
+[template varargsSafety Attribute a][if a.nonRawElementType or a.hasTypeVariables]@SafeVarargs @SuppressWarnings("varargs")[/if][/template]
+
+[template functionClass][if classpath.isJava8]java.util.function.Function[else][guava].base.Function[/if][/template]
+
+[template overrideJsonDeserialize Type type][if type.jacksonDeserialized]@com.fasterxml.jackson.databind.annotation.JsonDeserialize[/if][/template]
+
+[template overrideJsonTypeInfo Type type][if type.jacksonJsonTypeInfo]@com.fasterxml.jackson.annotation.JsonTypeInfo(use=com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NONE)[/if][/template]
+
+[template jsonIgnore Type type][if type.generateJacksonIngoreFields]@com.fasterxml.jackson.annotation.JsonIgnore[/if][/template]
+
+[template castObject String typename][if typename ne 'java.lang.Object']([typename]) [/if][/template]
+
+[template maybeMasked Attribute a String value][if a.redactedMask][literal.string a.redactedMask][else][value][/if][/template]

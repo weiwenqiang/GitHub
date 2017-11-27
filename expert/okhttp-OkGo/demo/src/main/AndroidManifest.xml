@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2016 jeasonlzy(廖子尧)
+    
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+       http://www.apache.org/licenses/LICENSE-2.0
+       
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<manifest package="com.lzy.demo"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+
+    <application
+        android:name=".GApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".okgo.MethodActivity"/>
+        <activity android:name=".okgo.JsonActivity"/>
+        <activity android:name=".okgo.BitmapRequestActivity"/>
+        <activity android:name=".okgo.UpActivity"/>
+        <activity android:name=".okgo.CookieActivity"/>
+        <activity android:name=".okgo.FormUploadActivity"/>
+        <activity android:name=".okgo.SimpleDownloadActivity"/>
+        <activity android:name=".okgo.CacheActivity"/>
+        <activity android:name=".okgo.HttpsActivity"/>
+        <activity android:name=".okgo.SyncActivity"/>
+        <activity android:name=".okgo.RedirectActivity"/>
+        <activity android:name=".okgo.TestActivity"/>
+        <activity
+            android:name=".supercache.SuperCacheActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".WebActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".okgo.CommonActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".okdownload.DownloadAllActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".okdownload.DownloadingActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".okdownload.DownloadFinishActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".okdownload.DesActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".okdownload.DownloadListActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".okupload.UploadListActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".okupload.UploadAllActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".okupload.UploadFinishActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".okupload.UploadingActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <!-- Rx相关 -->
+        <activity android:name=".okrx2.RxCommonActivity"/>
+        <activity android:name=".okrx2.RxCacheActivity"/>
+        <activity android:name=".okrx2.RxRetrofitActivity"/>
+        <activity android:name=".okrx2.RxBitmapActivity"/>
+        <activity android:name=".okrx2.RxFileDownloadActivity"/>
+        <activity android:name=".okrx2.RxFormUploadActivity"/>
+    </application>
+
+</manifest>

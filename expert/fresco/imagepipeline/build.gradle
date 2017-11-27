@@ -1,0 +1,75 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+project.group = GROUP
+version = VERSION_NAME
+
+dependencies {
+    provided "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+    provided "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
+    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    provided "com.facebook.infer.annotation:infer-annotation:${INFER_ANNOTATION_VERSION}"
+    compile "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
+    provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compile project(':fbcore')
+    compile project(':imagepipeline-base')
+
+    testCompile project(':imagepipeline-test')
+    testCompile project(':imagepipeline-base-test')
+    testCompile "junit:junit:${JUNIT_VERSION}"
+    testCompile "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
+    testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+    testCompile("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {
+        exclude group: 'org.mockito', module: 'mockito-all'
+    }
+    testCompile "org.powermock:powermock-module-junit4:${POWERMOCK_VERSION}"
+    testCompile "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"
+    testCompile "org.powermock:powermock-classloading-xstream:${POWERMOCK_VERSION}"
+    testCompile("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+        exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    }
+}
+apply from: rootProject.file('release.gradle')
+
+// We download various C++ open-source dependencies from SourceForge into nativedeps/downloads.
+// We then copy both downloaded code and our custom makefiles and headers into nativedeps/merge.
+
+task fetchNativeDeps(dependsOn: [copyLibjpeg]) {
+}
+
+android {
+    def ndkLibs = [
+        ['bitmaps', []],
+        ['imagepipeline', [copyLibjpeg]],
+        ['memchunk', []]]
+
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    sourceSets {
+        main {
+            jni.srcDirs = []
+            jniLibs.srcDirs = ndkLibs.collect { "$buildDir/${it[0]}" }
+        }
+        test {
+            java {
+                exclude '**/LocalVideoThumbnailProducerTest.java'
+                exclude '**/DecodeProducerTest.java'
+                exclude '**/ProgressiveJpegParserTest.java'
+                exclude '**/AnimatedImageFactoryTest.java'
+
+            }
+            resources {
+                exclude '**/BUCK'
+            }
+        }
+    }
+    ndkLibs.each { lib -> makeNdkTasks lib[0], lib[1] }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+artifacts.add('archives', sourcesJar)

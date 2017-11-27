@@ -1,0 +1,65 @@
+{
+    "type" : "object",
+    "properties" : {
+        "nonUniqueArray" : {
+            "type" : "array",
+            "uniqueItems" : false,
+            "items" : {
+                "type" : "integer"
+            }
+        },
+        "uniqueArray" : {
+            "type" : "array",
+            "uniqueItems" : true,
+            "items" : {
+                "type" : "boolean"
+            }
+        },
+        "uniqueIntegerArray" : {
+            "type" : "array",
+            "uniqueItems" : true,
+            "items" : {
+                "type" : "integer"
+            }
+        },
+        "nonUniqueArrayByDefault" : {
+            "type" : "array",
+            "items" : {
+                "type" : "string"
+            }
+        },
+        "complexTypesArray" : {
+            "type" : "array",
+            "items" : {
+                "type" : "object"
+            }
+        },
+        "defaultTypesArray" : {
+            "type" : "array"
+        },
+        "multiDimensionalArray" : {
+            "type" : "array",
+            "items" : {
+                "type" : "array"
+            }
+        },
+        "things" : {
+            "type" : "array",
+            "items" : {
+                "type" : "object"
+            }
+        },
+        "properties" : {
+            "type" : "array",
+            "items" : {
+                "type" : "object"
+            }
+        },
+        "refToArray1" : {
+            "$ref" : "arrayAsRoot.json"
+        },
+        "refToArray2" : {
+            "$ref" : "arrayAsRoot.json"
+        }
+    }
+}

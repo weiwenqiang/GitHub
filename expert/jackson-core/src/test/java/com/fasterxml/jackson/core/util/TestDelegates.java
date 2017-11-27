@@ -1,0 +1,203 @@
+package com.fasterxml.jackson.core.util;
+
+import java.io.*;
+import java.util.Iterator;
+
+import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.core.JsonParser.NumberType;
+
+public class TestDelegates extends com.fasterxml.jackson.core.BaseTest
+{
+    static class POJO {
+        public int x = 3;
+    }
+
+    static class BogusTree implements TreeNode {
+        @Override
+        public JsonToken asToken() {
+            return null;
+        }
+
+        @Override
+        public NumberType numberType() {
+            return null;
+        }
+
+        @Override
+        public int size() {
+            return 0;
+        }
+
+        @Override
+        public boolean isValueNode() {
+            return false;
+        }
+
+        @Override
+        public boolean isContainerNode() {
+            return false;
+        }
+
+        @Override
+        public boolean isMissingNode() {
+            return false;
+        }
+
+        @Override
+        public boolean isEmbeddedValue() {
+            return false;
+        }
+        
+        @Override
+        public boolean isArray() {
+            return false;
+        }
+
+        @Override
+        public boolean isObject() {
+            return false;
+        }
+
+        @Override
+        public TreeNode get(String fieldName) {
+            return null;
+        }
+
+        @Override
+        public TreeNode get(int index) {
+            return null;
+        }
+
+        @Override
+        public TreeNode path(String fieldName) {
+            return null;
+        }
+
+        @Override
+        public TreeNode path(int index) {
+            return null;
+        }
+
+        @Override
+        public Iterator<String> fieldNames() {
+            return null;
+        }
+
+        @Override
+        public TreeNode at(JsonPointer ptr) {
+            return null;
+        }
+
+        @Override
+        public TreeNode at(String jsonPointerExpression) {
+            return null;
+        }
+
+        @Override
+        public JsonParser traverse(ObjectReadContext readCtxt) {
+            return null;
+        }
+    }
+
+    private final JsonFactory JSON_F = new JsonFactory();
+
+    /**
+     * Test default, non-overridden parser delegate.
+     */
+    public void testParserDelegate() throws IOException
+    {
+        final String TOKEN ="foo";
+
+        JsonParser parser = JSON_F.createParser(ObjectReadContext.empty(), "[ 1, true, null, { } ]");
+        JsonParserDelegate del = new JsonParserDelegate(parser);
+        
+        assertNull(del.currentToken());
+        assertToken(JsonToken.START_ARRAY, del.nextToken());
+        assertEquals("[", del.getText());
+        assertToken(JsonToken.VALUE_NUMBER_INT, del.nextToken());
+        assertEquals(1, del.getIntValue());
+
+        assertToken(JsonToken.VALUE_TRUE, del.nextToken());
+        assertTrue(del.getBooleanValue());
+
+        assertToken(JsonToken.VALUE_NULL, del.nextToken());
+        assertNull(del.getCurrentValue());
+        del.setCurrentValue(TOKEN);
+
+        assertToken(JsonToken.START_OBJECT, del.nextToken());
+        assertNull(del.getCurrentValue());
+
+        assertToken(JsonToken.END_OBJECT, del.nextToken());
+        assertEquals(TOKEN, del.getCurrentValue());
+
+        assertToken(JsonToken.END_ARRAY, del.nextToken());
+
+        del.close();
+        assertTrue(del.isClosed());
+        assertTrue(parser.isClosed());
+
+        parser.close();
+    }
+
+    /**
+     * Test default, non-overridden generator delegate.
+     */
+    public void testGeneratorDelegate() throws IOException
+    {
+        final String TOKEN ="foo";
+
+        StringWriter sw = new StringWriter();
+        JsonGenerator g0 = JSON_F.createGenerator(ObjectWriteContext.empty(), sw);
+        JsonGeneratorDelegate del = new JsonGeneratorDelegate(g0);
+        del.writeStartArray();
+
+        assertEquals(1, del.getOutputBuffered());
+        
+        del.writeNumber(13);
+        del.writeNull();
+        del.writeBoolean(false);
+        del.writeString("foo");
+
+        // verify that we can actually set/get "current value" as expected, even with delegates
+        assertNull(del.getCurrentValue());
+        del.setCurrentValue(TOKEN);
+
+        del.writeStartObject();
+        assertNull(del.getCurrentValue());
+        del.writeEndObject();
+        assertEquals(TOKEN, del.getCurrentValue());
+
+        del.writeStartArray(0);
+        del.writeEndArray();
+
+        del.writeEndArray();
+        
+        del.flush();
+        del.close();
+        assertTrue(del.isClosed());        
+        assertTrue(g0.isClosed());        
+        assertEquals("[13,null,false,\"foo\",{},[]]", sw.toString());
+
+        g0.close();
+    }
+
+    public void testNotDelegateCopyMethods() throws IOException
+    {
+        JsonParser jp = JSON_F.createParser(ObjectReadContext.empty(), "[{\"a\":[1,2,{\"b\":3}],\"c\":\"d\"},{\"e\":false},null]");
+        StringWriter sw = new StringWriter();
+        JsonGenerator jg = new JsonGeneratorDelegate(JSON_F.createGenerator(ObjectWriteContext.empty(), sw), false) {
+            @Override
+            public void writeFieldName(String name) throws IOException {
+                super.writeFieldName(name+"-test");
+                super.writeBoolean(true);
+                super.writeFieldName(name);
+            }
+        };
+        jp.nextToken();
+        jg.copyCurrentStructure(jp);
+        jg.flush();
+        assertEquals("[{\"a-test\":true,\"a\":[1,2,{\"b-test\":true,\"b\":3}],\"c-test\":true,\"c\":\"d\"},{\"e-test\":true,\"e\":false},null]", sw.toString());
+        jp.close();
+        jg.close();
+    }
+}

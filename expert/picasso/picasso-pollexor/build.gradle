@@ -1,0 +1,43 @@
+buildscript {
+  dependencies {
+    classpath dep.androidPlugin
+  }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+  compileSdkVersion rootProject.ext.compileSdkVersion
+  buildToolsVersion rootProject.ext.buildToolsVersion
+
+  compileOptions {
+    sourceCompatibility rootProject.ext.sourceCompatibilityVersion
+    targetCompatibility rootProject.ext.targetCompatibilityVersion
+  }
+
+  lintOptions {
+    textOutput 'stdout'
+    textReport true
+    lintConfig file('lint.xml')
+  }
+
+  dexOptions {
+    preDexLibraries = !rootProject.ext.isCi
+  }
+
+  defaultConfig {
+    minSdkVersion rootProject.ext.minSdkVersion
+  }
+}
+
+dependencies {
+  api project(':picasso')
+  api dep.pollexor
+  compileOnly dep.supportAnnotations
+  testImplementation dep.junit
+  testImplementation dep.robolectric
+  testImplementation dep.truth
+  testImplementation dep.pollexor
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

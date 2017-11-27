@@ -1,0 +1,142 @@
+[--
+   Copyright 2016 Immutables Authors and Contributors
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+--]
+[template public generate]
+  [for type in values.values if type.generateVisitor]
+    [if type.kind.isEnclosing]
+[for String visitorClassname = ((toUpper type.name) 'Visitor')]
+[output.java type.package visitorClassname]
+[type.sourceHeader]
+[generateVisitor type visitorClassname]
+[/output.java]
+[/for]
+    [else]
+[output.error]
+Use @Trees.Visit to annotate umbrella class with @Value.Enclosing
+[/output.error]
+    [/if]
+  [/for]
+[/template]
+
+[template generateVisitor Type visitorType String visitorClassname]
+[if visitorType.package]
+package [visitorType.package];
+[/if]
+
+[if visitorType.generateSuppressAllWarnings]@SuppressWarnings("all")[/if]
+@javax.annotation.ParametersAreNonnullByDefault
+@javax.annotation.Generated({"Transformers.generator", "[visitorType.name]"})
+[visitorType.typeValue.access]abstract class [visitorClassname] {
+  protected [visitorClassname]() {}
+  [for cases = visitorType.cases,
+       type in cases.implementedTypes,
+       t = type.typeValue,
+       im = type.typeImmutable,
+       s = type.name,
+       Boolean useCopy = type.useBuilder or (type.useCopyConstructor and type.useCopyMethods)]
+
+  public void case[s]([t] value) {
+    [for v in type.settableAttributes]
+    as[s][visitAttributeSuffix v](value, value.[v.names.get]());
+    [/for]
+  }
+  [for a in type.settableAttributes]
+    [if a.nullable]
+
+  protected void as[s][visitAttributeSuffix a]([t] value, [a.atNullability][a.type] nullable) {
+    if (nullable != null) {
+      return as[s][toUpper a.name](value, nullable);
+    }
+    return null;
+  }
+    [else if a.optionalType]
+
+  protected void as[s][visitAttributeSuffix a]([t] value, [a.type] optional) {
+    if (optional.[optionalPresent a]) {
+      as[s][toUpper a.name](value, optional.[optionalGet a]);
+      return;
+    }
+  }
+    [else if a.collectionType]
+
+  protected void as[s][visitAttributeSuffix a]([t] value, [a.type] elements) {
+    for ([a.unwrappedElementType] e : elements) {
+      as[s][toUpper a.name](value, e);
+    }
+  }
+    [else if a.mapType]
+      [for gE = a.consumedElementType,
+          uK = a.unwrappedElementType,
+          wK = a.wrappedElementType,
+          uV = a.unwrappedSecondaryElementType,
+          wV = a.wrappedSecondaryElementType]
+  [let mappingType][if a.multimapType][guava].collect.Multimap[else]java.util.Map[/if]<[wK], [wV]>[/let]
+  [let mappingConstruct][if a.multimapType][guava].collect.ArrayListMultimap.create(entries.size(), 3)[else]new java.util.LinkedHashMap<[wK], [wV]>(entries.size())[/if][/let]
+
+  protected void as[s][visitAttributeSuffix a]([t] value, [a.type] entries) {
+    for (java.util.Map.Entry<[wK], [wV]> entry : entries.[if a.multimapType]entries()[else]entrySet()[/if]) {
+      as[s][toUpper a.name](value, entry.getValue());
+    }
+  }
+      [/for]
+    [/if]
+  [for et = a.unwrappedValueElementType]
+
+  protected void as[s][toUpper a.name]([t] value, [et] attribute) {
+    [if cases.isImplementedType et]
+    case[simplifyName et](attribute);
+    [else]
+      [for Type subtype in cases.knownSubtypes et]
+    if (attribute instanceof [subtype.typeValue]) {
+      as[simplifyName et](([subtype.typeValue]) attribute);
+      return;
+    }
+      [/for]
+    [/if]
+  }
+  [/for]
+  [/for]
+  [/for]
+  [for cases = visitorType.cases,
+       e in cases.subtypeUsages.entries,
+       k = e.key,
+       v = e.value,
+       t = v.typeValue]
+
+  protected void as[simplifyName e.key]([t] value) {
+  [if cases.isImplementedType t]
+    case[v.name](value);
+  [/if]
+  }
+  [/for]
+}
+[/template]
+
+[template visitAttributeSuffix Attribute a][toUpper a.name][output.trim]
+[if a.nullable]Nullable
+[else if a.fugueOptional]Option
+[else if a.optionalType]Optional
+[else if a.mapType]Entries
+[else if a.collectionType]Elements
+[/if]
+[/output.trim][/template]
+
+[template optionalGet Attribute a][if a.jdkSpecializedOptional]getAs[toUpper a.elementType][else]get[/if]()[/template]
+
+[template optionalEmpty Attribute a][a.rawType].[if a.jdkOptional]empty[else if a.fugueOptional or a.javaslangOptional]none[else]absent[/if]()[/template]
+
+[template optionalOf Attribute a][a.rawType].[if not a.optionalAcceptNullable][if a.fugueOptional or a.javaslangOptional]some[else]of[/if][else if a.jdkOptional]ofNullable[else if a.fugueOptional]option[else if a.javaslangOptional]of[else]fromNullable[/if][/template]
+
+[template optionalPresent Attribute a][if a.fugueOptional or a.javaslangOptional]isDefined[else]isPresent[/if]()[/template]

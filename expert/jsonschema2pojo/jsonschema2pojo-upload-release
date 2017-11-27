@@ -1,0 +1,158 @@
+#!/bin/bash
+#
+# Prepares and uploads files for the project downloads area and pushes new docs into the wiki repo.
+#
+# To create a new release:
+#
+# 1. Maven release command:
+#     mvn clean release:clean release:prepare release:perform -DautoVersionSubmodules
+#
+# 2. Close and Release snapshots repo at oss.sonatype.org
+#
+# 3. Wait at least 2hrs for synchronization to central
+#
+# 4. Run this script to publish new release to github
+#
+set -e
+
+if [[ ! ("$#" == 3 ) ]]; then
+    echo 'Usage: jsonschema2pojo-upload-release <old version> <new version> <github token>'
+    exit 1
+fi
+
+if [[ "`which curl`" == "" ]]; then
+    echo "Missing required command 'curl'"
+    exit 1
+fi
+
+if [[ "`which jq`" == "" ]]; then
+    echo "Missing required command 'jq'"
+    exit 1
+fi
+
+OLD_VERSION=$1
+VERSION=$2
+WORKING_DIR=/tmp/jsonschema2pojo-$VERSION
+GITHUB_TOKEN=$3
+
+# recreate release dir
+rm -rf $WORKING_DIR
+mkdir -p $WORKING_DIR
+pushd $WORKING_DIR
+
+    # download artifacts
+    wget -U NoSuchBrowser/1.0 http://repo1.maven.org/maven2/org/jsonschema2pojo/jsonschema2pojo/$VERSION/jsonschema2pojo-$VERSION-javadoc.jar
+    wget -U NoSuchBrowser/1.0 http://repo1.maven.org/maven2/org/jsonschema2pojo/jsonschema2pojo-cli/$VERSION/jsonschema2pojo-cli-$VERSION.jar
+    wget -U NoSuchBrowser/1.0 http://repo1.maven.org/maven2/org/jsonschema2pojo/jsonschema2pojo-cli/$VERSION/jsonschema2pojo-cli-$VERSION.bat
+    wget -U NoSuchBrowser/1.0 http://repo1.maven.org/maven2/org/jsonschema2pojo/jsonschema2pojo-cli/$VERSION/jsonschema2pojo-cli-$VERSION.sh
+
+    # download dependencies for cli
+    wget -U NoSuchBrowser/1.0 http://repo1.maven.org/maven2/org/jsonschema2pojo/jsonschema2pojo-cli/$VERSION/jsonschema2pojo-cli-$VERSION.pom -O pom.xml
+    mvn dependency:copy-dependencies -DincludeScope=runtime
+    mv target/lib .
+    mv jsonschema2pojo-cli-$VERSION.jar lib
+    rm -r target pom.xml
+
+    # do some shuffling for cleaner script names
+    mkdir bin
+    mv jsonschema2pojo-cli-$VERSION.bat bin/jsonschema2pojo.bat
+    mv jsonschema2pojo-cli-$VERSION.sh bin/jsonschema2pojo
+    chmod +x bin/jsonschema2pojo
+
+    # create the release archives
+    pushd ..
+        tar czf jsonschema2pojo-$VERSION.tar.gz jsonschema2pojo-$VERSION
+        zip -r jsonschema2pojo-$VERSION.zip jsonschema2pojo-$VERSION
+    popd
+
+    # clone gh-pages to update & add docs
+    git clone git@github.com:joelittlejohn/jsonschema2pojo.git -b gh-pages gh-pages
+    pushd gh-pages
+
+        # extract javadocs to gh-pages
+        mkdir -p javadocs/$VERSION
+        unzip $WORKING_DIR/jsonschema2pojo-$VERSION-javadoc.jar -d javadocs/$VERSION/
+
+        # commit javadocs and push
+        git add .
+        git commit -m "[release] adding $VERSION javadocs"
+        git push origin gh-pages
+
+    popd
+
+    wget -U NoSuchBrowser/1.0 http://repo1.maven.org/maven2/org/jsonschema2pojo/jsonschema2pojo-maven-plugin/$VERSION/jsonschema2pojo-maven-plugin-$VERSION-site.jar
+    wget https://raw.github.com/joelittlejohn/jsonschema2pojo/jsonschema2pojo-$VERSION/jsonschema2pojo-ant/src/site/Jsonschema2PojoTask.html
+    pushd gh-pages
+
+        # extract plugin docs
+        mkdir -p site/$VERSION
+        unzip $WORKING_DIR/jsonschema2pojo-maven-plugin-$VERSION-site.jar -d site/$VERSION/
+        mv $WORKING_DIR/Jsonschema2PojoTask.html site/$VERSION/
+
+        # commit plugin docs and push
+        git add .
+        git commit -m "[release] adding $VERSION plugin docs"
+        git push origin gh-pages
+    popd
+
+    # clone wiki to update version references
+    git clone git@github.com:joelittlejohn/jsonschema2pojo.wiki.git wiki
+    pushd wiki
+
+        # replace any references to old version with new version
+        sed -i "s/$OLD_VERSION/$VERSION/g" *.md
+
+        # commit wiki updates and push to main repo
+        git add .
+        git commit -m "[release] updating wiki links and examples to $VERSION"
+        git push origin master
+
+        # update example
+        wget https://raw.github.com/joelittlejohn/jsonschema2pojo/jsonschema2pojo-$VERSION/jsonschema2pojo-core/src/test/java/org/jsonschema2pojo/example/Example.java
+        sed '/BEGIN EXAMPLE/q' Getting-Started.md > Getting-Started.md.new
+        echo '```java' >> Getting-Started.md.new
+        sed '1,/BEGIN EXAMPLE/d;/END EXAMPLE/,$d;s/  //g' Example.java >> Getting-Started.md.new
+        echo '```' >> Getting-Started.md.new
+        sed -n '/END EXAMPLE/,$p' Getting-Started.md >> Getting-Started.md.new
+        mv Getting-Started.md.new Getting-Started.md
+        rm Example.java
+
+        # commit wiki updates and push
+        git add .
+        git commit -m "[release] updating example code to $VERSION" || true
+        git push origin master || true
+
+    popd
+
+    # clone main repo to update version references in the README.md
+    git clone git@github.com:joelittlejohn/jsonschema2pojo.git main
+    pushd main
+        sed -i "s/$OLD_VERSION/$VERSION/g" README.md
+
+        git add .
+        git commit -m "[release] updating README.md for $VERSION"
+        git push origin master
+    popd
+
+    # upload to github
+    RELEASE=$(curl -H "Authorization: token $GITHUB_TOKEN" -sX POST \
+                  -d "{\"tag_name\":\"jsonschema2pojo-$VERSION\", \"name\":\"$VERSION\"}" \
+                  "https://api.github.com/repos/joelittlejohn/jsonschema2pojo/releases")
+
+    UPLOAD_URL=$(echo $RELEASE | jq -r .upload_url | sed "s/{?.*}/?name=jsonschema2pojo-$VERSION.tar.gz/")
+    curl -H "Authorization: token $GITHUB_TOKEN" -X POST \
+        -H"Content-Type: application/x-tar" --data-binary @../jsonschema2pojo-$VERSION.tar.gz "$UPLOAD_URL" -o /dev/null
+
+    UPLOAD_URL=$(echo $RELEASE | jq -r .upload_url | sed "s/{?.*}/?name=jsonschema2pojo-$VERSION.zip/")
+    curl -H "Authorization: token $GITHUB_TOKEN" -X POST \
+         -H"Content-Type: application/zip" --data-binary @../jsonschema2pojo-$VERSION.zip "$UPLOAD_URL" -o /dev/null
+
+    RELEASE_PAGE=$(echo $RELEASE | jq -r .html_url)
+popd
+
+rm -rf $WORKING_DIR
+
+echo Release complete. Next steps:
+echo    - Update release notes for $RELEASE_PAGE
+echo    - Update CHANGELOG.md
+echo    - Check README.md links are working

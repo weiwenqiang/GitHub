@@ -1,0 +1,78 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+group = 'org.greenrobot'
+archivesBaseName = 'greendao'
+version = rootProject.version
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':greendao-api')
+    compileOnly 'com.google.android:android:4.1.1.4'
+    compileOnly 'com.google.android:android-test:4.1.1.4'
+    compileOnly 'com.google.android:annotations:4.1.1.4'
+    compileOnly 'com.google.android:support-v4:r7'
+
+    compileOnly 'io.reactivex:rxjava:1.1.8'
+
+    compileOnly files('libs/sqlcipher.jar')
+}
+
+javadoc {
+    failOnError = false
+    title = " greenDAO ${version} API"
+    options.bottom = 'Available under the Apache License, Version 2.0 - <i>Copyright &#169; 2011-2017 <a href="http://greenrobot.org/">greenrobot.org</a>. All Rights Reserved.</i>'
+
+    excludes = ['org/greenrobot/dao/internal', 'org/greenrobot/dao/Internal*']
+    def srcApi = project(':greendao-api').file('src/main/java/')
+    if (!srcApi.directory) throw new GradleScriptException("Not a directory: ${srcApi}", null)
+    source += srcApi
+    doLast {
+        copy {
+            from '../javadoc-style'
+            into "build/docs/javadoc/"
+        }
+    }
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            // Basic definitions are defined in root project
+            pom.project {
+                name 'greenDAO'
+                description 'greenDAO is a light and fast ORM for Android'
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+            }
+        }
+    }
+}

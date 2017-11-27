@@ -1,0 +1,8 @@
+include ':nucleus-test-kit'
+include ':nucleus'
+include ':nucleus-support-v7'
+include ':nucleus-support-v4'
+include ':nucleus-example'
+include ':nucleus-example-with-fragments'
+include ':nucleus-example-with-tests'
+include ':nucleus-example-real-life'

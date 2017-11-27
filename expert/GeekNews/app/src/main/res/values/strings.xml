@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">GeekNews</string>
+    <string name="app_intro">A pure reading App for you</string>
+
+    //main drawer
+    <string name="zhihu">知乎日报</string>
+    <string name="wechat">微信精选</string>
+    <string name="gank">干货集中营</string>
+    <string name="gold">稀土掘金</string>
+    <string name="vtex">V2EX</string>
+    <string name="drawer_about">关于</string>
+    <string name="drawer_collection">收藏</string>
+    <string name="drawer_setting">设置</string>
+    <string name="drawer_open">打开</string>
+    <string name="drawer_close">关闭</string>
+    <string name="drawer_group_content">资讯</string>
+    <string name="drawer_group_options">选项</string>
+
+    <string name="detail_bottom_share">分享</string>
+    <string name="detail_bottom_like">点赞</string>
+    <string name="detail_bottom_commit">评论</string>
+    <string name="comment_expand">收起</string>
+
+    <string name="action_copy">复制链接到剪贴板</string>
+    <string name="action_save">保存到本地</string>
+    <string name="action_share">分享链接</string>
+    <string name="action_like">收藏</string>
+    <string name="action_search">搜索</string>
+
+    <string name="setting_cache">自动缓存</string>
+    <string name="setting_image">无图模式</string>
+    <string name="setting_night">夜间模式</string>
+    <string name="setting_feedback">意见反馈</string>
+    <string name="setting_clear">清除缓存</string>
+    <string name="setting_update">检查更新</string>
+    <string name="setting_normal">常规</string>
+    <string name="setting_other">其他</string>
+
+    <string name="about_addr">项目地址:\nhttps://github.com/codeestX/GeekNews</string>
+    <string name="about_author">作者:Est\t\t(codeest.dev@gmail.com)</string>
+    <string name="about_project">项目简介:\n极客日报,一个纯粹的阅读App\n为了熟悉当前Android端主流框架的使用,也为了能有一款将新闻、技术文章、福利一网打尽的简洁的阅读应用,利用闲暇时间做了这个项目n(*≧▽≦*)n\n
+        本着学习的目的,该项目会持续迭代与优化,加入更丰富的阅读内容与功能,并不断尝试最新的技术,欢迎star、fork、issue、email</string>
+    <string name="about_award">请作者吃糖(￣▽￣)</string>
+    <string name="about_info">GeekNews\t\t\tV1.3.0</string>
+    <string name="error_tips">糟糕！加载失败了ヽ(≧Д≦)ノ\n 偷偷告诉你一些可能的原因：\n1.惨不忍睹的网络环境\n 2.服务器君的不定期抽风\n 3.GeekNews现在心情不好拒绝服务喔~</string>
+</resources>

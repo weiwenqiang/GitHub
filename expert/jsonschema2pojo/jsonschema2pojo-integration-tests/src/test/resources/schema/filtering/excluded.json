@@ -1,0 +1,10 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "description": "a schema that should be exluded.",
+    "type": "object",
+    "properties": {
+        "prop": {
+            "type": "string"
+        }
+    }
+}

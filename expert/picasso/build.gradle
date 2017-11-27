@@ -1,0 +1,33 @@
+subprojects {
+  buildscript {
+    repositories {
+      jcenter()
+      google()
+    }
+  }
+  repositories {
+    jcenter()
+    google()
+  }
+
+  plugins.apply('checkstyle')
+
+  task('checkstyle', type: Checkstyle) {
+    configFile rootProject.file('checkstyle.xml')
+    source 'src/main/java'
+    ignoreFailures false
+    showViolations true
+    include '**/*.java'
+
+    classpath = files()
+  }
+
+  group = GROUP
+  version = VERSION_NAME
+
+  afterEvaluate {
+    tasks.findByName('check').dependsOn('checkstyle')
+  }
+}
+
+apply from: rootProject.file('gradle/dependencies.gradle')

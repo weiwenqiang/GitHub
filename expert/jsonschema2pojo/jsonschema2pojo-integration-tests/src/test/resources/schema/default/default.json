@@ -1,0 +1,133 @@
+{
+    "type" : "object",
+    "properties" : {
+        "emptyStringWithDefault" : {
+          "type" : "string",
+          "default" : ""
+        },
+        "stringWithDefault" : {
+            "type" : "string",
+            "default" : "abc"
+        },
+        "integerWithDefault" : {
+            "type" : "integer",
+            "default" : 1337
+        },
+        "numberWithDefault" : {
+            "type" : "number",
+            "default" : 1.337
+        },
+        "booleanWithDefault" : {
+            "type" : "boolean",
+            "default" : true
+        },
+        "dateTimeWithDefault" : {
+            "type" : "string",
+            "format" : "date-time",
+            "default" : 123456789
+        },
+        "dateTimeAsStringWithDefault" : {
+            "type" : "string",
+            "format" : "date-time",
+            "default" : "2011-02-24T09:25:23.112+0000"
+        },
+        "dateAsStringWithDefault" : {
+            "type" : "string",
+            "format" : "date",
+            "default" : "2015-03-04"
+        },
+        "timeAsStringWithDefault" : {
+            "type" : "string",
+            "format" : "time",
+            "default" : "16:15:00"
+        },
+        "utcmillisecWithDefault" : {
+            "type" : "integer",
+            "format" : "utc-millisec",
+            "default" : 123456789
+        },
+        "uriWithDefault" : {
+            "type" : "string",
+            "format": "uri",
+            "default": "http://example.com"
+        },
+        "enumWithDefault" : {
+            "type" : "string",
+            "enum" : ["one", "two", "three"],
+            "default" : "two"
+        },
+        "integerEnumWithDefault" : {
+            "type" : "integer",
+            "enum" : [1, 2, 3],
+            "default" : 2
+        },
+        "numberEnumWithDefault" : {
+            "type" : "number",
+            "enum" : [1.2, 2.3, 3.14],
+            "default" : 2.3
+        },
+        "arrayWithDefault" : {
+            "type" : "array",
+            "items" : {
+                "type" : "string"
+            },
+            "default" : ["one", "two", "three"]
+        },
+        "arrayWithUriDefault" : {
+            "type" : "array",
+            "items" : {
+                "type" : "string",
+                "format": "uri"
+            },
+            "default" : ["http://example.com/p/1", "http://example.com/p/2"]
+        },
+        "arrayWithEmptyDefault" : {
+            "type" : "array",
+            "items" : {
+                "type" : "string"
+            },
+            "default" : []
+        },
+        "complexPropertyWithDefault" : {
+            "type" : "object",
+            "properties" : {
+                "abc" : {
+                    "type" : "string"
+                }
+            },
+            "default" : {"abc" : "xyz"}
+        },
+        "simplePropertyWithNullDefault" : {
+            "type" : "integer",
+            "default" : null
+        },
+        "arrayPropertyWithNullDefault" : {
+            "type" : "array",
+            "items" : {
+                "type" : "string"
+            },
+            "default" : null
+        },
+        "uniqueArrayWithDefault" : {
+            "type" : "array",
+            "uniqueItems" : true,
+            "items" : {
+                "type" : "integer"
+            },
+            "default" : [100, 200, 300]
+        },
+        "arrayWithoutDefault" : {
+            "type" : "array",
+            "items" : {
+                "type" : "string"
+            }
+        },
+        "uniqueArrayWithoutDefault" : {
+            "type" : "array",
+            "uniqueItems" : true,
+            "items" : {
+                "type" : "boolean"
+            }
+        }
+    }
+}

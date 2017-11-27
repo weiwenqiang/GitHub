@@ -1,0 +1,13 @@
+include 'greendao-api'
+include 'DaoCore'
+include 'DaoGenerator'
+include 'tests'
+
+include 'examples:DaoExample'
+include 'examples:RxDaoExample'
+
+include 'tests:DaoTestBase'
+include 'tests:DaoTest'
+include 'tests:DaoTestPerformance'
+include 'tests:DaoTestGenerator'
+include 'tests:DaoTestEntityAnnotation'

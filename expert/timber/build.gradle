@@ -1,0 +1,50 @@
+apply plugin: 'com.github.ben-manes.versions'
+
+buildscript {
+  ext.versions = [
+      'minSdk': 9,
+      'compileSdk': 27,
+
+      'androidPlugin': '3.0.1',
+      'androidTools': '26.0.0',
+
+      'butterknife': '8.8.1',
+  ]
+
+  ext.deps = [
+      androidPlugin: "com.android.tools.build:gradle:${versions.androidPlugin}",
+      'butterknife': [
+          'runtime': "com.jakewharton:butterknife:${versions.butterknife}",
+          'compiler': "com.jakewharton:butterknife-compiler:${versions.butterknife}"
+      ],
+      'lint': [
+          'core': "com.android.tools.lint:lint:${versions.androidTools}",
+          'api': "com.android.tools.lint:lint-api:${versions.androidTools}",
+          'checks': "com.android.tools.lint:lint-checks:${versions.androidTools}",
+          'tests': "com.android.tools.lint:lint-tests:${versions.androidTools}",
+      ],
+      annotations: 'org.jetbrains:annotations:15.0',
+
+      junit: 'junit:junit:4.12',
+      truth: 'com.google.truth:truth:0.36',
+      robolectric: 'org.robolectric:robolectric:3.5',
+  ]
+
+  repositories {
+    jcenter()
+    google()
+  }
+
+  dependencies {
+    classpath deps.androidPlugin
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
+  }
+}
+
+allprojects {
+  repositories {
+    mavenCentral()
+    jcenter()
+    google()
+  }
+}

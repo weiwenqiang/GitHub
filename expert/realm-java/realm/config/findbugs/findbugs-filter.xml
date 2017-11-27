@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!--
+    In code, please prefer annotations as a way of ignoring Findbugs issues
+    -->
+
+    <!-- Unit tests
+        As of Jan 6, 2017, there are ~1000 Findbugs issues in the unit tests.
+        This shall not pass.
+        Clean the build directory and build only the product code:
+            ./gradlew clean findbugs
+    -->
+
+    <!-- Generated code -->
+    <Match>
+        <Class name="io.realm.PermissionChangeRealmProxy"/>
+    </Match>
+    <Match>
+        <Class name="io.realm.PermissionOfferRealmProxy"/>
+    </Match>
+    <Match>
+        <Class name="io.realm.PermissionOfferResponseRealmProxy"/>
+    </Match>
+    <Match>
+        <Class name="io.realm.PermissionRealmProxy"/>
+    </Match>
+
+</FindBugsFilter>

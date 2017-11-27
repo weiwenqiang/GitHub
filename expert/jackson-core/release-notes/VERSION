@@ -1,0 +1,25 @@
+Project: jackson-core
+Versions: 3.x (for earlier see VERSION-2.x)
+
+Contains core streaming reader (`JsonParser`) and writer (`JsonGenerator`) abstractions,
+factory for constructing readers/writers (JsonFactory), as well as a minimal set
+of interfaces needed for streaming level to make callbacks and call-throughs,
+via `ObjectCodec` and `TreeNode`.
+
+Also includes implementation of this API for JSON.
+Forms the base for other data formats as well, despite naming that suggests
+JSON-specificity: naming is due to history, as Jackson started out as pure
+JSON library.
+
+------------------------------------------------------------------------
+=== Releases ===
+------------------------------------------------------------------------
+
+3.0.0 (not yet released)
+
+#402: Remove dataformat-auto-detection functionality
+#408: Rename `JsonFactory` as `TokenStreamFactory`, split JSON-specific into `JsonFactory`
+#410: Add `ObjectWriteContext` abstraction for databind to pass config, state to
+  `JsonGenerator` on construction
+#411: Rename `JsonStreamContext` as `TokenStreamContext`
+#413: Remove `ObjectCodec`: replace with `ObjectWriteContext` / `ObjectReadContext

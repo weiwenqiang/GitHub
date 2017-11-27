@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://K:\zp\GitHub\SelectWidget\city\CityPicker2\citypicker\app\app.iml" filepath="K:\zp\GitHub\SelectWidget\city\CityPicker2\citypicker\app\app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/citypicker.iml" filepath="$PROJECT_DIR$/citypicker.iml" />
+      <module fileurl="file://K:\zp\GitHub\SelectWidget\city\CityPicker2\citypicker\citypicker.iml" filepath="K:\zp\GitHub\SelectWidget\city\CityPicker2\citypicker\citypicker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/citypickerview/citypickerview.iml" filepath="$PROJECT_DIR$/citypickerview/citypickerview.iml" />
+      <module fileurl="file://K:\zp\GitHub\SelectWidget\city\CityPicker2\citypicker\citypickerview\citypickerview.iml" filepath="K:\zp\GitHub\SelectWidget\city\CityPicker2\citypicker\citypickerview\citypickerview.iml" />
+    </modules>
+  </component>
+</project>

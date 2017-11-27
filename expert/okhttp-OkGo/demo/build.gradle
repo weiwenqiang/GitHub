@@ -1,0 +1,101 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        applicationId "com.lzy.demo"
+        minSdkVersion rootProject.ext.appMinSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName_okgo
+    }
+
+    signingConfigs {
+        appkey {
+            keyAlias 'OkGo'
+            keyPassword '111111'
+            storeFile file('../appkey.jks')
+            storePassword '111111'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable false
+            signingConfig signingConfigs.appkey
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable true
+            signingConfig signingConfigs.appkey
+        }
+    }
+    productFlavors {
+        miui {
+            proguardFile './proguard-rules.pro'
+            signingConfig signingConfigs.appkey
+        }
+        qihu360 {
+            proguardFile './proguard-rules.pro'
+            signingConfig signingConfigs.appkey
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+    packagingOptions {
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/notice'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/rxjava.properties'
+    }
+}
+
+task makeApk {
+    doLast {
+        def versionName = rootProject.ext.versionName_okgo
+        def appName = "okgo_v${versionName}.apk"
+        copy {
+            from "./build/outputs/apk/demo-miui-debug.apk"
+            into "../"
+            rename {
+                appName
+            }
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile "com.android.support:appcompat-v7:$supportVersion"
+    compile "com.android.support:design:$supportVersion"
+    compile "com.android.support:recyclerview-v7:$supportVersion"
+    compile "com.android.support:cardview-v7:$supportVersion"
+
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v2.0.7'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'com.readystatesoftware.chuck:library:1.0.4'
+
+    compile project(':okgo')
+    compile project(':okrx')
+    compile project(':okrx2')
+    compile project(':okserver')
+//    compile 'com.lzy.net:okgo:3.0.4'
+//    compile 'com.lzy.net:okrx:1.0.2'
+//    compile 'com.lzy.net:okrx2:2.0.2'
+//    compile 'com.lzy.net:okserver:2.0.5'
+    compile 'com.lzy.widget:ninegridview:0.2.1'
+    compile 'com.lzy.widget:imagepicker:0.3.2'
+    compile 'com.lzy.widget:view-core:0.2.1'
+}

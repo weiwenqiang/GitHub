@@ -1,0 +1,28 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+    }
+}
+
+repositories {
+    mavenLocal()
+}
+
+configurations {
+    compileJavadoc
+}
+
+dependencies {
+    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    compile "info.android15.nucleus:nucleus:$VERSION_NAME"
+    compileJavadoc "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    compileJavadoc "info.android15.nucleus:nucleus:$VERSION_NAME"
+}
+
+apply from: '../gradle/gradle-mvn-push.gradle'
